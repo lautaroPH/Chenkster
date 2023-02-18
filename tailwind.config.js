@@ -11,7 +11,15 @@ module.exports = {
       poppins: ['Poppins', 'sans-serif', 'ui-sans-serif', 'system-ui'],
     },
 
-    extend: {},
+    extend: {
+      colors: {
+        'chenkster-blue': '#0973E1',
+        'chenkster-gray': '#212E5B',
+        'chenkster-gray-light': '#F2F2F2',
+        'chenkster-gray-lighter': '#F9F9F9',
+        'chenkster-green': '#3CD24B',
+      },
+    },
   },
   plugins: [],
 };
