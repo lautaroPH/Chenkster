@@ -6,7 +6,7 @@ import ShowCountries from '@/components/WelcomeChenkster/ShowCountries';
 export default function Welcome() {
   return (
     <div className="relative flex flex-col items-center w-full h-screen overflow-hidden">
-      <GoBack />
+      <GoBack styles={'absolute top-16 left-8'} />
 
       <ChenksterLogo />
 

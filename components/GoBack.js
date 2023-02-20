@@ -1,11 +1,11 @@
 import { useRouter } from 'next/router';
 import ArrowSvg from './Svg/ArrowSvg';
 
-const GoBack = () => {
+const GoBack = ({ styles }) => {
   const router = useRouter();
 
   return (
-    <div className="absolute top-16 left-8" onClick={() => router.back()}>
+    <div className={`${styles}`} onClick={() => router.back()}>
       <ArrowSvg />
     </div>
   );

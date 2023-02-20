@@ -1,6 +1,6 @@
 import InfoChenkster from './InfoChenkster';
-import WorldSvg from '../WorldSvg';
 import ChenksterLogo from '../ChenksterLogo';
+import WorldSvg from '../Svg/WorldSvg';
 
 const AboutChenkster = () => {
   return (

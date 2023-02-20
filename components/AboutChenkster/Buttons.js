@@ -12,9 +12,12 @@ const Buttons = () => {
       <p className="w-64 mb-4 text-xl font-extrabold text-center mt-7 font-lato text-chenkster-gray">
         Are you a chenkster?
       </p>
-      <a className="w-full py-3 font-semibold text-center text-white rounded-lg opacity-90 background-gradient font-poppins">
+      <Link
+        href={'/register'}
+        className="w-full py-3 font-semibold text-center text-white rounded-lg opacity-90 background-gradient font-poppins"
+      >
         Enter the dashboard
-      </a>
+      </Link>
     </div>
   );
 };

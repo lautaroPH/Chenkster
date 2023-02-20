@@ -19,6 +19,9 @@ module.exports = {
         'chenkster-gray-lighter': '#F9F9F9',
         'chenkster-green': '#3CD24B',
       },
+      backgroundImage: {
+        italy: "url('/images/italy.png')",
+      },
     },
   },
   plugins: [],
