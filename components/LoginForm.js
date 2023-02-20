@@ -6,17 +6,21 @@ import EyeSvg from './Svg/EyeSvg';
 
 const LoginForm = () => {
   const [showFirstPassword, setShowFirstPassword] = useState(false);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setError(null);
+    setLoading(true);
     const { data, error } = await loginWithEmail(email, password);
 
+    setLoading(false);
     if (error) {
-      alert(error.message);
+      setError({ submit: error.message });
       return;
     }
   };
@@ -54,14 +58,21 @@ const LoginForm = () => {
           {showFirstPassword ? <EyeSvg /> : <EyeSlashSvg />}
         </div>
       </div>
-      <p className="mt-2 mb-4 text-lg font-medium font-lato text-chenkster-blue">
-        Forgot Password?
-      </p>
-      <button
-        type="submit"
-        className="w-full py-3 font-semibold text-center text-white rounded-lg opacity-90 background-gradient font-poppins"
+      <Link
+        href={'/recover'}
+        className="mt-2 mb-4 text-lg font-medium font-lato text-chenkster-blue"
       >
-        Login
+        Forgot Password?
+      </Link>
+      <p className="mb-3 text-red-600">{error?.submit}</p>
+      <button
+        disabled={loading}
+        type="submit"
+        className={`${
+          loading && 'bg-opacity-50 cursor-not-allowed'
+        } w-full py-3 font-semibold text-center text-white rounded-lg opacity-90 background-gradient font-poppins`}
+      >
+        {loading ? 'Loading...' : 'Login'}
       </button>
       <p className="mb-4 font-semibold text-center w-72 mt-7 font-poppins text-chenkster-gray">
         Don’t have an account?{' '}

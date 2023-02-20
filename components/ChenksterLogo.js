@@ -4,7 +4,7 @@ import Image from 'next/image';
 const ChenksterLogo = () => {
   return (
     <div className="mt-16">
-      <Image src={Chenkster} alt="Chenkster Logo" />
+      <Image priority src={Chenkster} alt="Chenkster Logo" />
     </div>
   );
 };
