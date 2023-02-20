@@ -66,11 +66,9 @@ const LoginForm = () => {
       </Link>
       <p className="mb-3 text-red-600">{error?.submit}</p>
       <button
-        disabled={loading}
+        disabled={loading || !email || !password}
         type="submit"
-        className={`${
-          loading && 'bg-opacity-50 cursor-not-allowed'
-        } w-full py-3 font-semibold text-center text-white rounded-lg opacity-90 background-gradient font-poppins`}
+        className="w-full py-3 font-semibold text-center text-white rounded-lg disabled:opacity-60 disabled:cursor-not-allowed background-gradient font-poppins"
       >
         {loading ? 'Loading...' : 'Login'}
       </button>

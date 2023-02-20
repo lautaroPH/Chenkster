@@ -107,11 +107,9 @@ const FormRegister = () => {
       <p className="mb-3 text-red-600">{error?.submit}</p>
 
       <button
-        disabled={loading}
+        disabled={loading || !username || !email || !password || !password2}
         type="submit"
-        className={`${
-          loading && 'disabled:bg-opacity-50 cursor-not-allowed'
-        }  w-full py-3 font-semibold text-center text-white rounded-lg opacity-90 background-gradient font-poppins`}
+        className="w-full py-3 font-semibold text-center text-white rounded-lg disabled:opacity-60 disabled:cursor-not-allowed background-gradient font-poppins"
       >
         {loading ? 'Loading...' : 'Sign up'}
       </button>
