@@ -12,7 +12,7 @@ export default function Register() {
   const router = useRouter();
 
   if (user) {
-    router.push(`/edit/profile/${user.user_metadata.username}`);
+    router.push(`/welcome`);
   }
 
   return (

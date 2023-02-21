@@ -5,6 +5,8 @@ import ShowCountries from '@/components/WelcomeChenkster/ShowCountries';
 import useUser from '@/hooks/useUser';
 
 export default function Welcome() {
+  const user = useUser();
+  console.log(user);
   return (
     <div className="relative flex flex-col items-center w-full h-screen overflow-hidden">
       <GoBack styles={'absolute top-16 left-8'} />

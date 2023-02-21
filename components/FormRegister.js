@@ -11,7 +11,6 @@ const FormRegister = () => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
@@ -23,11 +22,18 @@ const FormRegister = () => {
     setError(null);
     setLoading(true);
     if (password !== password2) {
+      setLoading(false);
       setError({ password: 'Passwords do not match' });
       return;
     }
 
-    const { data, error } = await registerWithEmail(email, password, username);
+    if (!email || !password || !password2) {
+      setLoading(false);
+      setError({ submit: 'Please fill in all fields' });
+      return;
+    }
+
+    const { data, error } = await registerWithEmail(email, password);
 
     setLoading(false);
     if (error) {
@@ -35,7 +41,7 @@ const FormRegister = () => {
       return;
     }
 
-    router.push(`/edit/profile/${username}`);
+    router.push(`/edit/profile`);
   };
 
   return (
@@ -43,16 +49,6 @@ const FormRegister = () => {
       onSubmit={handleSubmit}
       className="relative flex flex-col items-center justify-center mt-12 w-96"
     >
-      <input
-        type="text"
-        name="username"
-        id="username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        autoComplete="username"
-        placeholder="Enter your name"
-        className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-      />
       <input
         type="email"
         name="email"
@@ -62,6 +58,7 @@ const FormRegister = () => {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter your email"
         className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
+        required
       />
       <div className="relative w-full mb-3">
         <input
@@ -75,6 +72,7 @@ const FormRegister = () => {
           className={`${
             error?.password && 'border-red-600'
           } w-full px-4 py-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato`}
+          required
         />
         <div
           onClick={() => setShowFirstPassword(!showFirstPassword)}
@@ -95,6 +93,7 @@ const FormRegister = () => {
           className={`${
             error?.password && 'border-red-600'
           } w-full px-4 py-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato`}
+          required
         />
         <div
           onClick={() => setShowSecondPassword(!showSecondPassword)}
@@ -107,7 +106,7 @@ const FormRegister = () => {
       <p className="mb-3 text-red-600">{error?.submit}</p>
 
       <button
-        disabled={loading || !username || !email || !password || !password2}
+        disabled={loading || !email || !password || !password2}
         type="submit"
         className="w-full py-3 font-semibold text-center text-white rounded-lg disabled:opacity-60 disabled:cursor-not-allowed background-gradient font-poppins"
       >

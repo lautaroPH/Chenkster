@@ -16,6 +16,12 @@ const LoginForm = () => {
     e.preventDefault();
     setError(null);
     setLoading(true);
+    if (!email || !password) {
+      setLoading(false);
+      setError({ submit: 'Please fill in all fields' });
+      return;
+    }
+
     const { data, error } = await loginWithEmail(email, password);
 
     setLoading(false);
@@ -39,6 +45,7 @@ const LoginForm = () => {
         onChange={(e) => setEmail(e.target.value)}
         placeholder="Enter your email"
         className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
+        required
       />
       <div className="relative w-full">
         <input
@@ -50,6 +57,7 @@ const LoginForm = () => {
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Choose your password"
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
+          required
         />
         <div
           onClick={() => setShowFirstPassword(!showFirstPassword)}

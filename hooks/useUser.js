@@ -5,7 +5,6 @@ const useUser = () => {
   const session = useSession();
   const [user, setUser] = useState(false);
   useEffect(() => setUser(session?.user), [session]);
-
   return user;
 };
 
