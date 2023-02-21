@@ -206,8 +206,6 @@ export default function Profile() {
     setError(error);
   };
 
-  console.log(formData);
-
   return (
     <>
       {user && (

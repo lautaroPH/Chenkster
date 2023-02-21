@@ -5,7 +5,6 @@ import GoldBadge from '@/components/Stats/GoldBadge';
 import TotalEarning from '@/components/Stats/TotalEarning';
 import Verifications from '@/components/Stats/Verifications';
 import Views from '@/components/Stats/Views';
-import CheckSvg from '@/components/Svg/CheckSvg';
 import ConfigSvg from '@/components/Svg/ConfigSvg';
 import { getUserProfile } from '@/utils/getUserProfile';
 import { useState } from 'react';
@@ -40,6 +39,7 @@ export default function Username({ userProfile }) {
       changeFirstContent={() => setStats(false)}
       changeSecondContent={() => setStats(true)}
       currentLocation={stats}
+      href={`/profile/${userProfile.username}/settings`}
     >
       {!stats ? (
         <Profile

@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import Link from 'next/link';
 import GoBack from './GoBack';
 import WorldLightSvg from './Svg/WorldLightSvg';
 
@@ -12,6 +13,7 @@ const LayoutProfile = ({
   changeFirstContent,
   changeSecondContent,
   currentLocation,
+  href,
 }) => {
   return (
     <div className="relative flex flex-col items-center w-full min-h-screen overflow-hidden">
@@ -22,9 +24,9 @@ const LayoutProfile = ({
           alt="user image"
           className="object-cover w-20 h-20 -mt-3 rounded-full"
         />
-        <a>
+        <Link href={href}>
           <IconRight />
-        </a>
+        </Link>
       </div>
       <h2 className="mt-4 text-2xl font-bold text-center font-poppins text-chenkster-gray">
         {name}
