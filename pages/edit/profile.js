@@ -114,7 +114,11 @@ export default function Profile() {
 
       if (errorProfile) {
         await removeImage(dataImage.path);
-        handleError(errorProfile.message);
+        handleError(
+          errorProfile.code === '23505'
+            ? 'Username already exists'
+            : errorProfile.message,
+        );
         return;
       }
 
@@ -126,6 +130,7 @@ export default function Profile() {
         return;
       }
 
+      router.push(`/profile/${formData.username}`);
       return;
     }
 
@@ -144,6 +149,7 @@ export default function Profile() {
 
     setLoading(false);
     if (error) return handleError(error.message);
+    router.push(`/profile/${formData.username}`);
   };
 
   const handleClickLang = () => {
@@ -199,6 +205,8 @@ export default function Profile() {
     setLoading(false);
     setError(error);
   };
+
+  console.log(formData);
 
   return (
     <>
