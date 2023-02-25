@@ -1,7 +1,7 @@
-export const uploadImage = async (file, avatarName, username, supabase) => {
+export const uploadImage = async (file, name, title, supabase, storage) => {
   const { data, error } = await supabase.storage
-    .from('avatars')
-    .upload(`public/${username}/${avatarName}`, file, {
+    .from(storage)
+    .upload(`public/${title}/${name}`, file, {
       cacheControl: '3600',
       upsert: false,
     });

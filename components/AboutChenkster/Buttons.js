@@ -13,7 +13,7 @@ const Buttons = () => {
         Are you a chenkster?
       </p>
       <Link
-        href={'/register'}
+        href={'/dashboard'}
         className="w-full py-3 font-semibold text-center text-white rounded-lg opacity-90 background-gradient font-poppins"
       >
         Enter the dashboard

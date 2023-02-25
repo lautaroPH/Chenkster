@@ -12,6 +12,7 @@ import { uploadProfile } from '@/utils/uploadProfile';
 import { updateProfile } from '@/utils/updateProfile';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { allowedExtensions } from '@/utils/allowedExtension';
 
 export const getServerSideProps = async (ctx) => {
   const supabase = createServerSupabaseClient(ctx);
@@ -82,8 +83,6 @@ export default function Profile({ user }) {
       return handleError('Please fill in the required fields');
 
     if (avatar && avatar.length > 0) {
-      const allowedExtensions = /(.jpg|.jpeg|.png|.webp)$/i;
-
       const avatarName = profileImgRef.current.value?.split('\\')[2];
 
       if (!allowedExtensions.exec(avatar[0].type) && avatar[0].size > 700000)
@@ -92,10 +91,10 @@ export default function Profile({ user }) {
         );
 
       if (formData.avatar) {
-        console.log('asccs');
         const { data, error } = await removeImage(
           `public/${formData.username}/${formData.avatar.split('/').at(-1)}`,
           supabase,
+          'avatars',
         );
 
         if (error) return handleError(error.message);
@@ -106,6 +105,7 @@ export default function Profile({ user }) {
         avatarName,
         formData.username,
         supabase,
+        'avatars',
       );
 
       if (errorImage) return handleError(errorImage.message);
