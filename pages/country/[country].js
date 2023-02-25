@@ -1,9 +1,7 @@
 import DiscoverCountry from '@/components/Country/DiscoverCountry';
-import Header from '@/components/Header';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Milan from '@/public/images/milan.png';
-import WorldLightSvg from '@/components/Svg/WorldLightSvg';
 import Layout from '@/components/Layout';
 
 export default function Country() {

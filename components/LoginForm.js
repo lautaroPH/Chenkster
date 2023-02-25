@@ -3,11 +3,15 @@ import Link from 'next/link';
 import { useState } from 'react';
 import EyeSlashSvg from './Svg/EyeSlashSvg';
 import EyeSvg from './Svg/EyeSvg';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useRouter } from 'next/router';
 
 const LoginForm = () => {
   const [showFirstPassword, setShowFirstPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const supabase = useSupabaseClient();
+  const router = useRouter();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,13 +26,14 @@ const LoginForm = () => {
       return;
     }
 
-    const { data, error } = await loginWithEmail(email, password);
+    const { data, error } = await loginWithEmail(email, password, supabase);
 
     setLoading(false);
     if (error) {
       setError({ submit: error.message });
       return;
     }
+    router.push(`/welcome`);
   };
 
   return (

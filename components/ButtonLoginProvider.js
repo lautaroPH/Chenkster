@@ -1,12 +1,19 @@
 import { loginWithProvider } from '@/utils/loginWithProvider';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import { useRouter } from 'next/router';
 
 const ButtonLoginProvider = ({ Icon, text, provider, colorStyles }) => {
+  const supabase = useSupabaseClient();
+  const router = useRouter();
+
   const handleSocialLogin = async (provider) => {
-    const { data, error } = await loginWithProvider(provider);
+    const { data, error } = await loginWithProvider(provider, supabase);
 
     if (error) {
       alert(error.message);
+      return;
     }
+    router.push(`/welcome`);
   };
 
   return (

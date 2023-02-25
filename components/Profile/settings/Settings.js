@@ -9,10 +9,18 @@ import SafetySvg from '@/components/Svg/SafetySvg';
 import ThemeSvg from '@/components/Svg/ThemeSvg';
 import TwoFactorSvg from '@/components/Svg/TwoFactorSvg';
 import { logout } from '@/utils/logout';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Option from './Option';
 
 const SettingsProfile = () => {
+  const supabase = useSupabaseClient();
+  const router = useRouter();
+  const handleLogout = () => {
+    logout(supabase);
+    router.push('/');
+  };
   return (
     <>
       <div className="w-3/4 mt-10">
@@ -31,7 +39,7 @@ const SettingsProfile = () => {
         <Option Icon={ThemeSvg} title={'Theme'} border />
         <Option Icon={LanguageSvg} title={'Language'} border />
         <Option Icon={HelpSvg} title={'Help'} border />
-        <button onClick={logout}>
+        <button onClick={handleLogout}>
           <Option Icon={LogoutSvg} title={'log out'} />
         </button>
       </div>

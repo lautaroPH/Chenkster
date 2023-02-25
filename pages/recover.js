@@ -3,13 +3,37 @@ import EyeSlashSvg from '@/components/Svg/EyeSlashSvg';
 import EyeSvg from '@/components/Svg/EyeSvg';
 import { newPassword } from '@/utils/newPassword';
 import { recoverPassword } from '@/utils/recoverPassword';
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+
+export const getServerSideProps = async (ctx) => {
+  const supabase = createServerSupabaseClient(ctx);
+
+  const { data } = await supabase.auth.getUser();
+
+  if (!data.user)
+    return {
+      props: {
+        initialSession: data.user,
+        user: data.user,
+      },
+    };
+
+  return {
+    redirect: {
+      destination: '/welcome',
+      permanent: false,
+    },
+  };
+};
 
 export default function Recover() {
   const [showFirstPassword, setShowFirstPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const supabase = useSupabaseClient();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,8 +47,9 @@ export default function Recover() {
 
     const { data: dataRecover, error: errorRecover } = await recoverPassword(
       email,
+      supabase,
     );
-    const { data, error } = await newPassword(email, password);
+    const { data, error } = await newPassword(email, password, supabase);
 
     setLoading(false);
     if (errorRecover) {

@@ -28,18 +28,18 @@ export async function getServerSideProps({ query }) {
 
 export default function Username({ userProfile }) {
   const [stats, setStats] = useState(false);
-
   return (
     <LayoutProfile
       IconRight={ConfigSvg}
       firstOption={'PROFILE'}
       secondOption={'STATS'}
-      avatar={userProfile?.avatar_url}
+      avatar={userProfile?.avatar}
       name={`${userProfile?.first_name} ${userProfile?.last_name}`}
       changeFirstContent={() => setStats(false)}
       changeSecondContent={() => setStats(true)}
       currentLocation={stats}
       href={`/profile/${userProfile.username}/settings`}
+      username={userProfile.username}
     >
       {!stats ? (
         <Profile

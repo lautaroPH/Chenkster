@@ -1,10 +1,9 @@
-import { supabase } from '@/supabaseClient';
-
-export const updateUser = async (dataUser, path) => {
+export const updateUser = async (dataUser, path, supabase) => {
   const { data, error } = await supabase.auth.updateUser({
     data: {
       ...dataUser,
-      avatar_url: path,
+      avatar: path,
+      role: 'user',
     },
   });
 

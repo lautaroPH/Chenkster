@@ -1,4 +1,5 @@
 import { registerWithEmail } from '@/utils/registerWIthEmail';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -10,6 +11,7 @@ const FormRegister = () => {
   const [showSecondPassword, setShowSecondPassword] = useState(false);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const supabase = useSupabaseClient();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,7 +35,7 @@ const FormRegister = () => {
       return;
     }
 
-    const { data, error } = await registerWithEmail(email, password);
+    const { data, error } = await registerWithEmail(email, password, supabase);
 
     setLoading(false);
     if (error) {

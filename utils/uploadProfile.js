@@ -1,10 +1,15 @@
-import { supabase } from '@/supabaseClient';
-
-export const uploadProfile = async (dataProfile, imagePath, userId) => {
+export const uploadProfile = async (
+  dataProfile,
+  imagePath,
+  userId,
+  supabase,
+) => {
   const { data, error } = await supabase.from('profiles').insert([
     {
       ...dataProfile,
-      avatar_url: imagePath,
+      avatar: imagePath
+        ? imagePath
+        : 'https://res.cloudinary.com/dv1ksnrvk/image/upload/v1677080765/samples/userImg_oiynrs.png',
       user_id: userId,
     },
   ]);

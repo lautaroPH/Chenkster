@@ -3,61 +3,62 @@ import FollowUs from '@/components/Profile/settings/FollowUs';
 import Help from '@/components/Profile/settings/Help';
 import SettingsProfile from '@/components/Profile/settings/Settings';
 import LightBulbSvg from '@/components/Svg/LightBulbSvg';
-import useSession from '@/hooks/useSession';
-import useUser from '@/hooks/useUser';
-import { getUserProfile } from '@/utils/getUserProfile';
-import { useRouter } from 'next/router';
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useState } from 'react';
 
-export async function getServerSideProps({ query }) {
-  const { username } = query;
+export const getServerSideProps = async (ctx) => {
+  const { username } = ctx.query;
 
   if (!username) return { notFound: true };
 
-  const { data, error } = await getUserProfile(username);
+  const supabase = createServerSupabaseClient(ctx);
 
-  if (error) {
-    console.log('error', error);
-    return { notFound: true };
+  const { data } = await supabase.auth.getUser();
+
+  if (!data.user)
+    return {
+      redirect: {
+        destination: '/login',
+        permanent: false,
+      },
+    };
+
+  if (data.user.user_metadata.username !== username) {
+    return {
+      redirect: {
+        destination: `/profile/${data.user.user_metadata.username}/settings`,
+        permanent: false,
+      },
+    };
   }
 
-  if (!data[0]) return { notFound: true };
+  return {
+    props: {
+      initialSession: data.user,
+      user: data.user,
+    },
+  };
+};
 
-  return { props: { userProfile: data[0] } };
-}
-
-export default function Settings({ userProfile }) {
+export default function Settings({ user }) {
   const [help, setHelp] = useState(false);
-  const session = useSession();
-  const router = useRouter();
-  const user = useUser();
-
-  if (session === null) {
-    router.push(`/login`);
-  }
-
-  if (user && user?.user_metadata?.username !== userProfile.username) {
-    router.push(`/profile/${user?.user_metadata?.username}/settings`);
-  }
+  const { user_metadata } = user;
 
   return (
-    <>
-      {user?.user_metadata?.username === userProfile.username && (
-        <LayoutProfile
-          IconRight={LightBulbSvg}
-          firstOption={'SETTINGS'}
-          secondOption={'HELP'}
-          avatar={userProfile?.avatar_url}
-          name={`${userProfile?.first_name} ${userProfile?.last_name}`}
-          changeFirstContent={() => setHelp(false)}
-          changeSecondContent={() => setHelp(true)}
-          currentLocation={help}
-          href={`/profile/${userProfile.username}/settings`}
-        >
-          {!help ? <SettingsProfile /> : <Help />}
-          <FollowUs />
-        </LayoutProfile>
-      )}
-    </>
+    <LayoutProfile
+      IconRight={LightBulbSvg}
+      firstOption={'SETTINGS'}
+      secondOption={'HELP'}
+      avatar={user_metadata?.avatar}
+      name={`${user_metadata?.first_name} ${user_metadata?.last_name}`}
+      changeFirstContent={() => setHelp(false)}
+      changeSecondContent={() => setHelp(true)}
+      currentLocation={help}
+      href={`/profile/${user_metadata.username}/settings`}
+      username={user_metadata.username}
+    >
+      {!help ? <SettingsProfile /> : <Help />}
+      <FollowUs />
+    </LayoutProfile>
   );
 }

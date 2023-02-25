@@ -1,6 +1,4 @@
-import { supabase } from '@/supabaseClient';
-
-export const newPassword = async (email, password) => {
+export const newPassword = async (email, password, supabase) => {
   const { data, error } = await supabase.auth.updateUser({
     email,
     password,
