@@ -2,19 +2,21 @@
 import Layout from '@/components/Layout';
 import UploadSvg from '@/components/Svg/UploadSvg';
 import { allowedExtensions } from '@/utils/allowedExtension';
+import { getCountries } from '@/utils/getCountries';
 import { removeImage } from '@/utils/removeImage';
-import { uploadCountry } from '@/utils/uploadCountry';
+import { uploadCity } from '@/utils/uploadCity';
 import { uploadImage } from '@/utils/uploadImage';
 import { uploadImagePreview } from '@/utils/uploadImagePreview';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRef, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import { toast, Toaster } from 'react-hot-toast';
 
 export const getServerSideProps = async (ctx) => {
   const supabase = createServerSupabaseClient(ctx);
 
   const { data } = await supabase.auth.getUser();
+  const { countries } = await getCountries();
 
   if (!data.user)
     return {
@@ -37,25 +39,25 @@ export const getServerSideProps = async (ctx) => {
     props: {
       initialSession: data.user,
       user: data.user,
+      countries,
     },
   };
 };
 
-export default function Country({ user }) {
+export default function City({ user, countries }) {
   const [formData, setFormData] = useState({
+    city: '',
+    description: '',
+    image: '',
     country: '',
-    flag: '',
-    bg_image: '',
   });
   const supabase = useSupabaseClient();
 
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
-  const [flagPreview, setFlagPreview] = useState();
-  const [bgImagePreview, setBgImagePreview] = useState();
+  const [imagePreview, setImagePreview] = useState();
 
-  const flagInputRef = useRef();
-  const bgImageInputRef = useRef();
+  const imageInputRef = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,83 +65,64 @@ export default function Country({ user }) {
     setError('');
     setLoading(true);
     if (
-      !formData.country ||
-      formData.flag.length > 0 ||
-      formData.bg_image.length > 0
+      !formData.city ||
+      !formData.description ||
+      !formData.image ||
+      !formData.country
     )
       return handleError('Please fill all the fields');
 
-    const flagCorrect =
-      allowedExtensions.exec(formData.flag[0].type) &&
-      formData.flag[0].size < 700000;
-    const bgImageCorrect =
-      allowedExtensions.exec(formData.bg_image[0].type) &&
-      formData.bg_image[0].size < 700000;
+    const imageCorrect =
+      allowedExtensions.exec(formData.image[0].type) &&
+      formData.image[0].size < 700000;
 
-    if (!flagCorrect && !bgImageCorrect)
+    if (!imageCorrect)
       return handleError(
         'File type is not supported or file size is too large for flag and background image',
       );
 
     const { dataImage, errorImage } = await uploadImage(
-      formData.flag[0],
-      `flag`,
-      formData.country,
+      formData.image[0],
+      `image`,
+      formData.city,
       supabase,
-      'countries',
+      'cities',
     );
 
     if (errorImage) return handleError(errorImage.message);
 
-    const { dataImage: data, errorImage: error } = await uploadImage(
-      formData.bg_image[0],
-      `bg_image`,
-      formData.country,
+    const imagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/cities/${dataImage.path}`;
+
+    const { city, err } = await uploadCity(
+      formData.city,
       supabase,
-      'countries',
-    );
-
-    if (error) return handleError(error.message);
-
-    const flagPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/${dataImage.path}`;
-    const bgImagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/${data.path}`;
-
-    const { country, err } = await uploadCountry(
-      formData.country,
-      supabase,
-      flagPath,
-      bgImagePath,
+      formData.description,
+      imagePath,
       user.id,
+      formData.country,
     );
 
     if (err) {
-      const removeFlag = await removeImage(
+      const removedImage = await removeImage(
         `public/${dataImage.path}`,
         supabase,
-        'countries',
-      );
-
-      const removeBgImage = await removeImage(
-        `public/${data.path}`,
-        supabase,
-        'countries',
+        'cities',
       );
 
       handleError(err.message);
       return;
     }
 
-    toast.success(`Successfully uploaded: ${formData.country}`);
+    toast.success(`Successfully uploaded: ${formData.city}`);
     setLoading(false);
     setFormData({
+      city: '',
+      description: '',
+      image: '',
       country: '',
-      flag: '',
-      bg_image: '',
     });
-    setFlagPreview();
-    setBgImagePreview();
-    flagInputRef.current.value = '';
-    bgImageInputRef.current.value = '';
+    setImagePreview();
+    imageInputRef.current.value = '';
   };
 
   const handleChange = (e) => {
@@ -153,7 +136,7 @@ export default function Country({ user }) {
   };
 
   return (
-    <Layout title={'Upload country'}>
+    <Layout title={'Upload city'}>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-center mt-12 w-96"
@@ -162,81 +145,95 @@ export default function Country({ user }) {
           htmlFor="country"
           className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
         >
-          Country
+          Select a country
+        </label>
+        <select
+          name="country"
+          id="country"
+          className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
+          required
+          placeholder="Select a country"
+          defaultValue={''}
+          onChange={handleChange}
+          value={formData.country}
+        >
+          <option value="" disabled>
+            Select a country
+          </option>
+          {countries.map((country) => (
+            <option key={country.id} value={country.title}>
+              {country.title}
+            </option>
+          ))}
+        </select>
+        <label
+          htmlFor="city"
+          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
+        >
+          City
         </label>
         <input
           type="text"
-          name="country"
-          id="country"
-          autoComplete="country"
-          value={formData.country}
+          name="city"
+          id="city"
+          autoComplete="city"
+          value={formData.city}
           onChange={handleChange}
-          placeholder="Italy..."
+          placeholder="Milan..."
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />
         <label
-          htmlFor="flag"
+          htmlFor="description"
           className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
         >
-          Flag
+          Description
         </label>
-        <div
-          onClick={() => flagInputRef.current.click()}
-          className="flex w-full gap-3 px-4 py-3 mb-3 text-base text-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-        >
-          Upload a flag picture <UploadSvg />
-        </div>
-        <input
-          type="file"
-          name="flag"
-          id="flag"
-          hidden
-          ref={flagInputRef}
-          onChange={(e) => uploadImagePreview(e, setFlagPreview, setFormData)}
-          accept="image/png, image/jpeg, image/jpg, image/webp"
+        <textarea
+          name="description"
+          rows={3}
+          value={formData.description}
+          onChange={handleChange}
+          className="px-2 py-2 text-sm font-medium placeholder-gray-500 bg-transparent border border-gray-400 rounded-lg resize-none placeholder:font-lato font-lato"
+          placeholder="Milan is a city where you can find a lot of things to do..."
+          required
         />
-        {flagPreview && (
-          <img
-            src={flagPreview}
-            alt="Flag country"
-            className="object-cover w-16 overflow-hidden"
-          />
-        )}
         <label
-          htmlFor="bg_image"
+          htmlFor="image"
           className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
         >
-          Background image
+          Image city
         </label>
         <div
-          onClick={() => bgImageInputRef.current.click()}
+          onClick={() => imageInputRef.current.click()}
           className="flex w-full gap-3 px-4 py-3 mb-3 text-base text-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
         >
-          Upload a background image <UploadSvg />
+          Upload a image for the city <UploadSvg />
         </div>
         <input
           type="file"
-          name="bg_image"
-          id="bg_image"
+          name="image"
+          id="image"
           hidden
-          ref={bgImageInputRef}
-          onChange={(e) =>
-            uploadImagePreview(e, setBgImagePreview, setFormData)
-          }
+          ref={imageInputRef}
+          onChange={(e) => uploadImagePreview(e, setImagePreview, setFormData)}
           accept="image/png, image/jpeg, image/jpg, image/webp"
         />
-        {bgImagePreview && (
+        {imagePreview && (
           <img
-            src={bgImagePreview}
-            alt="Background image country"
+            src={imagePreview}
+            alt="Image for the city"
             className="object-cover overflow-hidden w-52 max-h-52"
           />
         )}
         <p className="mt-2 mb-3 text-red-600">{error}</p>
         <button
           disabled={
-            loading || !formData.country || !formData.flag || !formData.bg_image
+            loading ||
+            !formData.description ||
+            !formData.city ||
+            !formData.image ||
+            !formData.country
           }
           type="submit"
           className="w-full py-3 font-semibold text-center text-white rounded-lg disabled:opacity-60 disabled:cursor-not-allowed background-gradient font-poppins"
