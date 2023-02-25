@@ -3,13 +3,13 @@ import Layout from '@/components/Layout';
 import UploadSvg from '@/components/Svg/UploadSvg';
 import { allowedExtensions } from '@/utils/allowedExtension';
 import { removeImage } from '@/utils/removeImage';
-import { uploadCountry } from '@/utils/uploadCountry';
+import { uploadCategory } from '@/utils/uploadCategory';
 import { uploadImage } from '@/utils/uploadImage';
 import { uploadImagePreview } from '@/utils/uploadImagePreview';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRef, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import { toast, Toaster } from 'react-hot-toast';
 
 export const getServerSideProps = async (ctx) => {
   const supabase = createServerSupabaseClient(ctx);
@@ -41,101 +41,74 @@ export const getServerSideProps = async (ctx) => {
   };
 };
 
-export default function Country({ user }) {
+export default function Category({ user }) {
   const [formData, setFormData] = useState({
-    country: '',
-    flag: '',
-    bg_image: '',
+    category: '',
+    image: '',
   });
   const supabase = useSupabaseClient();
 
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
-  const [flagPreview, setFlagPreview] = useState();
-  const [bgImagePreview, setBgImagePreview] = useState();
+  const [imagePreview, setImagePreview] = useState();
 
-  const flagInputRef = useRef();
-  const bgImageInputRef = useRef();
+  const imageInputREf = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
     setError('');
     setLoading(true);
-    if (!formData.country || !formData.flag || !formData.bg_image)
+    if (!formData.category || !formData.image)
       return handleError('Please fill all the fields');
 
-    const flagCorrect =
-      allowedExtensions.exec(formData.flag[0].type) &&
-      formData.flag[0].size < 700000;
-    const bgImageCorrect =
-      allowedExtensions.exec(formData.bg_image[0].type) &&
-      formData.bg_image[0].size < 700000;
+    const imageCorrect =
+      allowedExtensions.exec(formData.image[0].type) &&
+      formData.image[0].size < 700000;
 
-    if (!flagCorrect && !bgImageCorrect)
+    if (!imageCorrect)
       return handleError(
         'File type is not supported or file size is too large for flag and background image',
       );
 
     const { dataImage, errorImage } = await uploadImage(
-      formData.flag[0],
-      `flag`,
-      formData.country,
+      formData.image[0],
+      `image`,
+      formData.category,
       supabase,
-      'countries',
+      'categories',
     );
 
     if (errorImage) return handleError(errorImage.message);
 
-    const { dataImage: data, errorImage: error } = await uploadImage(
-      formData.bg_image[0],
-      `bg_image`,
-      formData.country,
+    const imagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/categories/${dataImage.path}`;
+
+    const { category, err } = await uploadCategory(
+      formData.category,
       supabase,
-      'countries',
-    );
-
-    if (error) return handleError(error.message);
-
-    const flagPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/${dataImage.path}`;
-    const bgImagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/${data.path}`;
-
-    const { country, err } = await uploadCountry(
-      formData.country,
-      supabase,
-      flagPath,
-      bgImagePath,
+      imagePath,
       user.id,
     );
 
     if (err) {
-      const removeFlag = await removeImage(
+      const removedImage = await removeImage(
         `public/${dataImage.path}`,
         supabase,
-        'countries',
-      );
-
-      const removeBgImage = await removeImage(
-        `public/${data.path}`,
-        supabase,
-        'countries',
+        'categories',
       );
 
       handleError(err.message);
       return;
     }
 
-    toast.success(`Successfully uploaded: ${formData.country}`);
+    toast.success(`Successfully uploaded: ${formData.category}`);
     setLoading(false);
     setFormData({
-      country: '',
-      flag: '',
-      bg_image: '',
+      category: '',
+      image: '',
     });
-    setFlagPreview();
-    setBgImagePreview();
-    flagInputRef.current.value = '';
-    bgImageInputRef.current.value = '';
+    setImagePreview();
+    imageInputREf.current.value = '';
   };
 
   const handleChange = (e) => {
@@ -155,85 +128,53 @@ export default function Country({ user }) {
         className="flex flex-col justify-center mt-12 w-96"
       >
         <label
-          htmlFor="country"
+          htmlFor="category"
           className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
         >
-          Country
+          Category
         </label>
         <input
           type="text"
-          name="country"
-          id="country"
-          autoComplete="country"
-          value={formData.country}
+          name="category"
+          id="category"
+          autoComplete="category"
+          value={formData.category}
           onChange={handleChange}
-          placeholder="Italy..."
+          placeholder="Going out..."
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />
         <label
-          htmlFor="flag"
+          htmlFor="image"
           className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
         >
-          Flag
+          Category image
         </label>
         <div
-          onClick={() => flagInputRef.current.click()}
+          onClick={() => imageInputREf.current.click()}
           className="flex w-full gap-3 px-4 py-3 mb-3 text-base text-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
         >
-          Upload a flag picture <UploadSvg />
+          Upload an image for the category <UploadSvg />
         </div>
         <input
           type="file"
-          name="flag"
-          id="flag"
+          name="image"
+          id="image"
           hidden
-          ref={flagInputRef}
-          onChange={(e) => uploadImagePreview(e, setFlagPreview, setFormData)}
+          ref={imageInputREf}
+          onChange={(e) => uploadImagePreview(e, setImagePreview, setFormData)}
           accept="image/png, image/jpeg, image/jpg, image/webp"
         />
-        {flagPreview && (
+        {imagePreview && (
           <img
-            src={flagPreview}
+            src={imagePreview}
             alt="Flag country"
             className="object-cover w-16 overflow-hidden"
           />
         )}
-        <label
-          htmlFor="bg_image"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Background image
-        </label>
-        <div
-          onClick={() => bgImageInputRef.current.click()}
-          className="flex w-full gap-3 px-4 py-3 mb-3 text-base text-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-        >
-          Upload a background image <UploadSvg />
-        </div>
-        <input
-          type="file"
-          name="bg_image"
-          id="bg_image"
-          hidden
-          ref={bgImageInputRef}
-          onChange={(e) =>
-            uploadImagePreview(e, setBgImagePreview, setFormData)
-          }
-          accept="image/png, image/jpeg, image/jpg, image/webp"
-        />
-        {bgImagePreview && (
-          <img
-            src={bgImagePreview}
-            alt="Background image country"
-            className="object-cover overflow-hidden w-52 max-h-52"
-          />
-        )}
         <p className="mt-2 mb-3 text-red-600">{error}</p>
         <button
-          disabled={
-            loading || !formData.country || !formData.flag || !formData.bg_image
-          }
+          disabled={loading || !formData.category || !formData.image}
           type="submit"
           className="w-full py-3 font-semibold text-center text-white rounded-lg disabled:opacity-60 disabled:cursor-not-allowed background-gradient font-poppins"
         >
