@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 import GoBack from './GoBack';
+import NavbarBottom from './NavbarBottom';
 import HomeSvg from './Svg/HomeSvg';
 import ItenarySvg from './Svg/ItenarySvg';
 import MapPointSvg from './Svg/MapPointSvg';
@@ -57,23 +58,7 @@ const LayoutProfile = ({
       </div>
 
       {children}
-      <div className="fixed bottom-0 z-30 flex items-center justify-between w-full px-10 pt-2 pb-4 bg-white rounded-t-lg shadow-sm shadow-black drop-shadow-2xl">
-        <Link href={'/'}>
-          <MapPointSvg />
-        </Link>
-        <Link href={'/'}>
-          <ItenarySvg />
-        </Link>
-        <Link className="p-2 rounded-full bg-chenkster-blue" href={'/welcome'}>
-          <HomeSvg />
-        </Link>
-        <Link href={'/'}>
-          <MessageSvg />
-        </Link>
-        <Link href={`/profile/${username}`}>
-          <PersonSvg />
-        </Link>
-      </div>
+      <NavbarBottom username={username} />
       <div className="absolute bottom-0 left-0 right-0 -z-10">
         <WorldLightSvg />
       </div>

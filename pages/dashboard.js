@@ -58,7 +58,7 @@ export default function Dashboard() {
           href={'/dashboard/itinerary'}
           className="w-2/3 py-5 mb-6 text-xl font-bold text-center text-white rounded-lg bg-gradient font-lato"
         >
-          Upload Itinerarie
+          Upload Itinerary
         </Link>
       </div>
     </Layout>

@@ -4,7 +4,7 @@ const Verifications = () => {
   return (
     <div className="flex items-center w-4/5 px-5 py-2 bg-transparent shadow-lg rounded-xl mt-7 drop-shadow-xl">
       <div className="text-[#3CD24B] mr-3">
-        <CheckSvg />
+        <CheckSvg styles={'w-14 h-14'} />
       </div>
       <div>
         <h4 className="font-lato text-chenkster-gray">

@@ -1,11 +1,5 @@
-/* eslint-disable @next/next/no-img-element */
 import Layout from '@/components/Layout';
 import UploadSvg from '@/components/Svg/UploadSvg';
-import { allowedExtensions } from '@/utils/allowedExtension';
-import { removeImage } from '@/utils/removeImage';
-import { uploadCategory } from '@/utils/uploadCategory';
-import { uploadImage } from '@/utils/uploadImage';
-import { uploadImagePreview } from '@/utils/uploadImagePreview';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRef, useState } from 'react';
@@ -41,7 +35,7 @@ export const getServerSideProps = async (ctx) => {
   };
 };
 
-export default function Category({ user }) {
+export default function Itinerary() {
   const [formData, setFormData] = useState({
     category: '',
     image: '',
@@ -122,7 +116,15 @@ export default function Category({ user }) {
   };
 
   return (
-    <Layout title={'Upload category'}>
+    <Layout title={'Upload itinerary'}>
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3273.96721201449!2d-57.890855384230555!3d-34.85705117845417!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzTCsDUxJzI1LjQiUyA1N8KwNTMnMTkuMiJX!5e0!3m2!1ses-419!2sar!4v1677418221189!5m2!1ses-419!2sar"
+        width="600"
+        height="450"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-center mt-12 w-96"
