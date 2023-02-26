@@ -1,30 +1,30 @@
 /* eslint-disable @next/next/no-img-element */
-import Link from 'next/link';
+
 import VerificSvg from '../Svg/VerificSvg';
 
-const Category = ({ category, city, country }) => {
+const Itinerary = () => {
   return (
-    <Link href={`/country/${country}/${city}/${category}`}>
+    <div className="w-full px-2 py-2 mb-4 bg-transparent shadow rounded-2xl drop-shadow-lg">
       <img
-        className="object-cover w-36 h-36 rounded-xl"
+        className="object-cover h-40 w-80 rounded-xl"
         src="/images/italy.png"
         alt="Food"
       />
-      <div className="flex items-center justify-between px-2 mt-2 h-7">
+      <div className="flex items-center justify-between px-3 mt-2">
         <p className="px-3 py-1 text-sm tracking-wider text-center text-white rounded-md bg-gradient font-poppins">
-          Eating out
+          Assaje -- $$
         </p>
         <div className="flex items-center justify-center ml-2">
           <div className="mr-1 text-chenkster-green">
-            <VerificSvg styles={'w-3 h-3'} />
+            <VerificSvg styles={'w-5 h-5'} />
           </div>
-          <p className="text-xs font-semibold font-lato mt-[2px] text-chenkster-gray">
-            6
+          <p className="text-xs font-semibold font-lato text-chenkster-gray">
+            Verified
           </p>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
-export default Category;
+export default Itinerary;
