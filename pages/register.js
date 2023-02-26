@@ -29,7 +29,7 @@ export const getServerSideProps = async (ctx) => {
 
 export default function Register() {
   return (
-    <Layout title="Chenkster Sign Up">
+    <Layout title="Chenkster Sign Up" notShow={true}>
       <FormRegister />
 
       <LineSeparate />

@@ -35,7 +35,7 @@ export const getServerSideProps = async (ctx) => {
   };
 };
 
-export default function Itinerary() {
+export default function Itinerary({ user }) {
   const [formData, setFormData] = useState({
     category: '',
     image: '',
@@ -116,7 +116,7 @@ export default function Itinerary() {
   };
 
   return (
-    <Layout title={'Upload itinerary'}>
+    <Layout title={'Upload itinerary'} username={user?.user_metadata?.username}>
       <iframe
         src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3273.96721201449!2d-57.890855384230555!3d-34.85705117845417!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzTCsDUxJzI1LjQiUyA1N8KwNTMnMTkuMiJX!5e0!3m2!1ses-419!2sar!4v1677418221189!5m2!1ses-419!2sar"
         width="600"

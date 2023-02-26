@@ -8,19 +8,19 @@ import PersonSvg from './Svg/PersonSvg';
 const NavbarBottom = ({ username }) => {
   return (
     <div className="fixed bottom-0 z-30 flex items-center justify-between w-full px-10 pt-2 pb-4 bg-white rounded-t-lg shadow-sm shadow-black drop-shadow-2xl">
-      <Link href={'/'}>
-        <MapPointSvg />
+      <Link href={'/welcome'} className="text-chenkster-blue">
+        <MapPointSvg styles={'w-5 h-7'} />
       </Link>
-      <Link href={'/'}>
+      <Link href={'/welcome'}>
         <ItenarySvg />
       </Link>
       <Link className="p-2 rounded-full bg-chenkster-blue" href={'/welcome'}>
         <HomeSvg />
       </Link>
-      <Link href={'/'}>
+      <Link href={username ? `/profile/${username}/messages` : `/login`}>
         <MessageSvg />
       </Link>
-      <Link href={`/profile/${username}`}>
+      <Link href={username ? `/profile/${username}` : `/login`}>
         <PersonSvg />
       </Link>
     </div>

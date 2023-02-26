@@ -211,7 +211,7 @@ export default function Profile({ user }) {
   };
 
   return (
-    <Layout title="Create profile">
+    <Layout title="Create profile" username={user?.user_metadata?.username}>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-center gap-5 mt-8 w-96"

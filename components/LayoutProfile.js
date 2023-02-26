@@ -2,11 +2,6 @@
 import Link from 'next/link';
 import GoBack from './GoBack';
 import NavbarBottom from './NavbarBottom';
-import HomeSvg from './Svg/HomeSvg';
-import ItenarySvg from './Svg/ItenarySvg';
-import MapPointSvg from './Svg/MapPointSvg';
-import MessageSvg from './Svg/MessageSvg';
-import PersonSvg from './Svg/PersonSvg';
 import WorldLightSvg from './Svg/WorldLightSvg';
 
 const LayoutProfile = ({

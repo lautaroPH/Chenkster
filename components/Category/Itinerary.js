@@ -1,10 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
 
+import Link from 'next/link';
 import VerificSvg from '../Svg/VerificSvg';
 
-const Itinerary = () => {
+const Itinerary = ({ category, city, country, itinerary }) => {
   return (
-    <div className="w-full px-2 py-2 mb-4 bg-transparent shadow rounded-2xl drop-shadow-lg">
+    <Link
+      href={`/country/${country}/${city}/${category}/${itinerary}`}
+      className="w-full px-2 py-2 mb-4 bg-transparent shadow rounded-2xl drop-shadow-lg"
+    >
       <img
         className="object-cover h-40 w-80 rounded-xl"
         src="/images/italy.png"
@@ -23,7 +27,7 @@ const Itinerary = () => {
           </p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

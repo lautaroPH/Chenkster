@@ -1,6 +1,6 @@
 const EnterMetaverse = () => {
   return (
-    <div className="py-4 px-4 flex flex-col items-center justify-center bg-gradient-to-b from-[#9bc5f3] to-slate-100 mt-10 rounded-lg">
+    <div className="py-4 px-4 flex flex-col items-center justify-center bg-gradient-to-b from-[#7bb6f469] to-slate-100 mt-10 rounded-lg">
       <p className="text-lg font-semibold tracking-wider text-center font-lato text-chenkster-gray">
         We are developing an{' '}
         <span className="text-chenkster-blue">innovative</span> and{' '}

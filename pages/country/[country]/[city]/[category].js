@@ -1,12 +1,29 @@
+import AskChenkster from '@/components/AskChenkster';
 import Itinerary from '@/components/Category/Itinerary';
 import Layout from '@/components/Layout';
 import PreferencesSvg from '@/components/Svg/PreferencesSvg';
 import ShufleSvg from '@/components/Svg/ShufleSvg';
-import VerificSvg from '@/components/Svg/VerificSvg';
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 
-export default function Category() {
+export const getServerSideProps = async (ctx) => {
+  const supabase = createServerSupabaseClient(ctx);
+
+  const { data } = await supabase.auth.getUser();
+
+  return {
+    props: {
+      initialSession: data?.user,
+      user: data?.user,
+    },
+  };
+};
+
+export default function Category({ user }) {
   return (
-    <Layout title={'Explore our top suggestions'}>
+    <Layout
+      title={'Explore our top suggestions'}
+      username={user?.user_metadata?.username}
+    >
       <div className="flex items-center justify-center">
         <button className="flex items-center justify-center px-2 py-1 mr-5 text-white rounded-lg gap-x-2 bg-gradient">
           Preferences <PreferencesSvg />
@@ -20,19 +37,27 @@ export default function Category() {
       </p>
 
       <div>
-        <Itinerary />
-        <Itinerary />
-        <Itinerary />
+        <Itinerary
+          category={'Eating-out'}
+          city={'Milan'}
+          country={'Italy'}
+          itinerary={'Assaje'}
+        />
+        <Itinerary
+          category={'Eating-out'}
+          city={'Milan'}
+          country={'Italy'}
+          itinerary={'Assaje'}
+        />
+        <Itinerary
+          category={'Eating-out'}
+          city={'Milan'}
+          country={'Italy'}
+          itinerary={'Assaje'}
+        />
       </div>
 
-      <div className="py-4 px-4 flex flex-col items-center justify-center bg-gradient-to-b from-[#9bc5f3] to-slate-100  mt-4 mb-10 rounded-lg">
-        <p className="font-semibold tracking-wider text-center font-lato text-chenkster-gray">
-          Looking for something more specific?
-        </p>
-        <button className="px-2 py-1 mt-4 tracking-wider text-white bg-gradient rounded-xl font-lato">
-          Ask a chenkster
-        </button>
-      </div>
+      <AskChenkster />
     </Layout>
   );
 }
