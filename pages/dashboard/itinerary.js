@@ -78,7 +78,6 @@ export default function Itinerary({ user, countries, cities, categories }) {
     if (loading) return;
     setError('');
     setLoading(true);
-    //all the data is requiered
     if (
       !formData.categories ||
       !formData.image ||

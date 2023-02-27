@@ -24,11 +24,12 @@ export default function Country({ user }) {
   return (
     <Layout title={'Select the city'} username={user?.user_metadata?.username}>
       <DiscoverCountry country={country} />
-
-      <City country={'Italy'} city={'Milan'} />
-      <City country={'Italy'} city={'Milan'} />
-      <City country={'Italy'} city={'Milan'} />
-      <City country={'Italy'} city={'Milan'} />
+      <div className="mb-10">
+        <City country={'Italy'} city={'Milan'} />
+        <City country={'Italy'} city={'Milan'} />
+        <City country={'Italy'} city={'Milan'} />
+        <City country={'Italy'} city={'Milan'} />
+      </div>
     </Layout>
   );
 }

@@ -4,7 +4,7 @@ const DiscoverCountry = ({ country }) => {
   const countryFileImg = country?.split(' ').join('').toLowerCase();
 
   return (
-    <div className="flex flex-col items-center justify-center mt-12 text-white bg-center bg-no-repeat bg-cover drop-shadow-xl bg-italy rounded-3xl w-80 h-72">
+    <div className="flex flex-col items-center justify-center text-white bg-center bg-no-repeat bg-cover drop-shadow-xl bg-italy rounded-3xl w-80 h-72">
       <h2 className="text-4xl font-lato">
         Discover{' '}
         <p className="flex items-center gap-2 font-bold">

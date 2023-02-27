@@ -36,26 +36,24 @@ export default function Category({ user }) {
         Best 3 picks for you
       </p>
 
-      <div>
-        <Itinerary
-          category={'Eating-out'}
-          city={'Milan'}
-          country={'Italy'}
-          itinerary={'Assaje'}
-        />
-        <Itinerary
-          category={'Eating-out'}
-          city={'Milan'}
-          country={'Italy'}
-          itinerary={'Assaje'}
-        />
-        <Itinerary
-          category={'Eating-out'}
-          city={'Milan'}
-          country={'Italy'}
-          itinerary={'Assaje'}
-        />
-      </div>
+      <Itinerary
+        category={'Eating-out'}
+        city={'Milan'}
+        country={'Italy'}
+        itinerary={'Assaje'}
+      />
+      <Itinerary
+        category={'Eating-out'}
+        city={'Milan'}
+        country={'Italy'}
+        itinerary={'Assaje'}
+      />
+      <Itinerary
+        category={'Eating-out'}
+        city={'Milan'}
+        country={'Italy'}
+        itinerary={'Assaje'}
+      />
 
       <AskChenkster />
     </Layout>

@@ -2,6 +2,7 @@ import AskChenkster from '@/components/AskChenkster';
 import InfoSection from '@/components/Itinerary/InfoSection';
 import ItineraryImage from '@/components/Itinerary/ItineraryImage';
 import Layout from '@/components/Layout';
+import Map from '@/components/Map';
 import MapPointSvg from '@/components/Svg/MapPointSvg';
 import VerificSvg from '@/components/Svg/VerificSvg';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
@@ -60,13 +61,14 @@ export default function Itinerary({ user }) {
           title={'Location'}
           info={'Via Traù, 2, 20159 Milano MI, Italy'}
         >
-          <iframe
+          {/* <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60117.81005979324!2d-122.40984742585711!3d37.78564847001532!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085807d19dbd10d%3A0x62f31595dfc6dbf0!2sGolden%20Gate%20Bridge!5e0!3m2!1sen!2sus!4v1612322660253!5m2!1sen!2sus"
             width="302"
             height="247"
             allowFullScreen=""
             loading="lazy"
-          ></iframe>
+          ></iframe> */}
+          <Map />
         </InfoSection>
       </div>
       <AskChenkster />

@@ -1,10 +1,11 @@
+/* eslint-disable @next/next/no-img-element */
 import Link from 'next/link';
 
 const City = ({ country, city }) => {
   return (
     <Link
       href={`/country/${country}/${city}`}
-      className="flex items-center w-4/5 py-4 mt-10 bg-transparent shadow-xl h-28 drop-shadow-md rounded-2xl"
+      className="flex items-center w-full py-4 mt-10 bg-transparent shadow-xl h-28 drop-shadow-md rounded-2xl"
     >
       <img
         src="/images/italy.png"
