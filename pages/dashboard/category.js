@@ -92,7 +92,7 @@ export default function Category({ user }) {
 
     if (err) {
       const removedImage = await removeImage(
-        `public/${dataImage.path}`,
+        dataImage.path,
         supabase,
         'categories',
       );
@@ -169,7 +169,7 @@ export default function Category({ user }) {
           <img
             src={imagePreview}
             alt="Flag country"
-            className="object-cover w-16 overflow-hidden"
+            className="object-cover overflow-hidden w-52 max-h-52"
           />
         )}
         <p className="mt-2 mb-3 text-red-600">{error}</p>
@@ -181,7 +181,7 @@ export default function Category({ user }) {
           Submit
         </button>
       </form>
-      <Toaster position="bottom-center" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
     </Layout>
   );
 }

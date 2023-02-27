@@ -1,20 +1,12 @@
 import RectangleSvg from '../Svg/RectangleSvg';
 
-const ShowCountriesBox = ({ handleOpenCountrySelect, title }) => {
+const ShowCountriesBox = ({ title }) => {
   return (
     <>
-      <div
-        onClick={handleOpenCountrySelect}
-        onMouseDown={handleOpenCountrySelect}
-        onMouseUp={handleOpenCountrySelect}
-        className="flex flex-col items-center justify-center w-full text-center cursor-pointer"
-      >
+      <div className="flex flex-col items-center justify-center w-full text-center cursor-pointer">
         <RectangleSvg />
       </div>
-      <p
-        onClick={handleOpenCountrySelect}
-        className="-mt-5 text-lg font-bold cursor-pointer text-chenkster-blue font-lato"
-      >
+      <p className="-mt-5 text-lg font-bold cursor-pointer text-chenkster-blue font-lato">
         {title}
       </p>
     </>

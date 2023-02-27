@@ -51,9 +51,8 @@ const LayoutProfile = ({
           {secondOption}
         </button>
       </div>
-
       {children}
-      <NavbarBottom username={username} />
+      {username && <NavbarBottom username={username} />}
       <div className="absolute bottom-0 left-0 right-0 -z-10">
         <WorldLightSvg />
       </div>

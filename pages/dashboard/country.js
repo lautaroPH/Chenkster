@@ -110,16 +110,12 @@ export default function Country({ user }) {
 
     if (err) {
       const removeFlag = await removeImage(
-        `public/${dataImage.path}`,
+        dataImage.path,
         supabase,
         'countries',
       );
 
-      const removeBgImage = await removeImage(
-        `public/${data.path}`,
-        supabase,
-        'countries',
-      );
+      const removeBgImage = await removeImage(data.path, supabase, 'countries');
 
       handleError(err.message);
       return;

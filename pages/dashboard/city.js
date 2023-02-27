@@ -104,7 +104,7 @@ export default function City({ user, countries }) {
 
     if (err) {
       const removedImage = await removeImage(
-        `public/${dataImage.path}`,
+        dataImage.path,
         supabase,
         'cities',
       );

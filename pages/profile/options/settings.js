@@ -7,10 +7,6 @@ import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useState } from 'react';
 
 export const getServerSideProps = async (ctx) => {
-  const { username } = ctx.query;
-
-  if (!username) return { notFound: true };
-
   const supabase = createServerSupabaseClient(ctx);
 
   const { data } = await supabase.auth.getUser();
@@ -22,15 +18,6 @@ export const getServerSideProps = async (ctx) => {
         permanent: false,
       },
     };
-
-  if (data.user.user_metadata.username !== username) {
-    return {
-      redirect: {
-        destination: `/profile/${data.user.user_metadata.username}/settings`,
-        permanent: false,
-      },
-    };
-  }
 
   return {
     props: {
@@ -54,7 +41,7 @@ export default function Settings({ user }) {
       changeFirstContent={() => setHelp(false)}
       changeSecondContent={() => setHelp(true)}
       currentLocation={help}
-      href={`/profile/${user_metadata.username}/settings`}
+      href={`/profile/options/settings`}
       username={user_metadata.username}
     >
       {!help ? <SettingsProfile /> : <Help />}

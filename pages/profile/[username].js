@@ -38,7 +38,7 @@ export default function Username({ userProfile }) {
       changeFirstContent={() => setStats(false)}
       changeSecondContent={() => setStats(true)}
       currentLocation={stats}
-      href={`/profile/${userProfile.username}/settings`}
+      href={`/profile/options/settings`}
       username={userProfile.username}
     >
       {!stats ? (

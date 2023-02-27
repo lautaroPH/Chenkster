@@ -117,7 +117,7 @@ export default function Profile({ user }) {
         : await uploadProfile(formData, imagePath, user.id, supabase);
 
       if (errorProfile) {
-        await removeImage(dataImage.path, supabase);
+        await removeImage(dataImage.path, supabase, 'avatars');
         handleError(
           errorProfile.code === '23505'
             ? 'Username already exists'
@@ -214,7 +214,7 @@ export default function Profile({ user }) {
     <Layout title="Create profile" username={user?.user_metadata?.username}>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col justify-center gap-5 mt-8 w-96"
+        className="flex flex-col justify-center gap-5 mt-8 mb-10 w-96"
       >
         <input
           onChange={uploadImagePreview}

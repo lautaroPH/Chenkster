@@ -61,7 +61,7 @@ export default function Itinerary({ user, countries, cities, categories }) {
     visit_period: '',
     city: '',
     street: '',
-    categories: '',
+    categories: [],
     lat: '',
     lng: '',
   });
@@ -72,6 +72,7 @@ export default function Itinerary({ user, countries, cities, categories }) {
   const [imagePreview, setImagePreview] = useState();
 
   const imageInputRef = useRef();
+  const categorySelectRef = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -123,7 +124,7 @@ export default function Itinerary({ user, countries, cities, categories }) {
 
     if (err) {
       const removedImage = await removeImage(
-        `public/${dataImage.path}`,
+        dataImage.path,
         supabase,
         'itineraries',
       );
@@ -143,7 +144,7 @@ export default function Itinerary({ user, countries, cities, categories }) {
       visit_period: '',
       city: '',
       street: '',
-      categories: '',
+      categories: [],
       lat: '',
       lng: '',
     });
@@ -159,6 +160,19 @@ export default function Itinerary({ user, countries, cities, categories }) {
   const handleError = (error) => {
     setLoading(false);
     setError(error);
+  };
+
+  const handleCategoryChange = (e) => {
+    const { value } = e.target;
+    if (formData.categories.includes(value)) {
+      categorySelectRef.current.value = '';
+      return;
+    }
+    setFormData((prev) => ({
+      ...prev,
+      categories: [...prev.categories, value],
+    }));
+    categorySelectRef.current.value = '';
   };
 
   return (
@@ -225,10 +239,10 @@ export default function Itinerary({ user, countries, cities, categories }) {
           name="categories"
           id="categories"
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-          required
           placeholder="Select a category"
           defaultValue={''}
-          onChange={handleChange}
+          onChange={handleCategoryChange}
+          ref={categorySelectRef}
         >
           <option value="" disabled>
             Select a category
@@ -239,6 +253,30 @@ export default function Itinerary({ user, countries, cities, categories }) {
             </option>
           ))}
         </select>
+        <div className="flex flex-wrap gap-2">
+          {formData.categories.map((category) => (
+            <div
+              key={category}
+              className="flex items-center justify-center px-2 py-1 text-sm font-semibold text-white rounded-lg bg-chenkster-gray"
+            >
+              {category}
+              <button
+                type="button"
+                className="ml-2 text-sm font-bold text-white"
+                onClick={() =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    categories: prev.categories.filter(
+                      (cat) => cat !== category,
+                    ),
+                  }))
+                }
+              >
+                x
+              </button>
+            </div>
+          ))}
+        </div>
         <label
           htmlFor="title"
           className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
@@ -360,13 +398,13 @@ export default function Itinerary({ user, countries, cities, categories }) {
           htmlFor="image"
           className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
         >
-          Category image
+          Itinerary image
         </label>
         <div
           onClick={() => imageInputRef.current.click()}
           className="flex w-full gap-3 px-4 py-3 mb-3 text-base text-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
         >
-          Upload an image for the category <UploadSvg />
+          Upload an image for the itinerary <UploadSvg />
         </div>
         <input
           type="file"

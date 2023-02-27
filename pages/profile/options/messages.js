@@ -10,16 +10,9 @@ import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useEffect, useState } from 'react';
 
 export const getServerSideProps = async (ctx) => {
-  const { username } = ctx.query;
-
-  if (!username) return { notFound: true };
-
   const supabase = createServerSupabaseClient(ctx);
 
   const { data } = await supabase.auth.getUser();
-  const { messages, errorMessage } = await getTotalMessages(
-    data.user.user_metadata.username,
-  );
 
   if (!data.user)
     return {
@@ -29,16 +22,11 @@ export const getServerSideProps = async (ctx) => {
       },
     };
 
-  if (data.user.user_metadata.username !== username) {
-    return {
-      redirect: {
-        destination: `/profile/${data.user.user_metadata.username}/messages`,
-        permanent: false,
-      },
-    };
-  }
+  const { messages, errorMessage } = await getTotalMessages(
+    data.user.user_metadata.username,
+  );
 
-  if (messages.length === 0 && data.user.user_metadata.role === 'user') {
+  if (messages.length === 0 && data.user.user_metadata?.role === 'user') {
     const { data: dataAdmin, error } = await getUsersAdmin();
     return {
       props: {
@@ -84,7 +72,7 @@ export default function Messages({ user, messagesLoaded, adminProfiles }) {
       changeFirstContent={() => setRequests(false)}
       changeSecondContent={() => setRequests(true)}
       currentLocation={requests}
-      href={`/profile/${user_metadata.username}/messages`}
+      href={`/profile/options/messages`}
       username={user_metadata.username}
     >
       {!requests ? (
