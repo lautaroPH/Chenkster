@@ -39,7 +39,7 @@ const SettingsProfile = () => {
         <Option Icon={ThemeSvg} title={'Theme'} border />
         <Option Icon={LanguageSvg} title={'Language'} border />
         <Option Icon={HelpSvg} title={'Help'} border />
-        <button onClick={handleLogout}>
+        <button onClick={handleLogout} className="w-full text-start">
           <Option Icon={LogoutSvg} title={'log out'} />
         </button>
       </div>
