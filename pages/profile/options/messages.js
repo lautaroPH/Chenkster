@@ -23,7 +23,7 @@ export const getServerSideProps = async (ctx) => {
     };
 
   const { messages, errorMessage } = await getTotalMessages(
-    data.user.user_metadata.username,
+    data.user.user_metadata?.username,
   );
 
   if (messages.length === 0 && data.user.user_metadata?.role === 'user') {
@@ -85,7 +85,7 @@ export default function Messages({ user, messagesLoaded, adminProfiles }) {
                 avatar={adminProfile.avatar}
                 first_name={adminProfile.first_name}
                 last_name={adminProfile.last_name}
-                room={`${adminProfile.username}-${user_metadata.username}`}
+                room={adminProfile.username}
               />
             ))}
           {messages?.map((message) => (
@@ -96,11 +96,7 @@ export default function Messages({ user, messagesLoaded, adminProfiles }) {
               last_name={message.username.last_name}
               created_at={message.created_at}
               numberMessages={message.messages}
-              room={
-                user_metadata.role === 'admin'
-                  ? `${user_metadata.username}-${message.username.username}`
-                  : `${message.username.username}-${user_metadata.username}`
-              }
+              room={message.username.username}
             />
           ))}
         </>

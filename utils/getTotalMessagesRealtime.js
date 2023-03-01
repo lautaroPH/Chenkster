@@ -1,5 +1,5 @@
 import { supabase } from '@/supabaseClient';
-import { getUserProfileById } from './getUserProfileById';
+import { getUserProfile } from './getUserProfile';
 
 export const getTotalMessagesRealtime = (channel, setMessages, messages) => {
   const channelSupabase = supabase
@@ -13,7 +13,7 @@ export const getTotalMessagesRealtime = (channel, setMessages, messages) => {
         filter: `to_username=eq.${channel}`,
       },
       async (payload) => {
-        const newMessage = await getUserProfileById(payload.new.username);
+        const newMessage = await getUserProfile(payload.new.username);
         setMessages([
           {
             ...payload.new,

@@ -7,7 +7,7 @@ const AskChenkster = () => {
         Looking for something more specific?
       </p>
       <Link
-        href={'/profile/options/message'}
+        href={'/profile/options/messages'}
         className="px-2 py-1 mt-4 tracking-wider text-white bg-gradient rounded-xl font-lato"
       >
         Ask a chenkster
