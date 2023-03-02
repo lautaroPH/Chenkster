@@ -16,7 +16,7 @@ export async function getServerSideProps(ctx) {
 
   const { data, error } = await getUserProfile(roomId);
 
-  if (error) return { notFound: true };
+  if (error || !data?.role) return { notFound: true };
 
   const { data: currentUser } = await supabase.auth.getUser();
 
@@ -28,10 +28,7 @@ export async function getServerSideProps(ctx) {
       },
     };
 
-  if (
-    currentUser.user.user_metadata?.role === 'user' &&
-    data[0].role === 'user'
-  ) {
+  if (currentUser.user.user_metadata?.role === 'user' && data.role === 'user') {
     return { notFound: true };
   }
 
@@ -43,7 +40,7 @@ export async function getServerSideProps(ctx) {
   const { messages, errorMessage } = await getMessages(bothUsers);
 
   const messagesDeleted = await deleteTotalMessages(
-    data[0].username,
+    data.username,
     currentUser.user.user_metadata.username,
     supabase,
   );
@@ -54,13 +51,14 @@ export async function getServerSideProps(ctx) {
     currentUser.user.user_metadata?.username,
     roomId,
   );
+
   return {
     props: {
       messagesLoaded: messages,
       room: roomId,
       user: currentUser.user,
       both_users: bothUsers,
-      totalMessages: totalMessages.length > 0 ? totalMessages[0]?.messages : 0,
+      totalMessages: totalMessages?.messages ? totalMessages.messages : 0,
     },
   };
 }

@@ -1,22 +1,32 @@
 import Category from '@/components/City/Category';
 import EnterMetaverse from '@/components/City/EnterMetaverse';
 import Layout from '@/components/Layout';
+import { getCategories } from '@/utils/getCategories';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 
 export const getServerSideProps = async (ctx) => {
+  const { country, city } = ctx.query;
+
   const supabase = createServerSupabaseClient(ctx);
 
   const { data } = await supabase.auth.getUser();
+
+  const { categories, error } = await getCategories();
+
+  if (error) return { notFound: true };
 
   return {
     props: {
       initialSession: data?.user,
       user: data?.user,
+      categories,
+      country,
+      city,
     },
   };
 };
 
-export default function City({ user }) {
+export default function City({ user, categories, country, city }) {
   return (
     <Layout
       title={'Choose the category'}
@@ -32,12 +42,15 @@ export default function City({ user }) {
           Categories
         </h2>
         <div className="flex flex-wrap items-center justify-between mt-5 gap-y-10">
-          <Category category={'Eating-out'} city={'Milan'} country={'Italy'} />
-          <Category category={'Eating-out'} city={'Milan'} country={'Italy'} />
-          <Category category={'Eating-out'} city={'Milan'} country={'Italy'} />
-          <Category category={'Eating-out'} city={'Milan'} country={'Italy'} />
-          <Category category={'Eating-out'} city={'Milan'} country={'Italy'} />
-          <Category category={'Eating-out'} city={'Milan'} country={'Italy'} />
+          {categories.map((category) => (
+            <Category
+              key={category.id}
+              category={category.title}
+              city={city}
+              country={country}
+              image={category.image}
+            />
+          ))}
         </div>
 
         <EnterMetaverse />

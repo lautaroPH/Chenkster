@@ -6,7 +6,8 @@ export const getUserProfile = async (username) => {
     .select(
       'description,language,location,avatar,first_name,last_name,username,role,user_id',
     )
-    .eq('username', username);
+    .eq('username', username)
+    .single();
 
   return { data, error };
 };

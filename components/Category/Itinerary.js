@@ -3,20 +3,21 @@
 import Link from 'next/link';
 import VerificSvg from '../Svg/VerificSvg';
 
-const Itinerary = ({ category, city, country, itinerary }) => {
+const Itinerary = ({ category, city, country, title, budget, image }) => {
+  const titleReplace = title.replace(/\s+/g, '-');
   return (
     <Link
-      href={`/country/${country}/${city}/${category}/${itinerary}`}
+      href={`/country/${country}/${city}/${category}/${titleReplace}`}
       className="w-full px-2 py-2 mb-4 bg-transparent shadow rounded-2xl drop-shadow-lg"
     >
       <img
         className="object-cover h-40 w-80 rounded-xl"
-        src="/images/italy.png"
-        alt="Food"
+        src={image}
+        alt={`Image of ${title}`}
       />
       <div className="flex items-center justify-between px-3 mt-2">
         <p className="px-3 py-1 text-sm tracking-wider text-center text-white rounded-md bg-gradient font-poppins">
-          Assaje -- $$
+          {title} -- {budget}
         </p>
         <div className="flex items-center justify-center ml-2">
           <div className="mr-1 text-chenkster-green">

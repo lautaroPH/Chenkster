@@ -21,10 +21,10 @@ export const getMessagesRealtime = (
         filter: `both_users=eq.${both_users}`,
       },
       async (payload) => {
-        const newMessage = await getUserProfile(payload.new.username);
+        const { data } = await getUserProfile(payload.new.username);
         const newData = {
           ...payload.new,
-          username: newMessage.data[0],
+          username: data,
         };
         setNewData(newData);
 

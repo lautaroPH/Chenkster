@@ -13,11 +13,11 @@ export const getTotalMessagesRealtime = (channel, setMessages, messages) => {
         filter: `to_username=eq.${channel}`,
       },
       async (payload) => {
-        const newMessage = await getUserProfile(payload.new.username);
+        const { data } = await getUserProfile(payload.new.username);
         setMessages([
           {
             ...payload.new,
-            username: { ...newMessage.data[0] },
+            username: { ...data },
           },
           ...messages,
         ]);

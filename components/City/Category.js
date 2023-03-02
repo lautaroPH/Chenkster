@@ -2,25 +2,24 @@
 import Link from 'next/link';
 import VerificSvg from '../Svg/VerificSvg';
 
-const Category = ({ category, city, country }) => {
+const Category = ({ category, city, country, image }) => {
+  const categoryReplace = category.replace(/\s+/g, '-');
+
   return (
-    <Link href={`/country/${country}/${city}/${category}`}>
+    <Link href={`/country/${country}/${city}/${categoryReplace}`}>
       <img
         className="object-cover w-36 h-36 rounded-xl"
-        src="/images/italy.png"
-        alt="Food"
+        src={image}
+        alt={`Image of ${category}`}
       />
       <div className="flex items-center justify-between px-2 mt-2 h-7">
         <p className="px-3 py-1 text-sm tracking-wider text-center text-white rounded-md bg-gradient font-poppins">
-          Eating out
+          {category}
         </p>
         <div className="flex items-center justify-center ml-2">
           <div className="mr-1 text-chenkster-green">
             <VerificSvg styles={'w-3 h-3'} />
           </div>
-          <p className="text-xs font-semibold font-lato mt-[2px] text-chenkster-gray">
-            6
-          </p>
         </div>
       </div>
     </Link>

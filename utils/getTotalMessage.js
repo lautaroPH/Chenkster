@@ -5,6 +5,8 @@ export const getTotalMessage = async (username, to_username) => {
     .from('total_messages')
     .select('messages')
     .eq('username', username)
-    .eq('to_username', to_username);
+    .eq('to_username', to_username)
+    .single();
+
   return { totalMessages: data, errorMessage: error };
 };

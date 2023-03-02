@@ -21,9 +21,9 @@ export async function getServerSideProps({ query }) {
     return { notFound: true };
   }
 
-  if (!data[0]) return { notFound: true };
+  if (!data?.role) return { notFound: true };
 
-  return { props: { userProfile: data[0] } };
+  return { props: { userProfile: data } };
 }
 
 export default function Username({ userProfile }) {
