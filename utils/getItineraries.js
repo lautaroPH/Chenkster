@@ -7,8 +7,7 @@ export const getItineraries = async (city, country, category) => {
     .contains('categories', [category])
     .eq('city', city)
     .eq('country', country)
-    .limit(3)
-    .order('created_at', { ascending: true });
+    .limit(3);
 
   return { places, error };
 };
