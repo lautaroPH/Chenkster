@@ -1,11 +1,11 @@
 Things to do in order of priority:
 
-1-Fix styles (There are important styles that break depending on the mobile phone).
-2-Fix the problem with the Google Maps API.
-3-Fix the problem with uploading an image (itinerary).
-4-Add subcategories for categories.
+1-Fix styles (There are important styles that break depending on the mobile phone). ✅
+2-Fix the problem with the Google Maps API. 
+3-Fix the problem with uploading an image (itinerary). ✅
+4-Add subcategories for categories. ✅
 5-Button shuffle and preferences functionality.
-6-Show accurate data.
+6-Show accurate data. ✅
 7-Country search on the welcome page.
 8-Add the ability for admins to edit and delete countries, categories, cities, and places.
 9-Save places and also be able to remove the saved places (bookmarks).
