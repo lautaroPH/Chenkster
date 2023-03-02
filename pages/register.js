@@ -36,12 +36,6 @@ export default function Register() {
 
       <div>
         <ButtonLoginProvider
-          Icon={FacebookSvg}
-          text="Sign Up with Facebook"
-          provider="facebook"
-          colorStyles={'bg-[#039be5] text-white'}
-        />
-        <ButtonLoginProvider
           Icon={GoogleSvg}
           text="Sign Up with Google"
           provider="google"

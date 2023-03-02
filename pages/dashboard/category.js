@@ -45,6 +45,7 @@ export default function Category({ user }) {
   const [formData, setFormData] = useState({
     category: '',
     image: '',
+    sub_categories: '',
   });
   const supabase = useSupabaseClient();
 
@@ -59,7 +60,7 @@ export default function Category({ user }) {
     if (loading) return;
     setError('');
     setLoading(true);
-    if (!formData.category || !formData.image)
+    if (!formData.category || !formData.image || !formData.sub_categories)
       return handleError('Please fill all the fields');
 
     const imageCorrect =
@@ -83,11 +84,16 @@ export default function Category({ user }) {
 
     const imagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/categories/${dataImage.path}`;
 
+    const subCategories = formData.sub_categories
+      .split(',')
+      .map((sub) => sub.trim());
+
     const { category, err } = await uploadCategory(
       formData.category,
       supabase,
       imagePath,
       user.id,
+      subCategories,
     );
 
     if (err) {
@@ -106,6 +112,7 @@ export default function Category({ user }) {
     setFormData({
       category: '',
       image: '',
+      sub_categories: '',
     });
     setImagePreview();
     imageInputREf.current.value = '';
@@ -125,7 +132,7 @@ export default function Category({ user }) {
     <Layout title={'Upload category'} username={user?.user_metadata?.username}>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col justify-center mt-12 w-96"
+        className="flex flex-col justify-center w-96"
       >
         <label
           htmlFor="category"
@@ -142,6 +149,21 @@ export default function Category({ user }) {
           onChange={handleChange}
           placeholder="Going out..."
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
+          required
+        />
+        <label
+          htmlFor="sub_categories"
+          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
+        >
+          Sub categories
+        </label>
+        <textarea
+          name="sub_categories"
+          rows={3}
+          value={formData.sub_categories}
+          onChange={handleChange}
+          className="px-2 py-2 text-sm font-medium placeholder-gray-500 bg-transparent border border-gray-400 rounded-lg resize-none placeholder:font-lato font-lato"
+          placeholder="Meat, Fish, Vegetarian, Vegan, etc... (Important to separate with commas)"
           required
         />
         <label

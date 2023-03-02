@@ -7,7 +7,7 @@ const AboutChenkster = () => {
     <>
       <ChenksterLogo />
       <InfoChenkster />
-      <div className="absolute bottom-0 left-0 right-0 z-0">
+      <div className="absolute bottom-0 left-0 right-0 z-0 flex items-center justify-center">
         <WorldSvg />
       </div>
     </>

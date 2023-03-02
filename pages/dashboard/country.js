@@ -148,7 +148,7 @@ export default function Country({ user }) {
     <Layout title={'Upload country'} username={user?.user_metadata?.username}>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col justify-center mt-12 w-96"
+        className="flex flex-col justify-center w-96"
       >
         <label
           htmlFor="country"
@@ -236,7 +236,7 @@ export default function Country({ user }) {
           Submit
         </button>
       </form>
-      <Toaster position="bottom-center" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
     </Layout>
   );
 }

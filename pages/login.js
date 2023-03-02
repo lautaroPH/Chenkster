@@ -36,12 +36,6 @@ export default function Login() {
 
       <div>
         <ButtonLoginProvider
-          Icon={FacebookSvg}
-          text="Login with Facebook"
-          provider="facebook"
-          colorStyles={'bg-[#039be5] text-white'}
-        />
-        <ButtonLoginProvider
           Icon={GoogleSvg}
           text="Login with Google"
           provider="google"

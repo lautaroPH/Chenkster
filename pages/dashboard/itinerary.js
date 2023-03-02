@@ -13,6 +13,7 @@ import { uploadImage } from '@/utils/uploadImage';
 import { removeImage } from '@/utils/removeImage';
 import { uploadImagePreview } from '@/utils/uploadImagePreview';
 import { uploadItinerary } from '@/utils/uploadItinerary';
+import CategorySelected from '@/components/Dashboard/CategorySelected';
 
 export const getServerSideProps = async (ctx) => {
   const supabase = createServerSupabaseClient(ctx);
@@ -64,6 +65,7 @@ export default function Itinerary({ user, countries, cities, categories }) {
     categories: [],
     lat: '',
     lng: '',
+    sub_categories: [],
   });
   const supabase = useSupabaseClient();
 
@@ -73,6 +75,7 @@ export default function Itinerary({ user, countries, cities, categories }) {
 
   const imageInputRef = useRef();
   const categorySelectRef = useRef();
+  const subCategorySelectRef = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,7 +93,8 @@ export default function Itinerary({ user, countries, cities, categories }) {
       !formData.visit_period ||
       !formData.street ||
       !formData.lat ||
-      !formData.lng
+      !formData.lng ||
+      !formData.sub_categories
     )
       return handleError('Please fill all the fields');
 
@@ -110,8 +114,12 @@ export default function Itinerary({ user, countries, cities, categories }) {
       supabase,
       'itineraries',
     );
-
-    if (errorImage) return handleError(errorImage.message);
+    if (errorImage)
+      return handleError(
+        errorImage.statusCode === '409'
+          ? 'The place already exists'
+          : errorImage.message,
+      );
 
     const imagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/${dataImage.path}`;
 
@@ -147,6 +155,7 @@ export default function Itinerary({ user, countries, cities, categories }) {
       categories: [],
       lat: '',
       lng: '',
+      sub_categories: [],
     });
     setImagePreview();
     imageInputRef.current.value = '';
@@ -164,22 +173,51 @@ export default function Itinerary({ user, countries, cities, categories }) {
 
   const handleCategoryChange = (e) => {
     const { value } = e.target;
-    if (formData.categories.includes(value)) {
+    if (formData.categories.find((c) => c.title === value)) {
       categorySelectRef.current.value = '';
       return;
     }
+    const category = categories.find((category) => category.title === value);
     setFormData((prev) => ({
       ...prev,
-      categories: [...prev.categories, value],
+      categories: [...prev.categories, category],
     }));
     categorySelectRef.current.value = '';
+  };
+
+  const handleSubCategoryChange = (e) => {
+    const { value } = e.target;
+    if (formData.sub_categories.includes(value)) {
+      subCategorySelectRef.current.value = '';
+      return;
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      sub_categories: [...prev.sub_categories, value],
+    }));
+    subCategorySelectRef.current.value = '';
+  };
+
+  const removeCategory = (category) => {
+    setFormData((prev) => ({
+      ...prev,
+      categories: prev.categories.filter((c) => c.title !== category.title),
+    }));
+  };
+
+  const removeSubCategory = (subCategory) => {
+    setFormData((prev) => ({
+      ...prev,
+      sub_categories: prev.sub_categories.filter((c) => c !== subCategory),
+    }));
   };
 
   return (
     <Layout title={'Upload itinerary'} username={user?.user_metadata?.username}>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col justify-center mt-12 mb-10 w-96"
+        className="flex flex-col justify-center mb-10 w-96"
       >
         <label
           htmlFor="country"
@@ -255,26 +293,49 @@ export default function Itinerary({ user, countries, cities, categories }) {
         </select>
         <div className="flex flex-wrap gap-2">
           {formData.categories.map((category) => (
-            <div
-              key={category}
-              className="flex items-center justify-center px-2 py-1 text-sm font-semibold text-white rounded-lg bg-chenkster-gray"
-            >
-              {category}
-              <button
-                type="button"
-                className="ml-2 text-sm font-bold text-white"
-                onClick={() =>
-                  setFormData((prev) => ({
-                    ...prev,
-                    categories: prev.categories.filter(
-                      (cat) => cat !== category,
-                    ),
-                  }))
-                }
+            <CategorySelected
+              key={category.id}
+              removeItem={removeCategory}
+              title={category.title}
+            />
+          ))}
+        </div>
+        <label
+          htmlFor="sub_categories"
+          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
+        >
+          Select a sub category
+        </label>
+        <select
+          name="sub_categories"
+          id="sub_categories"
+          className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
+          placeholder="Select a sub categories"
+          defaultValue={''}
+          onChange={handleSubCategoryChange}
+          ref={subCategorySelectRef}
+        >
+          <option value="" disabled>
+            Select a sub categories
+          </option>
+          {formData.categories.map((categoria) =>
+            categoria.sub_categories.map((subcategoria) => (
+              <option
+                key={`${subcategoria}-${categoria.id}`}
+                value={subcategoria}
               >
-                x
-              </button>
-            </div>
+                {subcategoria}
+              </option>
+            )),
+          )}
+        </select>
+        <div className="flex flex-wrap gap-2">
+          {formData.sub_categories.map((category) => (
+            <CategorySelected
+              key={category}
+              removeItem={removeSubCategory}
+              title={category}
+            />
           ))}
         </div>
         <label
@@ -436,7 +497,8 @@ export default function Itinerary({ user, countries, cities, categories }) {
             !formData.visit_period ||
             !formData.street ||
             !formData.lat ||
-            !formData.lng
+            !formData.lng ||
+            !formData.sub_categories
           }
           type="submit"
           className="w-full py-3 font-semibold text-center text-white rounded-lg disabled:opacity-60 disabled:cursor-not-allowed background-gradient font-poppins"
@@ -444,7 +506,7 @@ export default function Itinerary({ user, countries, cities, categories }) {
           Submit
         </button>
       </form>
-      <Toaster position="bottom-center" reverseOrder={false} />
+      <Toaster position="top-center" reverseOrder={false} />
     </Layout>
   );
 }
