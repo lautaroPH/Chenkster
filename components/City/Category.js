@@ -1,7 +1,8 @@
 /* eslint-disable @next/next/no-img-element */
+import { deleteCategory } from '@/utils/deleteCategory';
 import Link from 'next/link';
+import ButtonDelete from '../ButtonDelete';
 import VerificSvg from '../Svg/VerificSvg';
-import ButtonDelete from './ButtonDelete';
 
 const Category = ({ category, city, country, image, role, id }) => {
   const categoryReplace = category.replace(/\s+/g, '-');
@@ -25,7 +26,13 @@ const Category = ({ category, city, country, image, role, id }) => {
           </div>
         </div>
       </Link>
-      {role === 'admin' && <ButtonDelete title={category} />}
+      {role === 'admin' && (
+        <ButtonDelete
+          title={category}
+          deleteFunction={deleteCategory}
+          redirect={`/dashboard/category`}
+        />
+      )}
     </div>
   );
 };

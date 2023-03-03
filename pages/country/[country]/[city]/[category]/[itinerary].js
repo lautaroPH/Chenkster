@@ -1,5 +1,5 @@
 import AskChenkster from '@/components/AskChenkster';
-import ButtonDelete from '@/components/Itinerary/ButtonDelete';
+import ButtonDelete from '@/components/ButtonDelete';
 import InfoSection from '@/components/Itinerary/InfoSection';
 import ItineraryImage from '@/components/Itinerary/ItineraryImage';
 import Layout from '@/components/Layout';
@@ -8,6 +8,7 @@ import DeleteSvg from '@/components/Svg/DeleteSvg';
 import EditSvg from '@/components/Svg/EditSvg';
 import MapPointSvg from '@/components/Svg/MapPointSvg';
 import VerificSvg from '@/components/Svg/VerificSvg';
+import { deleteItinerary } from '@/utils/deleteItinerary';
 import { getItinerary } from '@/utils/getItinerary';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import Link from 'next/link';
@@ -53,7 +54,11 @@ export default function Itinerary({ user, itinerary }) {
               >
                 <EditSvg />
               </Link>
-              <ButtonDelete title={itinerary.title} />
+              <ButtonDelete
+                title={itinerary.title}
+                deleteFunction={deleteItinerary}
+                redirect={`/dashboard/itinerary/${itinerary.id}}`}
+              />
             </>
           )}
         </div>

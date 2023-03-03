@@ -1,7 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 
-const DeleteModal = ({ isOpen, setIsOpen, handleDelete, loading }) => {
+const DeleteModal = ({ isOpen, setIsOpen, handleDelete, loading, title }) => {
   function closeModal() {
     setIsOpen(false);
   }
@@ -48,7 +48,7 @@ const DeleteModal = ({ isOpen, setIsOpen, handleDelete, loading }) => {
                   as="h3"
                   className="text-lg font-medium leading-6 text-gray-900"
                 >
-                  Are you sure you want to delete this itinerary?
+                  Are you sure you want to delete {title}?
                 </Dialog.Title>
                 <div className="mt-2">
                   <p className="text-sm text-gray-500">

@@ -47,6 +47,7 @@ export default function Country({ user, cities, country }) {
             city={city.title}
             description={city.description}
             image={city.image}
+            role={user?.user_metadata?.role}
           />
         ))}
       </div>

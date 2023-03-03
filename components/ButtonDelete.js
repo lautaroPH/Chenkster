@@ -1,12 +1,11 @@
-import { deleteCategory } from '@/utils/deleteCategory';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
-import DeleteModal from '../Itinerary/DeleteModal';
-import DeleteSvg from '../Svg/DeleteSvg';
+import DeleteModal from './DeleteModal';
+import DeleteSvg from './Svg/DeleteSvg';
 
-const ButtonDelete = ({ title }) => {
+const ButtonDelete = ({ title, deleteFunction, redirect }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   function openModal() {
@@ -17,11 +16,11 @@ const ButtonDelete = ({ title }) => {
   const router = useRouter();
   const handleDelete = async () => {
     setLoading(true);
-    const { data, error } = await deleteCategory(title, supabase);
+    const { data, error } = await deleteFunction(title, supabase);
     if (error) return console.log(error);
     setLoading(false);
     toast.success('Itinerary deleted');
-    router.push('/dashboard/itinerary/new');
+    router.push(redirect);
   };
 
   return (
@@ -35,6 +34,7 @@ const ButtonDelete = ({ title }) => {
         setIsOpen={setIsOpen}
         handleDelete={handleDelete}
         loading={loading}
+        title={title}
       />
     </>
   );
