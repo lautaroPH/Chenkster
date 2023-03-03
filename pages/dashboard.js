@@ -55,7 +55,7 @@ export default function Dashboard({ user }) {
           Upload Category
         </Link>
         <Link
-          href={'/dashboard/itinerary'}
+          href={'/dashboard/itinerary/new'}
           className="w-2/3 py-5 mb-6 text-xl font-bold text-center text-white rounded-lg bg-gradient font-lato"
         >
           Upload Itinerary

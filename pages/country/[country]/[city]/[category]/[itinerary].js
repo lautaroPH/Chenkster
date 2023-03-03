@@ -1,12 +1,16 @@
 import AskChenkster from '@/components/AskChenkster';
+import ButtonDelete from '@/components/Itinerary/ButtonDelete';
 import InfoSection from '@/components/Itinerary/InfoSection';
 import ItineraryImage from '@/components/Itinerary/ItineraryImage';
 import Layout from '@/components/Layout';
 import Map from '@/components/Map';
+import DeleteSvg from '@/components/Svg/DeleteSvg';
+import EditSvg from '@/components/Svg/EditSvg';
 import MapPointSvg from '@/components/Svg/MapPointSvg';
 import VerificSvg from '@/components/Svg/VerificSvg';
 import { getItinerary } from '@/utils/getItinerary';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import Link from 'next/link';
 
 export const getServerSideProps = async (ctx) => {
   const { itinerary } = ctx.query;
@@ -37,9 +41,22 @@ export default function Itinerary({ user, itinerary }) {
     >
       <div className="mb-5">
         <ItineraryImage image={itinerary.image} title={itinerary.title} />
-        <h2 className="mt-4 mb-2 text-3xl font-bold text-center font-lato text-chenkster-blue">
-          {itinerary.title}
-        </h2>
+        <div className="flex items-center justify-center">
+          <h2 className="mt-4 mb-2 text-3xl font-bold text-center font-lato text-chenkster-blue">
+            {itinerary.title}
+          </h2>
+          {user?.user_metadata?.role === 'admin' && (
+            <>
+              <Link
+                href={`/dashboard/itinerary/${itinerary.id}`}
+                className="mt-2 ml-5 text-yellow-600"
+              >
+                <EditSvg />
+              </Link>
+              <ButtonDelete title={itinerary.title} />
+            </>
+          )}
+        </div>
         <p className="flex items-center justify-center gap-1 text-sm tracking-wide font-lato text-chenkster-gray">
           <VerificSvg styles={'w-4 h-4'} />
           Verified by{' '}
