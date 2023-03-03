@@ -49,6 +49,8 @@ export default function City({ user, categories, country, city }) {
               city={city}
               country={country}
               image={category.image}
+              role={user?.user_metadata.role}
+              id={category.id}
             />
           ))}
         </div>
