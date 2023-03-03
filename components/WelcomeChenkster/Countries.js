@@ -1,8 +1,8 @@
 import Country from './Country';
 
-const Countries = ({ countries }) => {
+const Countries = ({ countries, role }) => {
   return (
-    <ul className="mt-5 overflow-y-scroll w-72 max-h-36">
+    <ul className="w-full mt-5 overflow-y-scroll max-h-36">
       {countries.length === 0 && (
         <p className="mb-3 text-lg font-semibold font-poppins text-chenkster-gray">
           No results
@@ -13,6 +13,7 @@ const Countries = ({ countries }) => {
           key={country.id}
           image={country.flag}
           country={country.title}
+          role={role}
         />
       ))}
     </ul>

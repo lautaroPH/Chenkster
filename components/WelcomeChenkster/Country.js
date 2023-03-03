@@ -1,10 +1,16 @@
 /* eslint-disable @next/next/no-img-element */
+import { deleteCountry } from '@/utils/deleteCountry';
 import Link from 'next/link';
+import ButtonDelete from '../ButtonDelete';
 
-const Country = ({ image, country, comingSoon }) => {
+const Country = ({ image, country, role }) => {
   return (
-    <Link passHref href={`/country/${country}`}>
-      <li className="flex items-center gap-1 mb-5">
+    <li className="flex items-center justify-between w-full px-5 mb-5">
+      <Link
+        passHref
+        href={`/country/${country}`}
+        className="flex items-center gap-1"
+      >
         <img
           className="object-cover w-10 h-5"
           src={image}
@@ -13,13 +19,17 @@ const Country = ({ image, country, comingSoon }) => {
         <p className="text-lg font-semibold font-poppins text-chenkster-gray">
           {country}
         </p>
-        {comingSoon && (
-          <span className="px-2 py-[2px] ml-2 -mt-2 text-[10px] font-bold text-white rounded-full bg-chenkster-green">
-            Coming soon
-          </span>
-        )}
-      </li>
-    </Link>
+      </Link>
+      {role === 'admin' && (
+        <div>
+          <ButtonDelete
+            title={country}
+            deleteFunction={deleteCountry}
+            redirect={`/dashboard/country`}
+          />
+        </div>
+      )}
+    </li>
   );
 };
 

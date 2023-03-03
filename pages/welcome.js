@@ -3,20 +3,26 @@ import GoBack from '@/components/GoBack';
 import ChenksterLogo from '@/components/ChenksterLogo';
 import ShowCountries from '@/components/WelcomeChenkster/ShowCountries';
 import { getCountriesLimit } from '@/utils/getCountriesLimit';
+import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 
 export const getServerSideProps = async (ctx) => {
   const { countries, err } = await getCountriesLimit();
+  const supabase = createServerSupabaseClient(ctx);
+
+  const { data } = await supabase.auth.getUser();
 
   if (err) return { notFound: true };
 
   return {
     props: {
       countries,
+      initialSession: data?.user,
+      user: data?.user,
     },
   };
 };
 
-export default function Welcome({ countries }) {
+export default function Welcome({ countries, user }) {
   return (
     <div className="relative flex flex-col items-center justify-between w-full min-h-screen overflow-hidden">
       <GoBack styles={'absolute top-16 left-8'} />
@@ -32,7 +38,7 @@ export default function Welcome({ countries }) {
         <span className="text-chenkster-green">only 3 clicks</span>
       </p>
 
-      <ShowCountries countries={countries} />
+      <ShowCountries countries={countries} role={user?.user_metadata?.role} />
 
       <div className="absolute bottom-0 left-0 right-0 -z-30">
         <WorldLightSvg />

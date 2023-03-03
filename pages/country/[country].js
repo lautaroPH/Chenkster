@@ -19,7 +19,7 @@ export const getServerSideProps = async (ctx) => {
 
   const { cities, error } = await getCountryCities(replaceCountry);
 
-  if (error || cities.length === 0) return { notFound: true };
+  if (error) return { notFound: true };
 
   return {
     props: {
