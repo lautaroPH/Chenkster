@@ -2,10 +2,23 @@ import WorldLightSvg from '@/components/Svg/WorldLightSvg';
 import GoBack from '@/components/GoBack';
 import ChenksterLogo from '@/components/ChenksterLogo';
 import ShowCountries from '@/components/WelcomeChenkster/ShowCountries';
+import { getCountriesLimit } from '@/utils/getCountriesLimit';
 
-export default function Welcome() {
+export const getServerSideProps = async (ctx) => {
+  const { countries, err } = await getCountriesLimit();
+
+  if (err) return { notFound: true };
+
+  return {
+    props: {
+      countries,
+    },
+  };
+};
+
+export default function Welcome({ countries }) {
   return (
-    <div className="relative flex flex-col items-center w-full overflow-hidden">
+    <div className="relative flex flex-col items-center justify-between w-full min-h-screen overflow-hidden">
       <GoBack styles={'absolute top-16 left-8'} />
 
       <ChenksterLogo />
@@ -19,7 +32,7 @@ export default function Welcome() {
         <span className="text-chenkster-green">only 3 clicks</span>
       </p>
 
-      <ShowCountries />
+      <ShowCountries countries={countries} />
 
       <div className="absolute bottom-0 left-0 right-0 -z-30">
         <WorldLightSvg />

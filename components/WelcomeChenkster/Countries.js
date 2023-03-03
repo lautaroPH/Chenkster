@@ -1,22 +1,20 @@
 import Country from './Country';
-import ItalyImg from '@/public/countries/italy.png';
-import SpainImg from '@/public/countries/spain.png';
-import UnitedKingdomImg from '@/public/countries/unitedKingdom.png';
-import FranceImg from '@/public/countries/france.png';
-import GermanyImg from '@/public/countries/germany.png';
 
-const Countries = () => {
+const Countries = ({ countries }) => {
   return (
-    <ul className="mt-5 w-72">
-      <Country image={ItalyImg} country="Italy" />
-      <Country image={SpainImg} country="Spain" comingSoon={true} />
-      <Country image={FranceImg} country="France" comingSoon={true} />
-      <Country image={GermanyImg} country="Germany" comingSoon={true} />
-      <Country
-        image={UnitedKingdomImg}
-        country="United Kingdom"
-        comingSoon={true}
-      />
+    <ul className="mt-5 overflow-y-scroll w-72 max-h-36">
+      {countries.length === 0 && (
+        <p className="mb-3 text-lg font-semibold font-poppins text-chenkster-gray">
+          No results
+        </p>
+      )}
+      {countries.map((country) => (
+        <Country
+          key={country.id}
+          image={country.flag}
+          country={country.title}
+        />
+      ))}
     </ul>
   );
 };
