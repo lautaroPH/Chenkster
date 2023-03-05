@@ -1,7 +1,6 @@
 import { supabase } from '@/supabaseClient';
 
 export const getItinerariesWithPreferenes = async (
-  country,
   city,
   preferences,
   category,
@@ -9,7 +8,6 @@ export const getItinerariesWithPreferenes = async (
   let query = supabase
     .from('itineraries')
     .select('*')
-    .eq('country', country)
     .eq('city', city)
     .limit(3);
 

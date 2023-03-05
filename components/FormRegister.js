@@ -18,6 +18,7 @@ const FormRegister = () => {
   const [password2, setPassword2] = useState('');
 
   const router = useRouter();
+  const callbackUrl = router.query.callbackUrl || '/edit/profile';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,7 +44,7 @@ const FormRegister = () => {
       return;
     }
 
-    router.push(`/edit/profile`);
+    router.push(callbackUrl);
   };
 
   return (

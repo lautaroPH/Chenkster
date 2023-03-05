@@ -5,7 +5,6 @@ import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRef, useState } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
-import { getCountries } from '@/utils/getCountries';
 import { getCities } from '@/utils/getCities';
 import { getCategories } from '@/utils/getCategories';
 import { allowedExtensions } from '@/utils/allowedExtension';
@@ -23,14 +22,13 @@ export const getServerSideProps = async (ctx) => {
 
   const { data } = await supabase.auth.getUser();
 
-  const { countries } = await getCountries();
   const { cities } = await getCities();
   const { categories } = await getCategories();
 
   if (!data.user)
     return {
       redirect: {
-        destination: '/login',
+        destination: '/login?callbackUrl=/dashboard/itinerary/new',
         permanent: false,
       },
     };
@@ -49,7 +47,6 @@ export const getServerSideProps = async (ctx) => {
       props: {
         initialSession: data.user,
         user: data.user,
-        countries,
         cities,
         categories,
         itinerary: null,
@@ -84,7 +81,6 @@ export const getServerSideProps = async (ctx) => {
     props: {
       initialSession: data.user,
       user: data.user,
-      countries,
       cities,
       categories,
       itinerary: {
@@ -95,18 +91,11 @@ export const getServerSideProps = async (ctx) => {
   };
 };
 
-export default function Itinerary({
-  user,
-  countries,
-  cities,
-  categories,
-  itinerary,
-}) {
+export default function Itinerary({ user, cities, categories, itinerary }) {
   const [formData, setFormData] = useState({
     title: itinerary ? itinerary.title : '',
     description: itinerary ? itinerary.description : '',
     image: itinerary ? itinerary.image : '',
-    country: itinerary ? itinerary.country : '',
     budget: itinerary ? itinerary.budget : '',
     visit_period: itinerary ? itinerary.visit_period : '',
     city: itinerary ? itinerary.city : '',
@@ -136,7 +125,6 @@ export default function Itinerary({
       !formData.categories ||
       !formData.image ||
       !formData.city ||
-      !formData.country ||
       !formData.description ||
       !formData.title ||
       !formData.budget ||
@@ -233,7 +221,6 @@ export default function Itinerary({
       title: '',
       description: '',
       image: '',
-      country: '',
       budget: '',
       visit_period: '',
       city: '',
@@ -305,30 +292,6 @@ export default function Itinerary({
         onSubmit={handleSubmit}
         className="flex flex-col justify-center mb-10 w-96"
       >
-        <label
-          htmlFor="country"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Select a country
-        </label>
-        <select
-          name="country"
-          id="country"
-          className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-          required
-          placeholder="Select a country"
-          value={formData.country}
-          onChange={handleChange}
-        >
-          <option value="" disabled>
-            Select a country
-          </option>
-          {countries.map((country) => (
-            <option key={country.id} value={country.title}>
-              {country.title}
-            </option>
-          ))}
-        </select>
         <label
           htmlFor="city"
           className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
@@ -565,14 +528,14 @@ export default function Itinerary({
         {imagePreview && (
           <img
             src={imagePreview}
-            alt="Flag country"
+            alt="image preview"
             className="object-cover w-56 overflow-hidden max-h-56"
           />
         )}
         {!imagePreview && formData?.image && (
           <img
             src={formData?.image}
-            alt="Flag country"
+            alt="image preview"
             className="object-cover w-56 overflow-hidden max-h-56"
           />
         )}
@@ -583,7 +546,6 @@ export default function Itinerary({
             !formData.categories ||
             !formData.image ||
             !formData.city ||
-            !formData.country ||
             !formData.description ||
             !formData.title ||
             !formData.budget ||

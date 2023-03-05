@@ -1,7 +1,6 @@
 import { supabase } from '@/supabaseClient';
 
 export const getRandomItineraries = async (
-  country,
   city,
   preferences,
   category,
@@ -10,7 +9,6 @@ export const getRandomItineraries = async (
   let query = supabase
     .from('itineraries')
     .select('*')
-    .eq('country', country)
     .eq('city', city)
     .range(range - 3, range)
     .limit(3);

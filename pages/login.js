@@ -2,7 +2,6 @@ import ButtonLoginProvider from '@/components/ButtonLoginProvider';
 import Layout from '@/components/Layout';
 import LineSeparate from '@/components/LineSeparate';
 import LoginForm from '@/components/LoginForm';
-import FacebookSvg from '@/components/Svg/FacebookSvg';
 import GoogleSvg from '@/components/Svg/GoogleSvg';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 

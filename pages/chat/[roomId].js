@@ -23,7 +23,7 @@ export async function getServerSideProps(ctx) {
   if (!currentUser.user)
     return {
       redirect: {
-        destination: '/login',
+        destination: `/login?callbackUrl=/chat/${roomId}`,
         permanent: false,
       },
     };

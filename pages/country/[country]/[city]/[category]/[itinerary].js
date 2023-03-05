@@ -4,7 +4,6 @@ import InfoSection from '@/components/Itinerary/InfoSection';
 import ItineraryImage from '@/components/Itinerary/ItineraryImage';
 import Layout from '@/components/Layout';
 import Map from '@/components/Map';
-import DeleteSvg from '@/components/Svg/DeleteSvg';
 import EditSvg from '@/components/Svg/EditSvg';
 import MapPointSvg from '@/components/Svg/MapPointSvg';
 import VerificSvg from '@/components/Svg/VerificSvg';
@@ -74,7 +73,7 @@ export default function Itinerary({ user, itinerary }) {
             <MapPointSvg styles={'w-3 h-4'} />
           </div>
           <p>
-            {itinerary.country}, {itinerary.city}
+            {itinerary.city.country}, {itinerary.city.title}
           </p>
         </div>
         <InfoSection title={'Description'} info={itinerary.description} />

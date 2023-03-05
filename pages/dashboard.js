@@ -10,7 +10,7 @@ export const getServerSideProps = async (ctx) => {
   if (!data.user)
     return {
       redirect: {
-        destination: '/login',
+        destination: '/login?callbackUrl=/dashboard',
         permanent: false,
       },
     };

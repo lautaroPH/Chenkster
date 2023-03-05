@@ -6,6 +6,8 @@ const ButtonLoginProvider = ({ Icon, text, provider, colorStyles }) => {
   const supabase = useSupabaseClient();
   const router = useRouter();
 
+  const callbackUrl = router.query.callbackUrl || '/welcome';
+
   const handleSocialLogin = async (provider) => {
     const { data, error } = await loginWithProvider(provider, supabase);
 
@@ -13,7 +15,7 @@ const ButtonLoginProvider = ({ Icon, text, provider, colorStyles }) => {
       alert(error.message);
       return;
     }
-    router.push(`/welcome`);
+    router.push(callbackUrl);
   };
 
   return (

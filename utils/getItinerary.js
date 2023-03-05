@@ -3,7 +3,7 @@ import { supabase } from '@/supabaseClient';
 export const getItinerary = async (title) => {
   const { data: itineraryData, error } = await supabase
     .from('itineraries')
-    .select('*, user_id (first_name)')
+    .select('*, user_id (first_name), city (*)')
     .eq('title', title)
     .single();
 

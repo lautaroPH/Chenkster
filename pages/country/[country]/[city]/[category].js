@@ -16,7 +16,6 @@ export const getServerSideProps = async (ctx) => {
   if (!category || !country || !city) return { notFound: true };
   const categoryReplace = category.replace(/-/g, ' ');
   const cityReplace = city.replace(/-/g, ' ');
-  const countryReplace = country.replace(/-/g, ' ');
 
   const supabase = createServerSupabaseClient(ctx);
 
@@ -24,11 +23,7 @@ export const getServerSideProps = async (ctx) => {
 
   const { preferences } = await getPreferences(categoryReplace);
 
-  const { places, error } = await getItineraries(
-    cityReplace,
-    countryReplace,
-    categoryReplace,
-  );
+  const { places, error } = await getItineraries(cityReplace, categoryReplace);
   if (error) return { notFound: true };
 
   return {
@@ -65,7 +60,6 @@ export default function Category({
     e.preventDefault();
 
     const { itineraries, error } = await getItinerariesWithPreferenes(
-      countryReplace,
       cityReplace,
       checkedOptions,
       categoryReplace,

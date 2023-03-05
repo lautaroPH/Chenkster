@@ -13,6 +13,8 @@ const LoginForm = () => {
   const supabase = useSupabaseClient();
   const router = useRouter();
 
+  const callbackUrl = router.query.callbackUrl || '/welcome';
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -33,7 +35,7 @@ const LoginForm = () => {
       setError({ submit: error.message });
       return;
     }
-    router.push(`/welcome`);
+    router.push(callbackUrl);
   };
 
   return (
@@ -88,7 +90,7 @@ const LoginForm = () => {
       <p className="mb-4 font-semibold text-center w-72 mt-7 font-poppins text-chenkster-gray">
         Don’t have an account?{' '}
         <Link
-          href={'/register'}
+          href={`/register?callbackUrl=${callbackUrl}`}
           className="font-semibold font-poppins text-chenkster-blue"
         >
           Sign up
