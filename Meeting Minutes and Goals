@@ -8,9 +8,8 @@ Things to do in order of priority:
 6-Show accurate data. ✅
 7-Country search on the welcome page. ✅
 8-Add the ability for admins to edit and delete countries, categories, cities, and places. ✅
-9-Save places and also be able to remove the saved places (bookmarks).
+9-Save places and also be able to remove the saved places (bookmarks). ✅
 10-Add expertise for the user.
 11-Add links to social media.
 12-Show modals for the functionality that hasn't been implemented yet.
 13-Add security for the database and other external APIs.
-14-Improve the way categories are saved in the itineraries database.
