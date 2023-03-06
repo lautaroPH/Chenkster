@@ -23,12 +23,12 @@ const NavbarBottom = ({ username }) => {
         </div>
       </Link>
       <Link
-        href={'/bookmark'}
+        href={'/itinerary'}
         className="flex flex-col items-center justify-center"
       >
         <ItenarySvg />
         <div className="mt-1 -mb-2">
-          {pathname === '/bookmark' && <SelectedNavSvg />}
+          {pathname === '/itinerary' && <SelectedNavSvg />}
         </div>
       </Link>
       <Link

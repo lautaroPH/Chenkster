@@ -9,6 +9,7 @@ import MapPointSvg from '@/components/Svg/MapPointSvg';
 import VerificSvg from '@/components/Svg/VerificSvg';
 import { deleteItinerary } from '@/utils/deleteItinerary';
 import { getItinerary } from '@/utils/getItinerary';
+import { getSavedItineraries } from '@/utils/getSavedItineraries';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import Link from 'next/link';
 
@@ -24,23 +25,49 @@ export const getServerSideProps = async (ctx) => {
 
   if (err || !itineraryData?.title) return { notFound: true };
 
+  if (!data?.user?.id) {
+    return {
+      props: {
+        initialSession: data?.user,
+        user: data?.user,
+        itinerary: itineraryData,
+        itinerarySaved: false,
+      },
+    };
+  }
+
+  const { itinerarySaved, itinerarySavedError } = await getSavedItineraries(
+    data?.user?.id,
+    itineraryData.title,
+  );
+
+  if (itinerarySavedError) return { notFound: true };
+
   return {
     props: {
       initialSession: data?.user,
       user: data?.user,
       itinerary: itineraryData,
+      itinerarySaved: itinerarySaved.length > 0 ? true : false,
     },
   };
 };
 
-export default function Itinerary({ user, itinerary }) {
+export default function Itinerary({ user, itinerary, itinerarySaved }) {
   return (
     <Layout
       title={'Discover the best food'}
       username={user?.user_metadata?.username}
     >
       <div className="mb-5">
-        <ItineraryImage image={itinerary.image} title={itinerary.title} />
+        <ItineraryImage
+          image={itinerary.image}
+          title={itinerary.title}
+          country={itinerary.city.country}
+          city={itinerary.city.title}
+          userId={user?.id}
+          itinerarySaved={itinerarySaved}
+        />
         <div className="flex items-center justify-center">
           <h2 className="mt-4 mb-2 text-3xl font-bold text-center font-lato text-chenkster-blue">
             {itinerary.title}

@@ -1,12 +1,12 @@
 import Image from 'next/image';
 
 const DiscoverCountry = ({ country, bgImage, flag }) => {
-  const countryFileImg = country?.split(' ').join('').toLowerCase();
-
   return (
     <div
-      className="flex flex-col items-center justify-center text-white bg-center bg-no-repeat bg-cover drop-shadow-xl rounded-3xl w-80 h-72"
-      style={{ backgroundImage: `url(${bgImage})` }}
+      className="flex flex-col items-center justify-center text-white bg-black bg-center bg-no-repeat bg-cover bg-opacity-40 bg-blend-soft-light drop-shadow-xl rounded-3xl w-80 h-72"
+      style={{
+        backgroundImage: `url(${bgImage})`,
+      }}
     >
       <h2 className="text-4xl font-lato">
         Discover{' '}
