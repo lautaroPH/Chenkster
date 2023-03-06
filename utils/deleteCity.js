@@ -17,6 +17,19 @@ export const deleteCity = async (title, supabase) => {
     await supabase.from('itineraries').delete().eq('city', title);
   }
 
+  const { data: itinerarySaved } = await supabase
+    .from('saved_itineraries')
+    .select('id')
+    .eq('city', title)
+    .single();
+
+  if (itinerarySaved) {
+    await supabase
+      .from('saved_itineraries')
+      .delete()
+      .eq('id', itinerarySaved.id);
+  }
+
   await removeImage(`public/${title}/image`, supabase, 'cities');
 
   const { data, error } = await supabase

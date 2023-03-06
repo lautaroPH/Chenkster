@@ -29,6 +29,19 @@ export const deleteCountry = async (title, supabase) => {
     await supabase.from('cities').delete().eq('country', title);
   }
 
+  const { data: itinerarySaved } = await supabase
+    .from('saved_itineraries')
+    .select('id')
+    .eq('country', title)
+    .single();
+
+  if (itinerarySaved) {
+    await supabase
+      .from('saved_itineraries')
+      .delete()
+      .eq('id', itinerarySaved.id);
+  }
+
   await removeImage(`public/${title}/flag`, supabase, 'countries');
   await removeImage(`public/${title}/bg_image`, supabase, 'countries');
 
