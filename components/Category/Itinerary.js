@@ -11,7 +11,7 @@ const Itinerary = ({ category, city, country, title, budget, image }) => {
       className="w-full px-2 py-2 mb-4 bg-transparent shadow rounded-2xl drop-shadow-lg"
     >
       <img
-        className="object-cover h-40 w-80 rounded-xl"
+        className="object-cover w-full h-40 rounded-xl"
         src={image}
         alt={`Image of ${title}`}
       />

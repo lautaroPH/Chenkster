@@ -18,7 +18,7 @@ const LayoutProfile = ({
   username,
 }) => {
   return (
-    <div className="relative flex flex-col items-center w-full min-h-screen mb-20 overflow-hidden">
+    <div className="relative flex flex-col items-center w-full max-w-2xl min-h-screen m-auto mb-20 overflow-hidden">
       <div className="relative flex justify-between w-full px-8 mt-14">
         <GoBack styles="w-6 h-6" />
         <img
@@ -33,27 +33,28 @@ const LayoutProfile = ({
       <h2 className="mt-4 text-2xl font-bold text-center font-poppins text-chenkster-gray">
         {name}
       </h2>
-      <div className="flex items-center justify-between w-2/3 mx-auto mt-6">
+      <div className="flex items-center justify-center mx-auto mt-6 w-72 sm:w-96">
         <button
           onClick={changeFirstContent}
           className={`${
             !currentLocation ? 'text-chenkster-blue' : 'text-gray-400'
-          } w-full font-semibold tracking-wider border-r border-gray-400 font-lato text-start`}
+          } flex-1 font-semibold tracking-wider font-lato text-start`}
         >
           {firstOption}
         </button>
+        <div className="absolute flex-grow h-8 border-l border-gray-400"></div>
         <button
           onClick={changeSecondContent}
           className={`${
             currentLocation ? 'text-chenkster-blue' : 'text-gray-400'
-          } font-semibold tracking-wider w-[16.5rem] text-end font-lato`}
+          } flex-1 font-semibold tracking-wider text-end font-lato`}
         >
           {secondOption}
         </button>
       </div>
       {children}
       {username && <NavbarBottom username={username} />}
-      <div className="absolute bottom-0 left-0 right-0 -z-10">
+      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center m-auto -z-30">
         <WorldLightSvg />
       </div>
     </div>

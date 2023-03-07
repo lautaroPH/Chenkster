@@ -12,7 +12,7 @@ const NavbarBottom = ({ username }) => {
   const { pathname } = router;
 
   return (
-    <div className="fixed bottom-0 z-30 flex items-center justify-between w-full px-10 pt-2 pb-4 bg-white rounded-t-lg shadow-sm shadow-black drop-shadow-2xl">
+    <div className="fixed bottom-0 z-30 flex items-center justify-between w-full px-10 pt-2 pb-4 bg-white rounded-t-lg shadow-sm sm:w-96 shadow-black drop-shadow-2xl">
       <Link
         href={'/welcome'}
         className="flex flex-col items-center justify-center text-chenkster-blue"

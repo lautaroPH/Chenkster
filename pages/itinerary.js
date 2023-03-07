@@ -58,7 +58,11 @@ export const getServerSideProps = async (ctx) => {
   };
 };
 
-export default function Itinerary({ itinerarySaved, cities: citiesLoaded }) {
+export default function Itinerary({
+  itinerarySaved,
+  cities: citiesLoaded,
+  user,
+}) {
   const [cities, setcities] = useState(citiesLoaded);
   const [loading, setLoading] = useState(false);
   const supabase = useSupabaseClient();
@@ -79,7 +83,7 @@ export default function Itinerary({ itinerarySaved, cities: citiesLoaded }) {
   };
 
   return (
-    <Layout title={'Itineraries'}>
+    <Layout title={'Itineraries'} username={user.user_metadata.username}>
       <DragDropContext onDragEnd={handleDragEnd}>
         <StrictModeDroppable droppableId="items">
           {(provided) => (

@@ -47,7 +47,7 @@ const ItineraryImage = ({
   return (
     <div className="relative">
       <img
-        className="object-cover h-60 rounded-2xl w-96"
+        className="object-cover w-full h-60 rounded-2xl"
         src={image}
         alt={`Image of ${title}`}
       />

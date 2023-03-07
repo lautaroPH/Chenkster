@@ -1,13 +1,17 @@
 import Messages from '@/components/Chat/Messages';
 import ProfileTop from '@/components/Chat/ProfileTop';
 import SendMessage from '@/components/Chat/SendMessage';
+import { createChannel } from '@/utils/createChannel';
 import { deleteTotalMessages } from '@/utils/deleteTotalMessages';
 import { getMessages } from '@/utils/getMessages';
 import { getTotalMessage } from '@/utils/getTotalMessage';
 import { getUserProfile } from '@/utils/getUserProfile';
+import { subscribeUserOnline } from '@/utils/subscribeUserOnline';
+import { userIsOnline } from '@/utils/userIsOnline';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 export async function getServerSideProps(ctx) {
   const { roomId } = ctx.query;
@@ -75,13 +79,28 @@ export default function Chat({
 }) {
   const messagesEndRef = useRef();
   const supabase = useSupabaseClient();
+  const [isOnline, setIsOnline] = useState(false);
+
+  const handleOnline = (userOnline) => {
+    setIsOnline(userOnline);
+  };
+
+  useEffect(() => {
+    const channel = createChannel(both_users, supabase);
+
+    userIsOnline(channel, handleOnline);
+    subscribeUserOnline(channel);
+
+    return () => supabase.removeChannel(channel);
+  }, [supabase, both_users]);
 
   return (
-    <div className="flex flex-col w-full h-screen bg-gray-200">
+    <div className="relative flex flex-col w-full h-screen max-w-2xl m-auto bg-gray-200">
       <ProfileTop
         avatar={toUser.avatar}
         first_name={toUser.first_name}
         last_name={toUser.last_name}
+        isOnline={isOnline}
       />
       <Messages
         both_users={both_users}
@@ -98,6 +117,7 @@ export default function Chat({
         supabase={supabase}
         username={user?.user_metadata?.username}
         totalMessages={totalMessages}
+        isOnline={isOnline}
       />
     </div>
   );

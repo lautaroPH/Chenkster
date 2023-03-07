@@ -32,7 +32,7 @@ export default function City({ user, categories, country, city }) {
       title={'Choose the category'}
       username={user?.user_metadata?.username}
     >
-      <p className="text-lg text-center font-lato text-chenkster-gray">
+      <p className="text-lg text-center font-lato text-chenkster-gray w-80">
         Get the best advice about places, experiences and activities, directly
         from our <span className="text-chenkster-blue">local chenksters!</span>
       </p>
@@ -41,7 +41,7 @@ export default function City({ user, categories, country, city }) {
         <h2 className="text-xl font-bold text-center font-lato text-chenkster-gray">
           Categories
         </h2>
-        <div className="flex flex-wrap items-center justify-between mt-5 gap-y-10">
+        <div className="flex flex-wrap items-center justify-center mt-5 gap-x-5 gap-y-10">
           {categories.map((category) => (
             <Category
               key={category.id}

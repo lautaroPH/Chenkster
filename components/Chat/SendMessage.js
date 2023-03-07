@@ -1,7 +1,7 @@
 import { updateTotalMessages } from '@/utils/updateTotalMessages';
 import { uploadMessage } from '@/utils/uploadMessage';
 import { uploadTotalMessages } from '@/utils/uploadTotalMessages';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const SendMessage = ({
   both_users,
@@ -10,42 +10,10 @@ const SendMessage = ({
   supabase,
   endRef,
   totalMessages,
+  isOnline,
 }) => {
   const [newMessage, setNewMessage] = useState('');
   const [messages, setMessages] = useState(totalMessages);
-  const [isOnline, setIsOnline] = useState(false);
-
-  useEffect(() => {
-    const channel = supabase.channel(both_users, {
-      config: {
-        presence: {
-          key: 'onlineUsers',
-        },
-      },
-    });
-
-    channel.on('presence', { event: 'sync' }, () => {
-      const { onlineUsers } = channel.presenceState();
-
-      if (onlineUsers && onlineUsers.length >= 2) {
-        setIsOnline(true);
-      } else {
-        setIsOnline(false);
-      }
-    });
-
-    channel.subscribe(async (status) => {
-      if (status === 'SUBSCRIBED') {
-        await channel.track({
-          online_at: new Date().toISOString(),
-        });
-      } else if (status === 'UNSUBSCRIBED') {
-        await channel.untrack();
-      }
-    });
-
-    return () => supabase.removeChannel(channel);
-  }, [supabase, both_users]);
 
   const sendMessage = async (e) => {
     e.preventDefault();

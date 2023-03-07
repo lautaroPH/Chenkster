@@ -27,7 +27,7 @@ export const getServerSideProps = async (ctx) => {
 
 export default function Home({ user }) {
   return (
-    <div className="relative flex flex-col items-center w-full min-h-screen m-auto mb-10 overflow-hidden">
+    <div className="relative flex flex-col items-center w-full min-h-screen overflow-hidden">
       <AboutChenkster user={user} />
     </div>
   );

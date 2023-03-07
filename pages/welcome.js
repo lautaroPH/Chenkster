@@ -25,7 +25,11 @@ export const getServerSideProps = async (ctx) => {
 export default function Welcome({ countries, user }) {
   return (
     <div className="relative flex flex-col items-center justify-between w-full min-h-screen overflow-hidden">
-      <GoBack styles={'absolute top-16 left-8'} />
+      <GoBack
+        styles={
+          'absolute top-16 left-8 sm:left-40 md:left-60 lg:left-96 xl:left-[30rem]'
+        }
+      />
 
       <ChenksterLogo />
 
@@ -40,7 +44,7 @@ export default function Welcome({ countries, user }) {
 
       <ShowCountries countries={countries} role={user?.user_metadata?.role} />
 
-      <div className="absolute bottom-0 left-0 right-0 -z-30">
+      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center m-auto -z-30">
         <WorldLightSvg />
       </div>
     </div>
