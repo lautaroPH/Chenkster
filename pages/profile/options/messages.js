@@ -1,7 +1,7 @@
+import ButtonRingBell from '@/components/ButtonRingBell';
 import LayoutProfile from '@/components/LayoutProfile';
 import MessagesProfile from '@/components/Profile/messages/Messages';
 import Requests from '@/components/Profile/messages/Requests';
-import RingBellSvg from '@/components/Svg/RingBellSvg';
 import { supabase } from '@/supabaseClient';
 import { getTotalMessages } from '@/utils/getTotalMessages';
 import { getTotalMessagesRealtime } from '@/utils/getTotalMessagesRealtime';
@@ -64,7 +64,7 @@ export default function Messages({ user, messagesLoaded, adminProfiles }) {
 
   return (
     <LayoutProfile
-      IconRight={RingBellSvg}
+      IconRight={ButtonRingBell}
       firstOption={'MESSAGES'}
       secondOption={'REQUESTS'}
       avatar={user_metadata?.avatar}

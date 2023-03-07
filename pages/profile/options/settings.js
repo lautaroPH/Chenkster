@@ -1,8 +1,8 @@
+import ButtonLightBulb from '@/components/ButtonLightBulb';
 import LayoutProfile from '@/components/LayoutProfile';
 import FollowUs from '@/components/Profile/settings/FollowUs';
 import Help from '@/components/Profile/settings/Help';
 import SettingsProfile from '@/components/Profile/settings/Settings';
-import LightBulbSvg from '@/components/Svg/LightBulbSvg';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useState } from 'react';
 
@@ -33,7 +33,7 @@ export default function Settings({ user }) {
 
   return (
     <LayoutProfile
-      IconRight={LightBulbSvg}
+      IconRight={ButtonLightBulb}
       firstOption={'SETTINGS'}
       secondOption={'HELP'}
       avatar={user_metadata?.avatar}

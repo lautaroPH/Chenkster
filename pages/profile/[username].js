@@ -1,3 +1,4 @@
+import ConfigButton from '@/components/ConfigButton';
 import LayoutProfile from '@/components/LayoutProfile';
 import Profile from '@/components/Profile/Profile';
 import ProfileLevel from '@/components/Profile/ProfileLevel';
@@ -7,6 +8,7 @@ import Verifications from '@/components/Stats/Verifications';
 import Views from '@/components/Stats/Views';
 import ConfigSvg from '@/components/Svg/ConfigSvg';
 import { getUserProfile } from '@/utils/getUserProfile';
+import Link from 'next/link';
 import { useState } from 'react';
 
 export async function getServerSideProps({ query }) {
@@ -28,9 +30,10 @@ export async function getServerSideProps({ query }) {
 
 export default function Username({ userProfile }) {
   const [stats, setStats] = useState(false);
+
   return (
     <LayoutProfile
-      IconRight={ConfigSvg}
+      IconRight={ConfigButton}
       firstOption={'PROFILE'}
       secondOption={'STATS'}
       avatar={userProfile?.avatar}
@@ -38,7 +41,6 @@ export default function Username({ userProfile }) {
       changeFirstContent={() => setStats(false)}
       changeSecondContent={() => setStats(true)}
       currentLocation={stats}
-      href={`/profile/options/settings`}
       username={userProfile.username}
     >
       {!stats ? (

@@ -1,5 +1,4 @@
 /* eslint-disable @next/next/no-img-element */
-import Link from 'next/link';
 import GoBack from './GoBack';
 import NavbarBottom from './NavbarBottom';
 import WorldLightSvg from './Svg/WorldLightSvg';
@@ -14,7 +13,6 @@ const LayoutProfile = ({
   changeFirstContent,
   changeSecondContent,
   currentLocation,
-  href,
   username,
 }) => {
   return (
@@ -26,9 +24,7 @@ const LayoutProfile = ({
           alt="user image"
           className="object-cover w-20 h-20 -mt-3 rounded-full"
         />
-        <Link href={href}>
-          <IconRight />
-        </Link>
+        <IconRight />
       </div>
       <h2 className="mt-4 text-2xl font-bold text-center font-poppins text-chenkster-gray">
         {name}
