@@ -11,9 +11,8 @@ Things to do in order of priority:
 9-Save places and also be able to remove the saved places (bookmarks). ✅
 10-Drag and drop for the files in the dashboard.
 11-Add loaders to the dashboard.
-12-Fix styles for the chat.
-13-Remove go to dashboard if you are not the admin and put it a login button
-14-Add links to social media.
-15-Show modals for the functionality that hasn't been implemented yet.
-16-Add security for the database and other external APIs.
-17-Add expertise for the user.
+12-Remove go to dashboard if you are not the admin and put it a login button
+13-Add links to social media.
+14-Show modals for the functionality that hasn't been implemented yet.
+15-Add security for the database and other external APIs.
+16-Add expertise for the user.
