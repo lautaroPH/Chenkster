@@ -6,7 +6,7 @@ import ProfileLevel from './ProfileLevel';
 const Profile = ({ description, language, location }) => {
   return (
     <>
-      <ProfileLevel />
+      {/* <ProfileLevel /> */}
       <ProfileDescription description={description} />
       {language.length > 0 && (
         <div className="w-4/5 mt-5">
@@ -28,7 +28,7 @@ const Profile = ({ description, language, location }) => {
           </div>
         </div>
       )}
-      <ActivityLevel />
+      {/* <ActivityLevel /> */}
     </>
   );
 };

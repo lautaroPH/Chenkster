@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import FileInput from '@/components/FileInput';
 import Layout from '@/components/Layout';
 import UploadSvg from '@/components/Svg/UploadSvg';
 import { allowedExtensions } from '@/utils/allowedExtension';
@@ -64,6 +65,8 @@ export default function City({ user, countries }) {
     if (loading) return;
     setError('');
     setLoading(true);
+    const loadingToastId = toast.loading('Loading...');
+
     if (
       !formData.city ||
       !formData.description ||
@@ -112,7 +115,7 @@ export default function City({ user, countries }) {
       handleError(err.message);
       return;
     }
-
+    toast.dismiss(loadingToastId);
     toast.success(`Successfully uploaded: ${formData.city}`);
     setLoading(false);
     setFormData({
@@ -135,6 +138,14 @@ export default function City({ user, countries }) {
     setError(error);
   };
 
+  const updateImageData = (files, name) => {
+    setFormData((prev) => ({ ...prev, [name]: files }));
+  };
+
+  const uploadImagePreview = async (file) => {
+    setImagePreview(file);
+  };
+
   return (
     <Layout title={'Upload city'} username={user?.user_metadata?.username}>
       <form
@@ -153,7 +164,6 @@ export default function City({ user, countries }) {
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
           placeholder="Select a country"
-          defaultValue={''}
           onChange={handleChange}
           value={formData.country}
         >
@@ -204,20 +214,12 @@ export default function City({ user, countries }) {
         >
           Image city
         </label>
-        <div
-          onClick={() => imageInputRef.current.click()}
-          className="flex w-full gap-3 px-4 py-3 mb-3 text-base text-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-        >
-          Upload a image for the city <UploadSvg />
-        </div>
-        <input
-          type="file"
+        <FileInput
           name="image"
-          id="image"
-          hidden
-          ref={imageInputRef}
-          onChange={(e) => uploadImagePreview(e, setImagePreview, setFormData)}
-          accept="image/png, image/jpeg, image/jpg, image/webp"
+          inputRef={imageInputRef}
+          title="Upload a image for the city"
+          handleData={updateImageData}
+          handlePreview={uploadImagePreview}
         />
         {imagePreview && (
           <img

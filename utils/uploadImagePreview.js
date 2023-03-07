@@ -1,7 +1,10 @@
-export const uploadImagePreview = async (e, setImagePreview, setData) => {
-  const name = e.target.name;
-  const files = e.target.files;
-  setData((prev) => ({ ...prev, [name]: files }));
+export const uploadImagePreview = async (
+  files,
+  name,
+  setImagePreview,
+  setData,
+) => {
+  setData(files, name);
 
   const reader = new FileReader();
   if (files[0]) {

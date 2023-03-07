@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import FileInput from '@/components/FileInput';
 import Layout from '@/components/Layout';
 import UploadSvg from '@/components/Svg/UploadSvg';
 import { allowedExtensions } from '@/utils/allowedExtension';
@@ -53,13 +54,15 @@ export default function Category({ user }) {
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState();
 
-  const imageInputREf = useRef();
+  const imageInputRef = useRef();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (loading) return;
     setError('');
     setLoading(true);
+    const loadingToastId = toast.loading('Loading...');
+
     if (!formData.category || !formData.image || !formData.sub_categories)
       return handleError('Please fill all the fields');
 
@@ -106,7 +109,7 @@ export default function Category({ user }) {
       handleError(err.message);
       return;
     }
-
+    toast.dismiss(loadingToastId);
     toast.success(`Successfully uploaded: ${formData.category}`);
     setLoading(false);
     setFormData({
@@ -115,7 +118,7 @@ export default function Category({ user }) {
       sub_categories: '',
     });
     setImagePreview();
-    imageInputREf.current.value = '';
+    imageInputRef.current.value = '';
   };
 
   const handleChange = (e) => {
@@ -126,6 +129,14 @@ export default function Category({ user }) {
   const handleError = (error) => {
     setLoading(false);
     setError(error);
+  };
+
+  const updateImageData = (files, name) => {
+    setFormData((prev) => ({ ...prev, [name]: files }));
+  };
+
+  const uploadImagePreview = async (file) => {
+    setImagePreview(file);
   };
 
   return (
@@ -172,20 +183,12 @@ export default function Category({ user }) {
         >
           Category image
         </label>
-        <div
-          onClick={() => imageInputREf.current.click()}
-          className="flex w-full gap-3 px-4 py-3 mb-3 text-base text-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-        >
-          Upload an image for the category <UploadSvg />
-        </div>
-        <input
-          type="file"
+        <FileInput
           name="image"
-          id="image"
-          hidden
-          ref={imageInputREf}
-          onChange={(e) => uploadImagePreview(e, setImagePreview, setFormData)}
-          accept="image/png, image/jpeg, image/jpg, image/webp"
+          inputRef={imageInputRef}
+          title=" Upload an image for the category"
+          handleData={updateImageData}
+          handlePreview={uploadImagePreview}
         />
         {imagePreview && (
           <img

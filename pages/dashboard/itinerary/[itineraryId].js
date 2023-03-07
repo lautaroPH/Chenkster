@@ -15,6 +15,7 @@ import { uploadItinerary } from '@/utils/uploadItinerary';
 import CategorySelected from '@/components/Dashboard/CategorySelected';
 import { updateItinerary } from '@/utils/updateItinerary';
 import { useRouter } from 'next/router';
+import FileInput from '@/components/FileInput';
 
 export const getServerSideProps = async (ctx) => {
   const { itineraryId } = ctx.params;
@@ -121,6 +122,7 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
     if (loading) return;
     setError('');
     setLoading(true);
+    const loadingToastId = toast.loading('Loading...');
     if (
       !formData.categories ||
       !formData.image ||
@@ -213,7 +215,7 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
         return;
       }
     }
-
+    toast.dismiss(loadingToastId);
     toast.success(`Successfully uploaded: ${formData.title}`);
     if (itinerary) router.push(`/dashboard/itinerary/new`);
     setLoading(false);
@@ -284,6 +286,14 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
       ...prev,
       sub_categories: prev.sub_categories.filter((c) => c !== subCategory),
     }));
+  };
+
+  const updateImageData = (files, name) => {
+    setFormData((prev) => ({ ...prev, [name]: files }));
+  };
+
+  const uploadImagePreview = async (file) => {
+    setImagePreview(file);
   };
 
   return (
@@ -510,20 +520,12 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
         >
           Itinerary image
         </label>
-        <div
-          onClick={() => imageInputRef.current.click()}
-          className="flex w-full gap-3 px-4 py-3 mb-3 text-base text-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-        >
-          Upload an image for the itinerary <UploadSvg />
-        </div>
-        <input
-          type="file"
+        <FileInput
           name="image"
-          id="image"
-          hidden
-          ref={imageInputRef}
-          onChange={(e) => uploadImagePreview(e, setImagePreview, setFormData)}
-          accept="image/png, image/jpeg, image/jpg, image/webp"
+          inputRef={imageInputRef}
+          title="Upload an image for the itinerary"
+          handleData={updateImageData}
+          handlePreview={uploadImagePreview}
         />
         {imagePreview && (
           <img

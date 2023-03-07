@@ -38,7 +38,9 @@ const SettingsProfile = () => {
       <div className="w-3/4 mt-8">
         <Option Icon={ThemeSvg} title={'Theme'} border />
         <Option Icon={LanguageSvg} title={'Language'} border />
-        <Option Icon={HelpSvg} title={'Help'} border />
+        <Link href={'/chat/admin'}>
+          <Option Icon={HelpSvg} title={'Help'} border />
+        </Link>
         <button onClick={handleLogout} className="w-full text-start">
           <Option Icon={LogoutSvg} title={'log out'} />
         </button>

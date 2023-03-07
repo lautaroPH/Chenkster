@@ -102,11 +102,16 @@ export default function Messages({ user, messagesLoaded, adminProfiles }) {
         </>
       ) : (
         <>
+          {/* <Requests avatar={user_metadata?.avatar} />
           <Requests avatar={user_metadata?.avatar} />
           <Requests avatar={user_metadata?.avatar} />
           <Requests avatar={user_metadata?.avatar} />
-          <Requests avatar={user_metadata?.avatar} />
-          <Requests avatar={user_metadata?.avatar} />
+          <Requests avatar={user_metadata?.avatar} /> */}
+          <div className="py-4 w-4/5 px-4 flex flex-col items-center justify-center bg-gradient-to-b from-[#7bb6f469] to-slate-100  mt-10 mb-10 rounded-lg">
+            <p className="font-semibold tracking-wider text-center font-lato text-chenkster-gray">
+              We are currently working on this feature. Please check back later.
+            </p>
+          </div>
         </>
       )}
     </LayoutProfile>

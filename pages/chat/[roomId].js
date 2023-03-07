@@ -1,4 +1,5 @@
 import Messages from '@/components/Chat/Messages';
+import ProfileTop from '@/components/Chat/ProfileTop';
 import SendMessage from '@/components/Chat/SendMessage';
 import { deleteTotalMessages } from '@/utils/deleteTotalMessages';
 import { getMessages } from '@/utils/getMessages';
@@ -59,6 +60,7 @@ export async function getServerSideProps(ctx) {
       user: currentUser.user,
       both_users: bothUsers,
       totalMessages: totalMessages?.messages ? totalMessages.messages : 0,
+      toUser: data,
     },
   };
 }
@@ -69,12 +71,18 @@ export default function Chat({
   user,
   both_users,
   totalMessages,
+  toUser,
 }) {
   const messagesEndRef = useRef();
   const supabase = useSupabaseClient();
 
   return (
     <div className="flex flex-col w-full h-screen bg-gray-200">
+      <ProfileTop
+        avatar={toUser.avatar}
+        first_name={toUser.first_name}
+        last_name={toUser.last_name}
+      />
       <Messages
         both_users={both_users}
         endRef={messagesEndRef}

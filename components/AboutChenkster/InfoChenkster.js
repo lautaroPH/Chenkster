@@ -1,6 +1,6 @@
 import Buttons from './Buttons';
 
-const InfoChenkster = () => {
+const InfoChenkster = ({ user }) => {
   return (
     <div className="relative z-20 flex flex-col items-center justify-center mt-16">
       <h2 className="text-2xl font-semibold text-center w-80 font-lato">
@@ -15,7 +15,7 @@ const InfoChenkster = () => {
       <p className="w-64 mt-16 text-xl font-extrabold text-center font-lato text-chenkster-gray">
         Are you looking for information for your trip?
       </p>
-      <Buttons />
+      <Buttons user={user} />
     </div>
   );
 };

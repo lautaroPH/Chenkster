@@ -71,7 +71,7 @@ const SendMessage = ({
   };
 
   return (
-    <section className="min-h-[62px] w-full p-2 order-3">
+    <section className="min-h-[62px] w-full p-2 order-4">
       <form className="flex gap-2" onSubmit={sendMessage}>
         <input
           type="text"

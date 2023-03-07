@@ -1,4 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
+import FileInput from '@/components/FileInput';
 import Layout from '@/components/Layout';
 import UploadSvg from '@/components/Svg/UploadSvg';
 import { allowedExtensions } from '@/utils/allowedExtension';
@@ -62,6 +63,8 @@ export default function Country({ user }) {
     if (loading) return;
     setError('');
     setLoading(true);
+    const loadingToastId = toast.loading('Loading...');
+
     if (!formData.country || !formData.flag || !formData.bg_image)
       return handleError('Please fill all the fields');
 
@@ -121,6 +124,7 @@ export default function Country({ user }) {
       return;
     }
 
+    toast.dismiss(loadingToastId);
     toast.success(`Successfully uploaded: ${formData.country}`);
     setLoading(false);
     setFormData({
@@ -142,6 +146,18 @@ export default function Country({ user }) {
   const handleError = (error) => {
     setLoading(false);
     setError(error);
+  };
+
+  const updateImageData = (files, name) => {
+    setFormData((prev) => ({ ...prev, [name]: files }));
+  };
+
+  const uploadFlagPreview = async (file) => {
+    setFlagPreview(file);
+  };
+
+  const uploadBgPreview = async (file) => {
+    setBgImagePreview(file);
   };
 
   return (
@@ -173,20 +189,12 @@ export default function Country({ user }) {
         >
           Flag
         </label>
-        <div
-          onClick={() => flagInputRef.current.click()}
-          className="flex w-full gap-3 px-4 py-3 mb-3 text-base text-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-        >
-          Upload a flag picture <UploadSvg />
-        </div>
-        <input
-          type="file"
+        <FileInput
           name="flag"
-          id="flag"
-          hidden
-          ref={flagInputRef}
-          onChange={(e) => uploadImagePreview(e, setFlagPreview, setFormData)}
-          accept="image/png, image/jpeg, image/jpg, image/webp"
+          inputRef={flagInputRef}
+          title="Upload a flag picture"
+          handleData={updateImageData}
+          handlePreview={uploadFlagPreview}
         />
         {flagPreview && (
           <img
@@ -201,22 +209,12 @@ export default function Country({ user }) {
         >
           Background image
         </label>
-        <div
-          onClick={() => bgImageInputRef.current.click()}
-          className="flex w-full gap-3 px-4 py-3 mb-3 text-base text-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-        >
-          Upload a background image <UploadSvg />
-        </div>
-        <input
-          type="file"
+        <FileInput
           name="bg_image"
-          id="bg_image"
-          hidden
-          ref={bgImageInputRef}
-          onChange={(e) =>
-            uploadImagePreview(e, setBgImagePreview, setFormData)
-          }
-          accept="image/png, image/jpeg, image/jpg, image/webp"
+          inputRef={bgImageInputRef}
+          title="Upload a background image"
+          handleData={updateImageData}
+          handlePreview={uploadBgPreview}
         />
         {bgImagePreview && (
           <img

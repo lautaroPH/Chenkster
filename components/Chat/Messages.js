@@ -50,7 +50,7 @@ const Messages = ({
   return (
     <div
       ref={endRef}
-      className="flex flex-col order-1 w-full h-screen overflow-x-hidden overflow-y-scroll"
+      className="flex flex-col order-2 w-full h-screen overflow-x-hidden overflow-y-scroll"
     >
       <div className="flex-auto min-h-[12px] " />
       {messages.map((message, i) => (
