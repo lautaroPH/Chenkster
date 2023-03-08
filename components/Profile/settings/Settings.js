@@ -20,8 +20,8 @@ const SettingsProfile = () => {
   const [isOpen, setIsOpen] = useState(false);
   const supabase = useSupabaseClient();
   const router = useRouter();
-  const handleLogout = () => {
-    logout(supabase);
+  const handleLogout = async () => {
+    await logout(supabase);
     router.push('/');
   };
   return (
