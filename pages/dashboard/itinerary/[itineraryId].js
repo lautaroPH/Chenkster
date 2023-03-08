@@ -140,7 +140,7 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
 
     const imageCorrect =
       allowedExtensions.exec(formData.image[0].type) &&
-      formData.image[0].size < 700000;
+      formData.image[0].size < 5000000;
 
     if (!imageCorrect)
       return handleError(
