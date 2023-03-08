@@ -1,3 +1,5 @@
+import { uuid } from "uuidv4";
+
 export const loginWithProvider = async (provider, supabase) => {
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider,
@@ -9,6 +11,7 @@ export const loginWithProvider = async (provider, supabase) => {
           'https://res.cloudinary.com/dv1ksnrvk/image/upload/v1677080765/samples/userImg_oiynrs.png',
         first_name: 'Guest',
         last_name: 'User',
+        username: uuid()
       },
     },
     data: {
@@ -17,6 +20,7 @@ export const loginWithProvider = async (provider, supabase) => {
         'https://res.cloudinary.com/dv1ksnrvk/image/upload/v1677080765/samples/userImg_oiynrs.png',
       first_name: 'Guest',
       last_name: 'User',
+      username: uuid()
     },
   });
 
