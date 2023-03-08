@@ -9,7 +9,7 @@ const Country = ({ image, country, role }) => {
       <Link
         passHref
         href={`/country/${country}`}
-        className="flex items-center gap-1"
+        className="flex items-center gap-1 w-full"
       >
         <img
           className="object-cover w-10 h-5"

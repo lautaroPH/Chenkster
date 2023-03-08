@@ -100,7 +100,7 @@ export default function Category({
           Shuffle <ShufleSvg />
         </button>
       </div>
-      {itineraries.length === 0 ? (
+      {!itineraries || itineraries?.length === 0 ? (
         <p className="my-5 font-bold font-lato text-chenkster-gray">
           No itineraries found
         </p>
@@ -110,7 +110,7 @@ export default function Category({
             Best 3 picks for you
           </p>
 
-          {itineraries.map((place) => (
+          {itineraries?.map((place) => (
             <Itinerary
               key={place.id}
               category={category}
