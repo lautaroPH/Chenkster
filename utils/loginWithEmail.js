@@ -3,7 +3,6 @@ export const loginWithEmail = async (email, password, supabase) => {
     email,
     password,
     options: {
-      redirectTo: 'http://localhost:3000/welcome',
       data: {
         role: 'user',
         avatar:
@@ -13,6 +12,5 @@ export const loginWithEmail = async (email, password, supabase) => {
       },
     },
   });
-
   return { data, error };
 };

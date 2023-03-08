@@ -35,6 +35,10 @@ const LoginForm = () => {
       setError({ submit: error.message });
       return;
     }
+    if(data?.user?.user_metadata?.role){
+      router.push('/dashboard')
+      return
+    }
     router.push(callbackUrl);
   };
 
