@@ -16,8 +16,8 @@ Things to do in order of priority:
 14-Show modals for the functionality that hasn't been implemented yet. ✅
 15-Add security for the database and other external APIs.
 
-add Country into Itinerary
-
+i) add Country into Itinerary
+ii) possibility to delet/edit an uploaded file in the Itinerary Image 
 ----> For more frequent user and big travellers, to offer a search engine for them to find straight what they want?
 
 ----> How to allocate corectly the need of a customer in a specific moment
