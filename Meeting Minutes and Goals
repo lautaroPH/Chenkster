@@ -15,3 +15,45 @@ Things to do in order of priority:
 13-Add links to social media.
 14-Show modals for the functionality that hasn't been implemented yet. ✅
 15-Add security for the database and other external APIs.
+
+i) add Country into Itinerary
+ii) possibility to delet/edit an uploaded file in the Itinerary Image 
+----> For more frequent user and big travellers, to offer a search engine for them to find straight what they want?
+
+----> How to allocate corectly the need of a customer in a specific moment
+
+a) The google maps coordinates dificil
+b) Categories missing in the view
+--> ok Lau
+c) Chat first test didn´t functioning. Text does not apear and need to test it by receiving on the other side the messages and interact
+--> Chat is replacing another chat
+
+d) Menu Bar missing when open the chat
+--> add menue Bar everywhere, except first page 
+
+e) Edit button needed not only delete button
+--> Lau
+
+f) If use the back button to go from country BACk, but it jumps to the city. it is a loop on user side, seems tht there is no logical workflow
+--> Lau
+
+g) Shuffle function is an application error
+--> more data and then we test again
+
+h) Preferences just a few are included
+--> Lau
+
+i) As user it kicks-me out pretty quickly. What is the user logoff timeout?
+--> Let´s test again
+
+j) Logout button doesn´t function
+--> Retest
+
+k) Profile on Userside does not show any data except description even after uploading the general data like name, surname and phone
+--> For the time we keep it empty and static
+
+l) I´m logged in as a user (i.e. niki_cenkster@hotmail.com) and going to mainmenu, but having admin functions
+--> to be retested
+
+m) add 1 admin fully with all details, just for Investor presentation
+--> 1o1 like Figma 
