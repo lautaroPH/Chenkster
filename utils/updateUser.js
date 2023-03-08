@@ -3,7 +3,6 @@ export const updateUser = async (dataUser, path, supabase) => {
     data: {
       ...dataUser,
       avatar: path,
-      role: 'admin',
     },
   });
 
