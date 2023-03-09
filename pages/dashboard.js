@@ -34,7 +34,11 @@ export const getServerSideProps = async (ctx) => {
 
 export default function Dashboard({ user }) {
   return (
-    <Layout title={'Dashboard'} username={user.user_metadata?.username}>
+    <Layout
+      title={'Dashboard'}
+      username={user.user_metadata?.username}
+      url={'welcome'}
+    >
       <div className="flex flex-col items-center justify-center w-full mt-20">
         <Link
           href={'/dashboard/country'}

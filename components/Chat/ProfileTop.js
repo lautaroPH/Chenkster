@@ -8,7 +8,7 @@ const ProfileTop = ({ avatar, first_name, last_name, isOnline }) => {
     <div className="flex items-center justify-between w-full h-16 px-4 my-4 bg-white">
       <div className="flex items-center">
         <div className="mr-4">
-          <GoBack />
+          <GoBack url={'/profile/options/messages'} />
         </div>
         <div className="flex items-center">
           <img

@@ -16,7 +16,7 @@ import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import Link from 'next/link';
 
 export const getServerSideProps = async (ctx) => {
-  const { itinerary } = ctx.query;
+  const { itinerary, country, city, category } = ctx.query;
   if (!itinerary) return { notFound: true };
   const replaceItinerary = itinerary.replace(/-/g, ' ');
   const supabase = createServerSupabaseClient(ctx);
@@ -34,6 +34,9 @@ export const getServerSideProps = async (ctx) => {
         user: data?.user,
         itinerary: itineraryData,
         itinerarySaved: false,
+        country,
+        city,
+        category,
       },
     };
   }
@@ -51,13 +54,24 @@ export const getServerSideProps = async (ctx) => {
       user: data?.user,
       itinerary: itineraryData,
       itinerarySaved: itinerarySaved.length > 0 ? true : false,
+      country,
+      city,
+      category,
     },
   };
 };
 
-export default function Itinerary({ user, itinerary, itinerarySaved }) {
+export default function Itinerary({
+  user,
+  itinerary,
+  itinerarySaved,
+  country,
+  city,
+  category,
+}) {
   return (
     <Layout
+      url={`/country/${country}/${city}/${category}`}
       title={'Discover the best food'}
       username={user?.user_metadata?.username}
     >

@@ -6,9 +6,7 @@ import GoldBadge from '@/components/Stats/GoldBadge';
 import TotalEarning from '@/components/Stats/TotalEarning';
 import Verifications from '@/components/Stats/Verifications';
 import Views from '@/components/Stats/Views';
-import ConfigSvg from '@/components/Svg/ConfigSvg';
 import { getUserProfile } from '@/utils/getUserProfile';
-import Link from 'next/link';
 import { useState } from 'react';
 
 export async function getServerSideProps({ query }) {
@@ -42,6 +40,7 @@ export default function Username({ userProfile }) {
       changeSecondContent={() => setStats(true)}
       currentLocation={stats}
       username={userProfile.username}
+      url={`/welcome`}
     >
       {!stats ? (
         <Profile

@@ -14,11 +14,12 @@ const LayoutProfile = ({
   changeSecondContent,
   currentLocation,
   username,
+  url,
 }) => {
   return (
     <div className="relative flex flex-col items-center w-full max-w-2xl min-h-screen m-auto mb-20 overflow-hidden">
       <div className="relative flex justify-between w-full px-8 mt-14">
-        <GoBack styles="w-6 h-6" />
+        <GoBack styles="w-6 h-6" url={url} />
         <img
           src={avatar ? avatar : '/images/userImg.png'}
           alt="user image"

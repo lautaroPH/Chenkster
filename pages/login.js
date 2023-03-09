@@ -28,7 +28,7 @@ export const getServerSideProps = async (ctx) => {
 
 export default function Login() {
   return (
-    <Layout title="Chenkster Sign Up" notShow={true}>
+    <Layout url={'/register'} title="Chenkster Sign Up" notShow={true}>
       <LoginForm />
 
       <LineSeparate />

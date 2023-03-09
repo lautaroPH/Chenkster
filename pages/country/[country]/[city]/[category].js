@@ -83,6 +83,7 @@ export default function Category({
 
   return (
     <Layout
+      url={`/country/${country}/${city}`}
       title={'Explore our top suggestions'}
       username={user?.user_metadata?.username}
     >

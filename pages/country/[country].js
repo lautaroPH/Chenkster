@@ -33,7 +33,11 @@ export const getServerSideProps = async (ctx) => {
 
 export default function Country({ user, cities, country }) {
   return (
-    <Layout title={'Select the city'} username={user?.user_metadata?.username}>
+    <Layout
+      url={'/welcome'}
+      title={'Select the city'}
+      username={user?.user_metadata?.username}
+    >
       <DiscoverCountry
         country={country.title}
         bgImage={country.bg_image}

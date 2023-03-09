@@ -65,7 +65,7 @@ export default function Recover() {
   };
 
   return (
-    <Layout title="Recover password" notShow={true}>
+    <Layout url={'/login'} title="Recover password" notShow={true}>
       <form
         onSubmit={handleSubmit}
         className="relative flex flex-col items-center justify-center mt-12 w-96"

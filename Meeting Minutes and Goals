@@ -2,6 +2,15 @@ Things to do in order of priority:
 
 -Fix the problem with the Google Maps API. 
 -Add links to social media.
+-Edit button needed not only delete button
+-Add 1 admin fully with all details, just for Investor presentation
+-Username user more nice
+-Edit profile input language sumbit if the user write
+-Add security for the database and other external APIs.
+-Metrics to track the usage of users
+-Feedback system for users to be integrated
+-If use the back button to go from country BACk, but it jumps to the city. it is a loop on user side, seems tht there is no logical workflow ✅
+-Loading stop if error ✅
 -Add Country into Itinerary ✅
 -Possibility to delet/edit an uploaded file in the Itinerary Image ✅ 
 -Page to edit and steer the Chenkster/admin uploaded content with seeing a preview what will be published (see also Figma) ✅
@@ -11,18 +20,10 @@ Things to do in order of priority:
 -Chat is replacing another chat ✅
 -Button chat go bottom broke in window ✅
 -Menu Bar missing when open the chat ✅
--Edit button needed not only delete button
--If use the back button to go from country BACk, but it jumps to the city. it is a loop on user side, seems tht there is no logical workflow
--As user it kicks-me out pretty quickly. What is the user logoff timeout?
--Add 1 admin fully with all details, just for Investor presentation
 -Social Media Flag to be added as well for Instagram e.g ✅
--Username user more nice
--Edit profile input language sumbit if the user write
--Loading stop if error ✅
--Add security for the database and other external APIs.
--Metrics to track the usage of users
--Feedback system for users to be integrated
+
 Future ideas
 ----> For more frequent user and big travellers, to offer a search engine for them to find straight what they want?
 
 ----> How to allocate corectly the need of a customer in a specific moment
+

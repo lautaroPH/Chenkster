@@ -29,6 +29,7 @@ export const getServerSideProps = async (ctx) => {
 export default function City({ user, categories, country, city }) {
   return (
     <Layout
+      url={`/country/${country}`}
       title={'Choose the category'}
       username={user?.user_metadata?.username}
     >

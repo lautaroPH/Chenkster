@@ -142,7 +142,11 @@ export default function Category({ user }) {
   };
 
   return (
-    <Layout title={'Upload category'} username={user?.user_metadata?.username}>
+    <Layout
+      url={'/dashboard'}
+      title={'Upload category'}
+      username={user?.user_metadata?.username}
+    >
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-center w-96"

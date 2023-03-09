@@ -43,6 +43,7 @@ export default function Settings({ user }) {
       currentLocation={help}
       href={`/profile/options/settings`}
       username={user_metadata.username}
+      url={`/profile/${user_metadata.username}`}
     >
       {!help ? <SettingsProfile /> : <Help />}
       <FollowUs />

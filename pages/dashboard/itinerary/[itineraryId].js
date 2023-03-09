@@ -348,7 +348,11 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
   };
 
   return (
-    <Layout title={'Upload itinerary'} username={user?.user_metadata?.username}>
+    <Layout
+      url={'/dashboard'}
+      title={'Upload itinerary'}
+      username={user?.user_metadata?.username}
+    >
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-center mb-10 w-96"

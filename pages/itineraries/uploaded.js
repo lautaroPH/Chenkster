@@ -50,6 +50,7 @@ export const getServerSideProps = async (ctx) => {
 export default function Profile({ user, itineraries }) {
   return (
     <Layout
+      url={'/dashboard/itinerary/new'}
       title={'Your published contents'}
       username={user?.user_metadata?.username}
     >

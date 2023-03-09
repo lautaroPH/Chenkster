@@ -149,7 +149,11 @@ export default function City({ user, countries }) {
   };
 
   return (
-    <Layout title={'Upload city'} username={user?.user_metadata?.username}>
+    <Layout
+      url={'/dashboard'}
+      title={'Upload city'}
+      username={user?.user_metadata?.username}
+    >
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-center w-96"
