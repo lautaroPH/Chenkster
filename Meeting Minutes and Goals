@@ -20,7 +20,8 @@ Things to do in order of priority:
 -Edit profile input language sumbit if the user write
 -Loading stop if error
 -Add security for the database and other external APIs.
-
+-Metrics to track the usage of users
+-Feedback system for users to be integrated
 Future ideas
 ----> For more frequent user and big travellers, to offer a search engine for them to find straight what they want?
 
