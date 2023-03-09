@@ -4,6 +4,7 @@ import ChenksterLogo from '@/components/ChenksterLogo';
 import ShowCountries from '@/components/WelcomeChenkster/ShowCountries';
 import { getCountriesLimit } from '@/utils/getCountriesLimit';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import NavbarBottom from '@/components/NavbarBottom';
 
 export const getServerSideProps = async (ctx) => {
   const { countries, err } = await getCountriesLimit();
@@ -44,6 +45,7 @@ export default function Welcome({ countries, user }) {
 
       <ShowCountries countries={countries} role={user?.user_metadata?.role} />
 
+      <NavbarBottom username={user?.user_metadata?.username} />
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center m-auto -z-30">
         <WorldLightSvg />
       </div>

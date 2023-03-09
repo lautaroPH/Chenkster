@@ -2,6 +2,7 @@ import { updateTotalMessages } from '@/utils/updateTotalMessages';
 import { uploadMessage } from '@/utils/uploadMessage';
 import { uploadTotalMessages } from '@/utils/uploadTotalMessages';
 import { useState } from 'react';
+import SendSvg from '../Svg/SendSvg';
 
 const SendMessage = ({
   both_users,
@@ -9,23 +10,22 @@ const SendMessage = ({
   room,
   supabase,
   endRef,
-  totalMessages,
   isOnline,
+  setMessages,
+  messages,
 }) => {
   const [newMessage, setNewMessage] = useState('');
-  const [messages, setMessages] = useState(totalMessages);
-
   const sendMessage = async (e) => {
     e.preventDefault();
     if (newMessage !== '') {
       await uploadMessage(newMessage, both_users, username, room, supabase);
       if (!isOnline) {
-        if (messages > 0) {
-          await updateTotalMessages(username, room, messages, supabase);
-          setMessages(messages + 1);
-        } else {
+        if (messages === 'Not messages') {
           await uploadTotalMessages(username, room, supabase);
           setMessages(1);
+        } else {
+          await updateTotalMessages(username, room, messages, supabase);
+          setMessages(messages + 1);
         }
       } else {
         setMessages(0);
@@ -39,21 +39,19 @@ const SendMessage = ({
   };
 
   return (
-    <section className="min-h-[62px] w-full p-2 order-4">
-      <form className="flex gap-2" onSubmit={sendMessage}>
+    <section className="min-h-[62px] w-full p-2 order-4 mb-24">
+      <form className="flex gap-2 px-4 pt-2" onSubmit={sendMessage}>
         <input
           type="text"
           name="message"
           onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Write your message"
+          placeholder="Type something"
           value={newMessage}
-          className="p-2 pl-4 border-none shadow outline-none rounded-2xl grow"
+          className="p-2 pl-4 border-none bg-[#0973e11c] shadow outline-none rounded-2xl grow py-4 font-lato"
+          autoComplete="off"
         />
-        <button
-          className="flex items-center justify-center p-3 text-white border-none rounded-full cursor-pointer bg-gradient"
-          type="submit"
-        >
-          Enviar
+        <button className="absolute right-10 bottom-[103px]" type="submit">
+          <SendSvg />
         </button>
       </form>
     </section>

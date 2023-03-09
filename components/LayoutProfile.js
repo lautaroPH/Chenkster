@@ -49,7 +49,7 @@ const LayoutProfile = ({
         </button>
       </div>
       {children}
-      {username && <NavbarBottom username={username} />}
+      <NavbarBottom username={username} />
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center m-auto -z-30">
         <WorldLightSvg />
       </div>

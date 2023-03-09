@@ -1,13 +1,16 @@
 import Messages from '@/components/Chat/Messages';
 import ProfileTop from '@/components/Chat/ProfileTop';
 import SendMessage from '@/components/Chat/SendMessage';
+import NavbarBottom from '@/components/NavbarBottom';
+import WorldLightSvg from '@/components/Svg/WorldLightSvg';
 import { createChannel } from '@/utils/createChannel';
-import { deleteTotalMessages } from '@/utils/deleteTotalMessages';
+import { resetTotalMessages } from '@/utils/deleteTotalMessages';
 import { getMessages } from '@/utils/getMessages';
 import { getTotalMessage } from '@/utils/getTotalMessage';
 import { getUserProfile } from '@/utils/getUserProfile';
 import { subscribeUserOnline } from '@/utils/subscribeUserOnline';
 import { userIsOnline } from '@/utils/userIsOnline';
+import { userLeave } from '@/utils/userLeave';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRef } from 'react';
@@ -37,6 +40,9 @@ export async function getServerSideProps(ctx) {
     return { notFound: true };
   }
 
+  if (currentUser.user.user_metadata?.username === roomId)
+    return { notFound: true };
+
   const bothUsers =
     currentUser.user.user_metadata?.role === 'user'
       ? `${roomId}-${currentUser.user.user_metadata?.username}`
@@ -44,7 +50,7 @@ export async function getServerSideProps(ctx) {
 
   const { messages, errorMessage } = await getMessages(bothUsers);
 
-  const messagesDeleted = await deleteTotalMessages(
+  const messagesDeleted = await resetTotalMessages(
     data.username,
     currentUser.user.user_metadata.username,
     supabase,
@@ -63,7 +69,7 @@ export async function getServerSideProps(ctx) {
       room: roomId,
       user: currentUser.user,
       both_users: bothUsers,
-      totalMessages: totalMessages?.messages ? totalMessages.messages : 0,
+      totalMessages: totalMessages ? totalMessages.messages : 'Not messages',
       toUser: data,
     },
   };
@@ -80,22 +86,28 @@ export default function Chat({
   const messagesEndRef = useRef();
   const supabase = useSupabaseClient();
   const [isOnline, setIsOnline] = useState(false);
+  const [messages, setMessages] = useState(totalMessages);
 
   const handleOnline = (userOnline) => {
     setIsOnline(userOnline);
+  };
+
+  const resetMessages = () => {
+    setMessages(0);
   };
 
   useEffect(() => {
     const channel = createChannel(both_users, supabase);
 
     userIsOnline(channel, handleOnline);
+    userLeave(channel, resetMessages);
     subscribeUserOnline(channel);
 
     return () => supabase.removeChannel(channel);
   }, [supabase, both_users]);
 
   return (
-    <div className="relative flex flex-col w-full h-screen max-w-2xl m-auto bg-gray-200">
+    <div className="relative flex flex-col items-center w-full h-screen max-w-2xl m-auto">
       <ProfileTop
         avatar={toUser.avatar}
         first_name={toUser.first_name}
@@ -116,9 +128,14 @@ export default function Chat({
         endRef={messagesEndRef}
         supabase={supabase}
         username={user?.user_metadata?.username}
-        totalMessages={totalMessages}
         isOnline={isOnline}
+        setMessages={setMessages}
+        messages={messages}
       />
+      <NavbarBottom username={user?.user_metadata?.username} />
+      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center m-auto -z-30">
+        <WorldLightSvg />
+      </div>
     </div>
   );
 }

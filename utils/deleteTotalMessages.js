@@ -1,7 +1,7 @@
-export const deleteTotalMessages = async (username, toUsername, supabase) => {
+export const resetTotalMessages = async (username, toUsername, supabase) => {
   const { data, error } = await supabase
     .from('total_messages')
-    .delete()
+    .update({ messages: 0 })
     .eq('username', username)
     .eq('to_username', toUsername);
   return { messages: data, errorMessage: error };

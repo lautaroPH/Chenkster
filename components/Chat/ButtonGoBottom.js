@@ -10,7 +10,7 @@ const ButtonGoBottom = ({
 }) => {
   const handleScroll = useCallback(() => {
     const { scrollTop, offsetHeight, scrollHeight } = endRef.current;
-    if (scrollTop + offsetHeight >= scrollHeight) {
+    if (scrollTop + offsetHeight >= scrollHeight - 50) {
       setShowScrollButton(false);
     } else {
       setShowScrollButton(true);
@@ -36,7 +36,7 @@ const ButtonGoBottom = ({
       {showScrollButton && (
         <button
           onClick={handleScrollToBottom}
-          className="absolute z-40 p-1 bg-[#678eb8] rounded-full text-chenkster-gray bottom-16 right-3"
+          className="absolute z-40 p-1 bg-[#678eb8] rounded-full text-chenkster-gray bottom-44 right-3"
         >
           {messageNumber > 0 && (
             <span className="absolute flex items-center justify-center w-5 h-5 text-sm text-white rounded-full bg-chenkster-blue -left-2 -top-3">

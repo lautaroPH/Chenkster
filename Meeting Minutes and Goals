@@ -4,21 +4,21 @@ Things to do in order of priority:
 -Add links to social media.
 -Add Country into Itinerary ✅
 -Possibility to delet/edit an uploaded file in the Itinerary Image ✅ 
--Page to edit and steer the Chenkster/admin uploaded content with seeing a preview what will be published (see also Figma)
+-Page to edit and steer the Chenkster/admin uploaded content with seeing a preview what will be published (see also Figma) ✅
 -Add the possibility to upload two pictures.One for the front part and one within the details ✅
 -The google maps coordinates dificil ✅
--Categories missing in the view
--Chat is replacing another chat
--Menu Bar missing when open the chat
+-Categories missing in the view ✅
+-Chat is replacing another chat ✅
+-Button chat go bottom broke in window ✅
+-Menu Bar missing when open the chat ✅
 -Edit button needed not only delete button
 -If use the back button to go from country BACk, but it jumps to the city. it is a loop on user side, seems tht there is no logical workflow
 -As user it kicks-me out pretty quickly. What is the user logoff timeout?
 -Add 1 admin fully with all details, just for Investor presentation
--Social Media Flag to be added as well for Instagram e.g
+-Social Media Flag to be added as well for Instagram e.g ✅
 -Username user more nice
--Button chat go bottom broke in window
 -Edit profile input language sumbit if the user write
--Loading stop if error
+-Loading stop if error ✅
 -Add security for the database and other external APIs.
 
 Future ideas

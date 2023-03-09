@@ -4,6 +4,8 @@ import InfoSection from '@/components/Itinerary/InfoSection';
 import ItineraryImage from '@/components/Itinerary/ItineraryImage';
 import Layout from '@/components/Layout';
 import Map from '@/components/Map';
+import FollowUs from '@/components/Profile/settings/FollowUs';
+import SocialIcon from '@/components/SocialIcons';
 import EditSvg from '@/components/Svg/EditSvg';
 import MapPointSvg from '@/components/Svg/MapPointSvg';
 import VerificSvg from '@/components/Svg/VerificSvg';
@@ -69,6 +71,9 @@ export default function Itinerary({ user, itinerary, itinerarySaved }) {
           itinerarySaved={itinerarySaved}
         />
         <div className="flex items-center justify-center">
+          <Link href={itinerary.social_media} className="mt-3 mr-5">
+            <SocialIcon socialMediaName={itinerary.social_media} />
+          </Link>
           <h2 className="mt-4 mb-2 text-3xl font-bold text-center font-lato text-chenkster-blue">
             {itinerary.title}
           </h2>
@@ -113,6 +118,7 @@ export default function Itinerary({ user, itinerary, itinerarySaved }) {
           <Map lat={itinerary.lat} lng={itinerary.lng} />
         </InfoSection>
       </div>
+      <FollowUs />
       <AskChenkster />
     </Layout>
   );

@@ -106,6 +106,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
     sub_categories: itinerary ? itinerary.sub_categories : [],
     front_image: itinerary ? itinerary.front_image : '',
     detail_image: itinerary ? itinerary.detail_image : '',
+    social_media: itinerary ? itinerary.social_media : '',
   });
   const supabase = useSupabaseClient();
   const router = useRouter();
@@ -239,7 +240,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
     }
     toast.dismiss(loadingToastId);
     toast.success(`Successfully uploaded: ${formData.title}`);
-    if (itinerary) router.push(`/dashboard/itinerary/new`);
+    router.push(`/itineraries/uploaded`);
     setLoading(false);
     setFormData({
       title: '',
@@ -534,6 +535,23 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           value={formData.visit_period}
           onChange={handleChange}
           placeholder="Lunch time 12:30 or dinner 20:00, because Italians are coming 30-45 minutes later and yo..."
+          className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
+          required
+        />{' '}
+        <label
+          htmlFor="social_media"
+          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
+        >
+          Social media link
+        </label>
+        <input
+          type="url"
+          name="social_media"
+          id="social_media"
+          autoComplete="social_media"
+          value={formData.social_media}
+          onChange={handleChange}
+          placeholder="https://www.instagram.com/assaje_milano/"
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />

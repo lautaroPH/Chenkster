@@ -8,6 +8,7 @@ export const updateTotalMessages = async (
     .from('total_messages')
     .update({
       messages: messages + 1,
+      created_at: new Date(),
     })
     .eq('username', username)
     .eq('to_username', to_username);

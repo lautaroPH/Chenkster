@@ -12,7 +12,6 @@ const MessagesProfile = ({
 }) => {
   const timeInMiliseconds = new Date(created_at).getTime();
   const timeAgo = useTimeAgo(timeInMiliseconds);
-
   return (
     <Link
       className="flex items-center justify-between w-4/5 px-3 py-3 bg-transparent shadow mt-7 rounded-xl drop-shadow-lg"
@@ -29,18 +28,18 @@ const MessagesProfile = ({
           {first_name} {last_name}
         </p>
       </div>
-      <div className="flex flex-col items-end justify-center">
-        {numberMessages && numberMessages > 0 && (
+      {numberMessages > 0 && (
+        <div className="flex flex-col items-end justify-center">
           <p className="bg-[#3CD24B] rounded-full w-7 h-7 text-center text-white pt-[1px]">
             {numberMessages}
           </p>
-        )}
-        {created_at && (
-          <span className="font-poppins text-[9px] mt-3 font-semibold text-chenkster-gray">
-            {timeAgo}
-          </span>
-        )}
-      </div>
+          {created_at && (
+            <span className="font-poppins text-[9px] mt-3 font-semibold text-chenkster-gray">
+              {timeAgo}
+            </span>
+          )}
+        </div>
+      )}
     </Link>
   );
 };
