@@ -118,7 +118,7 @@ export default function Category({
               country={country}
               title={place.title}
               budget={place.budget}
-              image={place.image}
+              image={place.front_image}
             />
           ))}
         </>

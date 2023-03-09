@@ -59,9 +59,9 @@ export default function Itinerary({ user, itinerary, itinerarySaved }) {
       title={'Discover the best food'}
       username={user?.user_metadata?.username}
     >
-      <div className="mb-5">
+      <div className="w-full mb-5 sm:w-4/5">
         <ItineraryImage
-          image={itinerary.image}
+          image={itinerary.detail_image}
           title={itinerary.title}
           country={itinerary.city.country}
           city={itinerary.city.title}
@@ -110,13 +110,6 @@ export default function Itinerary({ user, itinerary, itinerarySaved }) {
           info={itinerary.visit_period}
         />
         <InfoSection title={'Location'} info={itinerary.street}>
-          {/* <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60117.81005979324!2d-122.40984742585711!3d37.78564847001532!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8085807d19dbd10d%3A0x62f31595dfc6dbf0!2sGolden%20Gate%20Bridge!5e0!3m2!1sen!2sus!4v1612322660253!5m2!1sen!2sus"
-            width="302"
-            height="247"
-            allowFullScreen=""
-            loading="lazy"
-          ></iframe> */}
           <Map lat={itinerary.lat} lng={itinerary.lng} />
         </InfoSection>
       </div>

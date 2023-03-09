@@ -2,7 +2,8 @@ export const updateItinerary = async (
   supabase,
   userId,
   dataItinerary,
-  image,
+  fronImage,
+  detailImage,
   id,
 ) => {
   const categories = dataItinerary.categories.map((category) => category.title);
@@ -13,7 +14,8 @@ export const updateItinerary = async (
       {
         ...dataItinerary,
         categories,
-        image,
+        front_image: fronImage,
+        detail_image: detailImage,
         user_id: userId,
       },
     ])

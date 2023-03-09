@@ -2,7 +2,8 @@ export const uploadItinerary = async (
   supabase,
   userId,
   dataItinerary,
-  image,
+  frontPath,
+  detailPath,
 ) => {
   const categories = dataItinerary.categories.map((category) => category.title);
 
@@ -10,8 +11,9 @@ export const uploadItinerary = async (
     {
       ...dataItinerary,
       categories,
-      image,
       user_id: userId,
+      front_image: frontPath,
+      detail_image: detailPath,
     },
   ]);
 

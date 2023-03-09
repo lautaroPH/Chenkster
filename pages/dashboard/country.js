@@ -66,7 +66,7 @@ export default function Country({ user }) {
     const loadingToastId = toast.loading('Loading...');
 
     if (!formData.country || !formData.flag || !formData.bg_image)
-      return handleError('Please fill all the fields');
+      return handleError('Please fill all the fields', loadingToastId);
 
     const flagCorrect =
       allowedExtensions.exec(formData.flag[0].type) &&
@@ -78,6 +78,7 @@ export default function Country({ user }) {
     if (!flagCorrect && !bgImageCorrect)
       return handleError(
         'File type is not supported or file size is too large for flag and background image',
+        loadingToastId,
       );
 
     const { dataImage, errorImage } = await uploadImage(
@@ -88,7 +89,7 @@ export default function Country({ user }) {
       'countries',
     );
 
-    if (errorImage) return handleError(errorImage.message);
+    if (errorImage) return handleError(errorImage.message, loadingToastId);
 
     const { dataImage: data, errorImage: error } = await uploadImage(
       formData.bg_image[0],
@@ -98,7 +99,7 @@ export default function Country({ user }) {
       'countries',
     );
 
-    if (error) return handleError(error.message);
+    if (error) return handleError(error.message, loadingToastId);
 
     const flagPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/${dataImage.path}`;
     const bgImagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/${data.path}`;
@@ -120,7 +121,7 @@ export default function Country({ user }) {
 
       const removeBgImage = await removeImage(data.path, supabase, 'countries');
 
-      handleError(err.message);
+      handleError(err.message, loadingToastId);
       return;
     }
 
@@ -144,6 +145,7 @@ export default function Country({ user }) {
   };
 
   const handleError = (error) => {
+    toast.dismiss(loadingToastId);
     setLoading(false);
     setError(error);
   };

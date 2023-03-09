@@ -64,7 +64,7 @@ export default function Category({ user }) {
     const loadingToastId = toast.loading('Loading...');
 
     if (!formData.category || !formData.image || !formData.sub_categories)
-      return handleError('Please fill all the fields');
+      return handleError('Please fill all the fields', loadingToastId);
 
     const imageCorrect =
       allowedExtensions.exec(formData.image[0].type) &&
@@ -73,6 +73,7 @@ export default function Category({ user }) {
     if (!imageCorrect)
       return handleError(
         'File type is not supported or file size is too large for flag and background image',
+        loadingToastId,
       );
 
     const { dataImage, errorImage } = await uploadImage(
@@ -83,7 +84,7 @@ export default function Category({ user }) {
       'categories',
     );
 
-    if (errorImage) return handleError(errorImage.message);
+    if (errorImage) return handleError(errorImage.message, loadingToastId);
 
     const imagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/categories/${dataImage.path}`;
 
@@ -98,7 +99,7 @@ export default function Category({ user }) {
       user.id,
       subCategories,
     );
-
+    console.log(err);
     if (err) {
       const removedImage = await removeImage(
         dataImage.path,
@@ -106,7 +107,7 @@ export default function Category({ user }) {
         'categories',
       );
 
-      handleError(err.message);
+      handleError(err.message, loadingToastId);
       return;
     }
     toast.dismiss(loadingToastId);
@@ -127,6 +128,7 @@ export default function Category({ user }) {
   };
 
   const handleError = (error) => {
+    toast.dismiss(loadingToastId);
     setLoading(false);
     setError(error);
   };

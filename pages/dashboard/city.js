@@ -73,7 +73,7 @@ export default function City({ user, countries }) {
       !formData.image ||
       !formData.country
     )
-      return handleError('Please fill all the fields');
+      return handleError('Please fill all the fields', loadingToastId);
 
     const imageCorrect =
       allowedExtensions.exec(formData.image[0].type) &&
@@ -82,6 +82,7 @@ export default function City({ user, countries }) {
     if (!imageCorrect)
       return handleError(
         'File type is not supported or file size is too large for flag and background image',
+        loadingToastId,
       );
 
     const { dataImage, errorImage } = await uploadImage(
@@ -92,7 +93,7 @@ export default function City({ user, countries }) {
       'cities',
     );
 
-    if (errorImage) return handleError(errorImage.message);
+    if (errorImage) return handleError(errorImage.message, loadingToastId);
 
     const imagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/cities/${dataImage.path}`;
 
@@ -112,7 +113,7 @@ export default function City({ user, countries }) {
         'cities',
       );
 
-      handleError(err.message);
+      handleError(err.message, loadingToastId);
       return;
     }
     toast.dismiss(loadingToastId);
@@ -134,6 +135,7 @@ export default function City({ user, countries }) {
   };
 
   const handleError = (error) => {
+    toast.dismiss(loadingToastId);
     setLoading(false);
     setError(error);
   };

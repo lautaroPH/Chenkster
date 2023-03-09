@@ -1,21 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 import Layout from '@/components/Layout';
-import UploadSvg from '@/components/Svg/UploadSvg';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRef, useState } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
-import { getCities } from '@/utils/getCities';
 import { getCategories } from '@/utils/getCategories';
 import { allowedExtensions } from '@/utils/allowedExtension';
 import { uploadImage } from '@/utils/uploadImage';
 import { removeImage } from '@/utils/removeImage';
-import { uploadImagePreview } from '@/utils/uploadImagePreview';
 import { uploadItinerary } from '@/utils/uploadItinerary';
 import CategorySelected from '@/components/Dashboard/CategorySelected';
 import { updateItinerary } from '@/utils/updateItinerary';
 import { useRouter } from 'next/router';
 import FileInput from '@/components/FileInput';
+import { getCountries } from '@/utils/getCountries';
+import { getCountryCities } from '@/utils/getCountryCities';
 
 export const getServerSideProps = async (ctx) => {
   const { itineraryId } = ctx.params;
@@ -23,7 +22,7 @@ export const getServerSideProps = async (ctx) => {
 
   const { data } = await supabase.auth.getUser();
 
-  const { cities } = await getCities();
+  const { countries } = await getCountries();
   const { categories } = await getCategories();
 
   if (!data.user)
@@ -48,9 +47,9 @@ export const getServerSideProps = async (ctx) => {
       props: {
         initialSession: data.user,
         user: data.user,
-        cities,
         categories,
         itinerary: null,
+        countries,
       },
     };
   }
@@ -82,21 +81,21 @@ export const getServerSideProps = async (ctx) => {
     props: {
       initialSession: data.user,
       user: data.user,
-      cities,
       categories,
       itinerary: {
         ...itinerary,
         categories: categoriesItineraries,
       },
+      countries,
     },
   };
 };
 
-export default function Itinerary({ user, cities, categories, itinerary }) {
+export default function Itinerary({ user, categories, itinerary, countries }) {
   const [formData, setFormData] = useState({
+    country: itinerary ? itinerary.country : '',
     title: itinerary ? itinerary.title : '',
     description: itinerary ? itinerary.description : '',
-    image: itinerary ? itinerary.image : '',
     budget: itinerary ? itinerary.budget : '',
     visit_period: itinerary ? itinerary.visit_period : '',
     city: itinerary ? itinerary.city : '',
@@ -105,15 +104,20 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
     lat: itinerary ? itinerary.lat : '',
     lng: itinerary ? itinerary.lng : '',
     sub_categories: itinerary ? itinerary.sub_categories : [],
+    front_image: itinerary ? itinerary.front_image : '',
+    detail_image: itinerary ? itinerary.detail_image : '',
   });
   const supabase = useSupabaseClient();
   const router = useRouter();
 
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
-  const [imagePreview, setImagePreview] = useState();
+  const [frontImagePreview, setFrontImagePreview] = useState();
+  const [detailImagePreview, setDetailImagePreview] = useState();
+  const [cities, setCities] = useState([]);
 
-  const imageInputRef = useRef();
+  const frontImageRef = useRef();
+  const detailImageRef = useRef();
   const categorySelectRef = useRef();
   const subCategorySelectRef = useRef();
 
@@ -125,7 +129,7 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
     const loadingToastId = toast.loading('Loading...');
     if (
       !formData.categories ||
-      !formData.image ||
+      !formData.detail_image ||
       !formData.city ||
       !formData.description ||
       !formData.title ||
@@ -136,64 +140,83 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
       !formData.lng ||
       !formData.sub_categories
     )
-      return handleError('Please fill all the fields');
+      return handleError('Please fill all the fields', loadingToastId);
 
     const imageCorrect =
-      allowedExtensions.exec(formData.image[0].type) &&
-      formData.image[0].size < 5000000;
+      allowedExtensions.exec(formData.detail_image[0].type) &&
+      formData.detail_image[0].size < 3000000 &&
+      allowedExtensions.exec(formData.front_image[0].type) &&
+      formData.front_image[0].size < 3000000;
 
     if (!imageCorrect)
       return handleError(
-        'File type is not supported or file size is too large for flag and background image',
+        'File type is not supported or file size is too large for the image',
+        loadingToastId,
       );
 
     if (itinerary) {
       const { error } = await removeImage(
-        `public/${itinerary.title}/image`,
+        `public/${itinerary.title}/detail_image`,
         supabase,
         'itineraries',
       );
 
-      if (error) {
-        handleError(error.message);
+      const { error: error2 } = await removeImage(
+        `public/${itinerary.title}/front_image`,
+        supabase,
+        'itineraries',
+      );
+
+      if (error || error2) {
+        handleError(error.message || error2.messag, loadingToastId);
         return;
       }
     }
 
+    const { dataImage: detailImage, errorImage: errorDetail } =
+      await uploadImage(
+        formData.detail_image[0],
+        `detail_image`,
+        formData.title,
+        supabase,
+        'itineraries',
+      );
+
     const { dataImage, errorImage } = await uploadImage(
-      formData.image[0],
-      `image`,
+      formData.front_image[0],
+      `front_image`,
       formData.title,
       supabase,
       'itineraries',
     );
 
-    if (errorImage)
+    if (errorImage || errorDetail)
       return handleError(
-        errorImage.statusCode === '409'
+        errorImage.statusCode === '409' || errorDetail.statusCode === '409'
           ? 'The place already exists'
-          : errorImage.message,
+          : errorImage.message || errorDetail.message,
+        loadingToastId,
       );
 
-    const imagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/${dataImage.path}`;
+    const frontPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/${dataImage.path}`;
+    const detailPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/${detailImage.path}`;
 
     if (itinerary) {
       const { err } = await updateItinerary(
         supabase,
         user.id,
         formData,
-        imagePath,
+        frontPath,
+        detailPath,
         itinerary.id,
       );
 
       if (err) {
-        const removedImage = await removeImage(
-          dataImage.path,
-          supabase,
-          'itineraries',
-        );
+        await removeImage(dataImage.path, supabase, 'itineraries');
 
-        handleError(err.message);
+        await removeImage(detailImage.path, supabase, 'itineraries');
+
+        handleError(err.message, loadingToastId);
         return;
       }
     } else {
@@ -201,17 +224,16 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
         supabase,
         user.id,
         formData,
-        imagePath,
+        frontPath,
+        detailPath,
       );
 
       if (err) {
-        const removedImage = await removeImage(
-          dataImage.path,
-          supabase,
-          'itineraries',
-        );
+        await removeImage(dataImage.path, supabase, 'itineraries');
 
-        handleError(err.message);
+        await removeImage(detailImage.path, supabase, 'itineraries');
+
+        handleError(err.message, loadingToastId);
         return;
       }
     }
@@ -222,7 +244,6 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
     setFormData({
       title: '',
       description: '',
-      image: '',
       budget: '',
       visit_period: '',
       city: '',
@@ -231,17 +252,26 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
       lat: '',
       lng: '',
       sub_categories: [],
+      front_image: '',
+      detail_image: '',
     });
-    setImagePreview();
-    imageInputRef.current.value = '';
+    setFrontImagePreview('');
+    setDetailImagePreview('');
+    detailImageRef.current.value = '';
+    frontImageRef.current.value = '';
   };
 
-  const handleChange = (e) => {
+  const handleChange = async (e) => {
     const { name, value } = e.target;
+    if (name === 'country') {
+      const { cities } = await getCountryCities(value);
+      setCities(cities);
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleError = (error) => {
+  const handleError = (error, loadingToastId) => {
+    toast.dismiss(loadingToastId);
     setLoading(false);
     setError(error);
   };
@@ -292,8 +322,28 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
     setFormData((prev) => ({ ...prev, [name]: files }));
   };
 
-  const uploadImagePreview = async (file) => {
-    setImagePreview(file);
+  const uploadDetailImagePreview = async (file) => {
+    setDetailImagePreview(file);
+  };
+
+  const uploadFrontImagePreview = async (file) => {
+    setFrontImagePreview(file);
+  };
+
+  const handleMapUrl = (e) => {
+    const url = e.target.value;
+    const regex = /@(-?\d+\.?\d*),(-?\d+\.?\d*)/;
+    const match = url.match(regex);
+
+    if (match) {
+      const lat = match[1];
+      const lng = match[2];
+      setFormData((prev) => ({
+        ...prev,
+        lat: parseFloat(lat),
+        lng: parseFloat(lng),
+      }));
+    }
   };
 
   return (
@@ -302,6 +352,30 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
         onSubmit={handleSubmit}
         className="flex flex-col justify-center mb-10 w-96"
       >
+        <label
+          htmlFor="country"
+          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
+        >
+          Select a country
+        </label>
+        <select
+          name="country"
+          id="country"
+          className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
+          required
+          placeholder="Select a country"
+          defaultValue={''}
+          onChange={handleChange}
+        >
+          <option value="" disabled>
+            Select a country
+          </option>
+          {countries.map((country) => (
+            <option key={country.id} value={country.title}>
+              {country.title}
+            </option>
+          ))}
+        </select>
         <label
           htmlFor="city"
           className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
@@ -481,62 +555,71 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
           required
         />
         <label
-          htmlFor="lat"
+          htmlFor="map_url"
           className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
         >
-          Latitude
+          Google Map Url
         </label>
         <input
-          type="number"
-          name="lat"
-          id="lat"
-          autoComplete="lat"
-          value={formData.lat}
-          onChange={handleChange}
-          placeholder="-34.876126"
+          type="url"
+          name="map_url"
+          id="map_url"
+          autoComplete="map_url"
+          onChange={handleMapUrl}
+          placeholder="https://www.google.com/maps/place/Parrilla+El+Pampa+Sal%C3%B3n+Familiar+%2F+Shows+En+Vivo/@-34.8788851,-57.8781179,16z"
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />
         <label
-          htmlFor="lng"
+          htmlFor="front_image"
           className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
         >
-          Longitude
-        </label>
-        <input
-          type="number"
-          name="lng"
-          id="lng"
-          autoComplete="lng"
-          value={formData.lng}
-          onChange={handleChange}
-          placeholder="-57.881605"
-          className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-          required
-        />
-        <label
-          htmlFor="image"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Itinerary image
+          Front image
         </label>
         <FileInput
-          name="image"
-          inputRef={imageInputRef}
-          title="Upload an image for the itinerary"
+          name="front_image"
+          inputRef={frontImageRef}
+          title="Upload a front image for the itinerary"
           handleData={updateImageData}
-          handlePreview={uploadImagePreview}
+          handlePreview={uploadFrontImagePreview}
         />
-        {imagePreview && (
+        {frontImagePreview && (
           <img
-            src={imagePreview}
+            src={frontImagePreview}
             alt="image preview"
             className="object-cover w-56 overflow-hidden max-h-56"
           />
         )}
-        {!imagePreview && formData?.image && (
+        {!frontImagePreview && formData?.front_image && (
           <img
-            src={formData?.image}
+            src={formData?.front_image}
+            alt="image preview"
+            className="object-cover w-56 overflow-hidden max-h-56"
+          />
+        )}
+        <label
+          htmlFor="detail_image"
+          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
+        >
+          Detail image
+        </label>
+        <FileInput
+          name="detail_image"
+          inputRef={detailImageRef}
+          title="Upload a detail image for the itinerary"
+          handleData={updateImageData}
+          handlePreview={uploadDetailImagePreview}
+        />
+        {detailImagePreview && (
+          <img
+            src={detailImagePreview}
+            alt="image preview"
+            className="object-cover w-56 overflow-hidden max-h-56"
+          />
+        )}
+        {!detailImagePreview && formData?.detail_image && (
+          <img
+            src={formData?.detail_image}
             alt="image preview"
             className="object-cover w-56 overflow-hidden max-h-56"
           />
@@ -546,7 +629,6 @@ export default function Itinerary({ user, cities, categories, itinerary }) {
           disabled={
             loading ||
             !formData.categories ||
-            !formData.image ||
             !formData.city ||
             !formData.description ||
             !formData.title ||
