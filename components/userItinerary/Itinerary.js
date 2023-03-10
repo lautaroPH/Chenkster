@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { toast, Toaster } from 'react-hot-toast';
 import HeartSvg from '../Svg/HeartSvg';
 import ShareSvg from '../Svg/ShareSvg';
+import TrashSvg from '../Svg/TrashSvg';
 const Draggable = dynamic(
   () =>
     import('react-beautiful-dnd').then((mod) => {
@@ -89,7 +90,7 @@ const Itinerary = ({
                     onClick={handleDeleteItinerary}
                     className="text-chenkster-blue"
                   >
-                    <HeartSvg fill="#0973E1" styles={'w-6 h-6'} />
+                    <TrashSvg />
                   </div>
                   <div onClick={handleCopyUrl}>
                     <ShareSvg />
