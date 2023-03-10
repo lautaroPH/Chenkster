@@ -13,6 +13,7 @@ const FormRegister = () => {
   const [loading, setLoading] = useState(false);
   const supabase = useSupabaseClient();
 
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [password2, setPassword2] = useState('');
@@ -30,13 +31,18 @@ const FormRegister = () => {
       return;
     }
 
-    if (!email || !password || !password2) {
+    if (!email || !password || !password2 || !username) {
       setLoading(false);
       setError({ submit: 'Please fill in all fields' });
       return;
     }
 
-    const { data, error } = await registerWithEmail(email, password, supabase);
+    const { data, error } = await registerWithEmail(
+      email,
+      password,
+      username,
+      supabase,
+    );
 
     setLoading(false);
     if (error) {
@@ -52,6 +58,17 @@ const FormRegister = () => {
       onSubmit={handleSubmit}
       className="relative flex flex-col items-center justify-center mt-12 w-96"
     >
+      <input
+        type="text"
+        name="username"
+        id="username"
+        value={username}
+        autoComplete="username"
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Enter your username"
+        className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
+        required
+      />
       <input
         type="email"
         name="email"
