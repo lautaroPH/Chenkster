@@ -24,7 +24,7 @@ export const registerWithEmail = async (
     options: {
       emailRedirectTo: `http://localhost:3000/edit/profile`,
       data: {
-        role: 'user',
+        role: 'admin',
         avatar:
           'https://res.cloudinary.com/dv1ksnrvk/image/upload/v1677080765/samples/userImg_oiynrs.png',
         first_name: 'Guest',

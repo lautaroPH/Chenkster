@@ -86,6 +86,7 @@ export default function Category({
       url={`/country/${country}/${city}`}
       title={'Explore our top suggestions'}
       username={user?.user_metadata?.username}
+      role={user?.user_metadata?.role}
     >
       <div className="flex items-center justify-center">
         <button

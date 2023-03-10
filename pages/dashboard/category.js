@@ -146,6 +146,7 @@ export default function Category({ user }) {
       url={'/dashboard'}
       title={'Upload category'}
       username={user?.user_metadata?.username}
+      role={user?.user_metadata?.role}
     >
       <form
         onSubmit={handleSubmit}

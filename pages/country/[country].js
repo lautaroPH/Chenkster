@@ -37,6 +37,7 @@ export default function Country({ user, cities, country }) {
       url={'/welcome'}
       title={'Select the city'}
       username={user?.user_metadata?.username}
+      role={user?.user_metadata?.role}
     >
       <DiscoverCountry
         country={country.title}

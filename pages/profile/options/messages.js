@@ -74,6 +74,7 @@ export default function Messages({ user, messagesLoaded, adminProfiles }) {
       currentLocation={requests}
       href={`/profile/options/messages`}
       username={user_metadata.username}
+      role={user_metadata.role}
     >
       {!requests ? (
         <>
@@ -102,16 +103,47 @@ export default function Messages({ user, messagesLoaded, adminProfiles }) {
         </>
       ) : (
         <>
-          {/* <Requests avatar={user_metadata?.avatar} />
-          <Requests avatar={user_metadata?.avatar} />
-          <Requests avatar={user_metadata?.avatar} />
-          <Requests avatar={user_metadata?.avatar} />
-          <Requests avatar={user_metadata?.avatar} /> */}
-          <div className="py-4 w-4/5 px-4 flex flex-col items-center justify-center bg-gradient-to-b from-[#7bb6f469] to-slate-100  mt-10 mb-10 rounded-lg">
-            <p className="font-semibold tracking-wider text-center font-lato text-chenkster-gray">
-              We are currently working on this feature. Please check back later.
-            </p>
-          </div>
+          {user_metadata.username === 'super admin' ? (
+            <>
+              <Requests
+                avatar={
+                  'https://dam.muyinteresante.com.mx/wp-content/uploads/2018/05/fotos-de-perfil-son-mejor-elegidas-por-personas-extranas-afirma-estudio.jpg'
+                }
+                name={'Jhon Doe'}
+              />
+              <Requests
+                avatar={
+                  'https://media.licdn.com/dms/image/C4D03AQFnohQzlY-XZw/profile-displayphoto-shrink_800_800/0/1624180767804?e=2147483647&v=beta&t=Vn6jKnvsAMS4C3WOX-3dkodb7wnJLezTpDhpPxbMjm8'
+                }
+                name={'Richard Dawson'}
+              />
+              <Requests
+                avatar={
+                  'https://i1.wp.com/www.viviendoencasa.mx/wp-content/uploads/2021/05/%C2%BFPor-que%CC%81-hay-personas-que-quitan-su-foto-de-WhatsApp-cuando-se-enojan_-1.jpg?resize=1280%2C720&ssl=1'
+                }
+                name={'Olivia Wikky'}
+              />
+              <Requests
+                avatar={
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTozd34MECljztW9OxdJUlN5mplgr1flFz9yA&usqp=CAU'
+                }
+                name={'Dianne Russell'}
+              />
+              <Requests
+                avatar={
+                  'https://i0.wp.com/thehappening.com/wp-content/uploads/2017/07/foto-perfil-5.jpg?resize=1024%2C694&ssl=1'
+                }
+                name={'Henry McKinney'}
+              />
+            </>
+          ) : (
+            <div className="py-4 w-4/5 px-4 flex flex-col items-center justify-center bg-gradient-to-b from-[#7bb6f469] to-slate-100  mt-10 mb-10 rounded-lg">
+              <p className="font-semibold tracking-wider text-center font-lato text-chenkster-gray">
+                We are currently working on this feature. Please check back
+                later.
+              </p>
+            </div>
+          )}
         </>
       )}
     </LayoutProfile>

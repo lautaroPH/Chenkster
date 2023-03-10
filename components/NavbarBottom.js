@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import HeartSvg from './Svg/HeartSvg';
 import HomeSvg from './Svg/HomeSvg';
 import ItenarySvg from './Svg/ItenarySvg';
 import MapPointSvg from './Svg/MapPointSvg';
@@ -7,7 +8,7 @@ import MessageSvg from './Svg/MessageSvg';
 import PersonSvg from './Svg/PersonSvg';
 import SelectedNavSvg from './Svg/SelectedNavSvg';
 
-const NavbarBottom = ({ username }) => {
+const NavbarBottom = ({ username, role }) => {
   const router = useRouter();
   const { pathname } = router;
 
@@ -23,13 +24,26 @@ const NavbarBottom = ({ username }) => {
         </div>
       </Link>
       <Link
-        href={'/itinerary'}
+        href={role === 'admin' ? '/dashboard' : '/itinerary'}
         className="flex flex-col items-center justify-center"
       >
-        <ItenarySvg />
-        <div className="mt-1 -mb-2">
-          {pathname === '/itinerary' && <SelectedNavSvg />}
-        </div>
+        {role === 'admin' ? (
+          <>
+            <ItenarySvg />
+            <div className="mt-1 -mb-2">
+              {pathname === '/dashboard' && <SelectedNavSvg />}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="text-chenkster-blue">
+              <HeartSvg styles={'w-8 h-8'} />
+            </div>
+            <div className="mt-1 -mb-2">
+              {pathname === '/itinerary' && <SelectedNavSvg />}
+            </div>
+          </>
+        )}
       </Link>
       <Link
         className="flex flex-col items-center justify-center p-2 pb-3 rounded-full bg-chenkster-blue"

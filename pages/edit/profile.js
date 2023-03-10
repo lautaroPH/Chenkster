@@ -82,6 +82,16 @@ export default function Profile({ user }) {
     if (!formData.first_name && !formData.last_name && !formData.description)
       return handleError('Please fill in the required fields');
 
+    const newData = {
+      ...formData,
+      location: locationInput
+        ? [...formData.location, locationInput]
+        : formData.location,
+      language: languageInput
+        ? [...formData.language, languageInput]
+        : formData.language,
+    };
+
     if (avatar && avatar.length > 0) {
       const avatarName = profileImgRef.current.value?.split('\\')[2];
 
@@ -112,9 +122,12 @@ export default function Profile({ user }) {
 
       const imagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/avatars/${dataImage.path}`;
 
-      const { dataProfile, errorProfile } = userFirstName
-        ? await updateProfile(formData, imagePath, user.id, supabase)
-        : await uploadProfile(formData, imagePath, user.id, supabase);
+      const { dataProfile, errorProfile } = await updateProfile(
+        newData,
+        imagePath,
+        user.id,
+        supabase,
+      );
 
       if (errorProfile) {
         await removeImage(dataImage.path, supabase, 'avatars');
@@ -126,7 +139,7 @@ export default function Profile({ user }) {
         return;
       }
 
-      const { data, error } = await updateUser(formData, imagePath, supabase);
+      const { data, error } = await updateUser(newData, imagePath, supabase);
 
       setLoading(false);
       if (error) {
@@ -138,9 +151,12 @@ export default function Profile({ user }) {
       return;
     }
 
-    const { dataProfile, errorProfile } = userFirstName
-      ? await updateProfile(formData, userImage, user.id, supabase)
-      : await uploadProfile(formData, userImage, user.id, supabase);
+    const { dataProfile, errorProfile } = await updateProfile(
+      newData,
+      userImage,
+      user.id,
+      supabase,
+    );
 
     if (errorProfile)
       return handleError(
@@ -149,7 +165,7 @@ export default function Profile({ user }) {
           : errorProfile.message,
       );
 
-    const { data, error } = await updateUser(formData, userImage, supabase);
+    const { data, error } = await updateUser(newData, userImage, supabase);
 
     setLoading(false);
     if (error) return handleError(error.message);
@@ -215,6 +231,7 @@ export default function Profile({ user }) {
       url={`/profile/${user?.user_metadata?.username}`}
       title="Create profile"
       username={user?.user_metadata?.username}
+      role={user?.user_metadata?.role}
     >
       <form
         onSubmit={handleSubmit}

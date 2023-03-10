@@ -53,6 +53,7 @@ export default function Profile({ user, itineraries }) {
       url={'/dashboard/itinerary/new'}
       title={'Your published contents'}
       username={user?.user_metadata?.username}
+      role={user?.user_metadata?.role}
     >
       {!itineraries || itineraries?.length === 0 ? (
         <p className="my-5 font-bold font-lato text-chenkster-gray">

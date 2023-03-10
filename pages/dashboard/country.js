@@ -167,6 +167,7 @@ export default function Country({ user }) {
       url={'/dashboard'}
       title={'Upload country'}
       username={user?.user_metadata?.username}
+      role={user?.user_metadata?.role}
     >
       <form
         onSubmit={handleSubmit}

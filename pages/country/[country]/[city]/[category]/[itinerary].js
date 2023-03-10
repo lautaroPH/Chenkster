@@ -74,6 +74,7 @@ export default function Itinerary({
       url={`/country/${country}/${city}/${category}`}
       title={'Discover the best food'}
       username={user?.user_metadata?.username}
+      role={user?.user_metadata?.role}
     >
       <div className="w-full mb-5 sm:w-4/5">
         <ItineraryImage

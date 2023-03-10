@@ -83,7 +83,11 @@ export default function Itinerary({
   };
 
   return (
-    <Layout title={'Itineraries'} username={user.user_metadata.username}>
+    <Layout
+      title={'Itineraries'}
+      username={user.user_metadata.username}
+      role={user?.user_metadata?.role}
+    >
       <DragDropContext onDragEnd={handleDragEnd}>
         <StrictModeDroppable droppableId="items">
           {(provided) => (

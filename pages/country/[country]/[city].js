@@ -32,6 +32,7 @@ export default function City({ user, categories, country, city }) {
       url={`/country/${country}`}
       title={'Choose the category'}
       username={user?.user_metadata?.username}
+      role={user?.user_metadata?.role}
     >
       <p className="text-lg text-center font-lato text-chenkster-gray w-80">
         Get the best advice about places, experiences and activities, directly

@@ -132,7 +132,10 @@ export default function Chat({
         setMessages={setMessages}
         messages={messages}
       />
-      <NavbarBottom username={user?.user_metadata?.username} />
+      <NavbarBottom
+        username={user?.user_metadata?.username}
+        role={user?.user_metadata?.role}
+      />
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center m-auto -z-30">
         <WorldLightSvg />
       </div>

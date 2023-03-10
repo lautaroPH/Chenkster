@@ -37,6 +37,7 @@ export default function Dashboard({ user }) {
     <Layout
       title={'Dashboard'}
       username={user.user_metadata?.username}
+      role={user?.user_metadata?.role}
       url={'welcome'}
     >
       <div className="flex flex-col items-center justify-center w-full mt-20">

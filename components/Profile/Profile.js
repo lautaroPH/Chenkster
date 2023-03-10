@@ -1,12 +1,11 @@
 import ProfileData from '../EditProfile/ProfileData';
-import ActivityLevel from './ActivityLevel';
 import ProfileDescription from './ProfileDescription';
 import ProfileLevel from './ProfileLevel';
 
-const Profile = ({ description, language, location }) => {
+const Profile = ({ description, language, location, username }) => {
   return (
     <>
-      {/* <ProfileLevel /> */}
+      {username === 'super admin' && <ProfileLevel />}
       <ProfileDescription description={description} />
       {language.length > 0 && (
         <div className="w-4/5 mt-5">
@@ -28,7 +27,6 @@ const Profile = ({ description, language, location }) => {
           </div>
         </div>
       )}
-      {/* <ActivityLevel /> */}
     </>
   );
 };
