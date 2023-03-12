@@ -103,7 +103,7 @@ export default function Itinerary({
               <ButtonDelete
                 title={itinerary.title}
                 deleteFunction={deleteItinerary}
-                redirect={`/dashboard/itinerary/${itinerary.id}}`}
+                redirect={`/dashboard/itinerary/${itinerary.title}}`}
               />
             </div>
           )}

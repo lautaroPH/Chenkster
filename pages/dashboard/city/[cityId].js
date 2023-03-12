@@ -26,7 +26,7 @@ export const getServerSideProps = async (ctx) => {
   if (!data.user)
     return {
       redirect: {
-        destination: '/login?callbackUrl=/dashboard/city',
+        destination: '/login?callbackUrl=/dashboard/city/new',
         permanent: false,
       },
     };
@@ -303,7 +303,7 @@ export default function City({ user, countries, city }) {
           <img
             src={imagePreview}
             alt="Image for the city"
-            className="object-cover overflow-hidden w-52 max-h-52"
+            className="object-cover h-32 w-28 rounded-2xl"
           />
         )}
         <p className="mt-2 mb-3 text-red-600">{error}</p>

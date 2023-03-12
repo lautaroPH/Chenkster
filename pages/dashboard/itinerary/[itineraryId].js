@@ -720,14 +720,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           <img
             src={frontImagePreview}
             alt="image preview"
-            className="object-cover w-56 overflow-hidden max-h-56"
-          />
-        )}
-        {!frontImagePreview && formData?.front_image && (
-          <img
-            src={formData?.front_image}
-            alt="image preview"
-            className="object-cover w-56 overflow-hidden max-h-56"
+            className="object-cover h-40 w-80 rounded-xl"
           />
         )}
         <label
@@ -747,14 +740,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           <img
             src={detailImagePreview}
             alt="image preview"
-            className="object-cover w-56 overflow-hidden max-h-56"
-          />
-        )}
-        {!detailImagePreview && formData?.detail_image && (
-          <img
-            src={formData?.detail_image}
-            alt="image preview"
-            className="object-cover w-56 overflow-hidden max-h-56"
+            className="object-cover w-96 h-60 rounded-2xl"
           />
         )}
         <p className="mt-2 mb-3 text-red-600">{error}</p>

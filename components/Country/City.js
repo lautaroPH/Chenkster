@@ -38,7 +38,7 @@ const City = ({ country, city, description, image, role, id }) => {
                 title={city}
                 id={id}
                 deleteFunction={deleteCity}
-                redirect={`/dashboard/city`}
+                redirect={`/dashboard/city/${city}`}
               />
             </>
           )}

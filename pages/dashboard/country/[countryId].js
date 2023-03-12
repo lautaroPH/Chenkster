@@ -23,7 +23,7 @@ export const getServerSideProps = async (ctx) => {
   if (!data.user)
     return {
       redirect: {
-        destination: '/login?callbackUrl=/dashboard/country',
+        destination: '/login?callbackUrl=/dashboard/country/new',
         permanent: false,
       },
     };
@@ -325,7 +325,7 @@ export default function Country({ user, country }) {
           <img
             src={flagPreview}
             alt="Flag country"
-            className="object-cover w-16 overflow-hidden"
+            className="object-cover w-10 h-5"
           />
         )}
         <label
@@ -345,7 +345,7 @@ export default function Country({ user, country }) {
           <img
             src={bgImagePreview}
             alt="Background image country"
-            className="object-cover overflow-hidden w-52 max-h-52"
+            className="object-cover w-80 h-72"
           />
         )}
         <p className="mt-2 mb-3 text-red-600">{error}</p>

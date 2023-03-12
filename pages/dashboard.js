@@ -48,7 +48,7 @@ export default function Dashboard({ user }) {
           Upload Country
         </Link>
         <Link
-          href={'/dashboard/city'}
+          href={'/dashboard/city/new'}
           className="w-2/3 py-5 mb-6 text-xl font-bold text-center text-white rounded-lg bg-gradient font-lato"
         >
           Upload City
