@@ -24,7 +24,7 @@ export const getServerSideProps = async (ctx) => {
 
   const { preferences } = await getPreferences(categoryReplace);
 
-  const { cities } = await getCity(cityReplace);
+  const { city: cities } = await getCity(cityReplace);
   const { places, error } = await getItineraries(cities.id, categoryReplace);
   if (error) return { notFound: true };
 

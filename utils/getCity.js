@@ -3,9 +3,9 @@ import { supabase } from '@/supabaseClient';
 export const getCity = async (city) => {
   const { data, error } = await supabase
     .from('cities')
-    .select('id,title')
+    .select('*')
     .eq('title', city)
     .single();
 
-  return { cities: data, err: error };
+  return { city: data, err: error };
 };

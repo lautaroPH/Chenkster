@@ -4,10 +4,9 @@ import InfoSection from '@/components/Itinerary/InfoSection';
 import ItineraryImage from '@/components/Itinerary/ItineraryImage';
 import Layout from '@/components/Layout';
 import Map from '@/components/Map';
-import FollowUs from '@/components/Profile/settings/FollowUs';
 import SocialIcon from '@/components/SocialIcons';
-import EditSvg from '@/components/Svg/EditSvg';
 import MapPointSvg from '@/components/Svg/MapPointSvg';
+import PencilEditSvg from '@/components/Svg/PencilEditSvg';
 import VerificSvg from '@/components/Svg/VerificSvg';
 import { deleteItinerary } from '@/utils/deleteItinerary';
 import { getItinerary } from '@/utils/getItinerary';
@@ -94,19 +93,19 @@ export default function Itinerary({
             {itinerary.title}
           </h2>
           {user?.user_metadata?.role === 'admin' && (
-            <>
+            <div className="flex items-center mt-2">
               <Link
-                href={`/dashboard/itinerary/${itinerary.id}`}
-                className="mt-2 ml-5 text-yellow-600"
+                href={`/dashboard/itinerary/${itinerary.title}`}
+                className="ml-5 "
               >
-                <EditSvg />
+                <PencilEditSvg />
               </Link>
               <ButtonDelete
                 title={itinerary.title}
                 deleteFunction={deleteItinerary}
                 redirect={`/dashboard/itinerary/${itinerary.id}}`}
               />
-            </>
+            </div>
           )}
         </div>
         <p className="flex items-center justify-center gap-1 text-sm tracking-wide font-lato text-chenkster-gray">
@@ -121,7 +120,7 @@ export default function Itinerary({
             <MapPointSvg styles={'w-3 h-4'} />
           </div>
           <p>
-            {itinerary.city.country}, {itinerary.city.title}
+            {itinerary.country.title}, {itinerary.city.title}
           </p>
         </div>
         <InfoSection title={'Description'} info={itinerary.description} />
@@ -134,7 +133,6 @@ export default function Itinerary({
           <Map lat={itinerary.lat} lng={itinerary.lng} />
         </InfoSection>
       </div>
-      <FollowUs />
       <AskChenkster />
     </Layout>
   );

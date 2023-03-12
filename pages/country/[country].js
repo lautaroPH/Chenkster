@@ -49,7 +49,7 @@ export default function Country({ user, cities, country }) {
           <City
             key={city.id}
             id={city.id}
-            country={city.country}
+            country={city.country_id.title}
             city={city.title}
             description={city.description}
             image={city.image}

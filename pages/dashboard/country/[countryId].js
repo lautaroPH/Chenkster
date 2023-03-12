@@ -1,7 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import FileInput from '@/components/FileInput';
 import Layout from '@/components/Layout';
-import { allowedExtensions } from '@/utils/allowedExtension';
 import { correctFile } from '@/utils/correctFile';
 import { getCountry } from '@/utils/getCountry';
 import { moveImage } from '@/utils/moveImage';
@@ -188,12 +187,26 @@ export default function Country({ user, country }) {
         countryData.id,
       );
 
-      if (err) return handleError(err.message, loadingToastId);
+      if (err) {
+        await removeImage(
+          `public/${formData.country}/bg_image`,
+          supabase,
+          'countries',
+        );
+
+        await removeImage(
+          `public/${formData.country}/flag`,
+          supabase,
+          'countries',
+        );
+
+        return handleError(err.message, loadingToastId);
+      }
     } else {
       if (!formData.country || !formData.flag || !formData.bg_image)
         return handleError('Please fill all the fields', loadingToastId);
 
-      if (!flagCorrect && !bgImageCorrect)
+      if (!flagCorrect || !bgImageCorrect)
         return handleError(
           'File type is not supported or file size is too large for flag and background image',
           loadingToastId,
@@ -242,16 +255,6 @@ export default function Country({ user, country }) {
     router.push('/welcome');
     toast.dismiss(loadingToastId);
     toast.success(`Successfully uploaded: ${formData.country}`);
-    setLoading(false);
-    setFormData({
-      country: '',
-      flag: '',
-      bg_image: '',
-    });
-    setFlagPreview();
-    setBgImagePreview();
-    flagInputRef.current.value = '';
-    bgImageInputRef.current.value = '';
   };
 
   const handleChange = (e) => {
@@ -280,7 +283,7 @@ export default function Country({ user, country }) {
   return (
     <Layout
       url={'/dashboard'}
-      title={'Upload country'}
+      title={country ? 'Edit Country' : 'Upload Country'}
       username={user?.user_metadata?.username}
       role={user?.user_metadata?.role}
     >

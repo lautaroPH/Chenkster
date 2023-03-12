@@ -15,6 +15,9 @@ import { useRouter } from 'next/router';
 import FileInput from '@/components/FileInput';
 import { getCountries } from '@/utils/getCountries';
 import { getCountryCities } from '@/utils/getCountryCities';
+import { getItinerary } from '@/utils/getItinerary';
+import { correctFile } from '@/utils/correctFile';
+import { moveImage } from '@/utils/moveImage';
 
 export const getServerSideProps = async (ctx) => {
   const { itineraryId } = ctx.params;
@@ -54,13 +57,9 @@ export const getServerSideProps = async (ctx) => {
     };
   }
 
-  const { data: itinerary, error: errorItinerary } = await supabase
-    .from('itineraries')
-    .select('*')
-    .eq('id', itineraryId)
-    .single();
+  const { itineraryData, err } = await getItinerary(itineraryId);
 
-  if (errorItinerary || !itinerary)
+  if (err || !itineraryData)
     return {
       redirect: {
         destination: '/dashboard/itinerary/new',
@@ -68,7 +67,7 @@ export const getServerSideProps = async (ctx) => {
       },
     };
 
-  const categoriesItineraries = itinerary.categories.map((category) => {
+  const categoriesItineraries = itineraryData.categories.map((category) => {
     const categoryWithSubCategories = categories.find(
       (categoryItem) => categoryItem.title === category,
     );
@@ -83,7 +82,7 @@ export const getServerSideProps = async (ctx) => {
       user: data.user,
       categories,
       itinerary: {
-        ...itinerary,
+        ...itineraryData,
         categories: categoriesItineraries,
       },
       countries,
@@ -93,34 +92,58 @@ export const getServerSideProps = async (ctx) => {
 
 export default function Itinerary({ user, categories, itinerary, countries }) {
   const [formData, setFormData] = useState({
-    country: itinerary ? itinerary.country : '',
-    title: itinerary ? itinerary.title : '',
-    description: itinerary ? itinerary.description : '',
-    budget: itinerary ? itinerary.budget : '',
-    visit_period: itinerary ? itinerary.visit_period : '',
-    city: itinerary ? itinerary.city : '',
-    street: itinerary ? itinerary.street : '',
-    categories: itinerary ? itinerary.categories : [],
-    lat: itinerary ? itinerary.lat : '',
-    lng: itinerary ? itinerary.lng : '',
-    sub_categories: itinerary ? itinerary.sub_categories : [],
-    front_image: itinerary ? itinerary.front_image : '',
-    detail_image: itinerary ? itinerary.detail_image : '',
-    social_media: itinerary ? itinerary.social_media : '',
+    country: itinerary?.country || '',
+    title: itinerary?.title || '',
+    description: itinerary?.description || '',
+    budget: itinerary?.budget || '',
+    visit_period: itinerary?.visit_period || '',
+    city: itinerary?.city || '',
+    street: itinerary?.street || '',
+    categories: itinerary?.categories || [],
+    lat: itinerary?.lat || '',
+    lng: itinerary?.lng || '',
+    sub_categories: itinerary?.sub_categories || [],
+    front_image: '',
+    detail_image: '',
+    social_media: itinerary?.social_media || '',
+    map_url: itinerary?.map_url || '',
   });
+
   const supabase = useSupabaseClient();
   const router = useRouter();
 
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
-  const [frontImagePreview, setFrontImagePreview] = useState();
-  const [detailImagePreview, setDetailImagePreview] = useState();
+  const [frontImagePreview, setFrontImagePreview] = useState(
+    itinerary?.front_image || '',
+  );
+  const [detailImagePreview, setDetailImagePreview] = useState(
+    itinerary?.detail_image || '',
+  );
   const [cities, setCities] = useState([]);
 
   const frontImageRef = useRef();
   const detailImageRef = useRef();
   const categorySelectRef = useRef();
   const subCategorySelectRef = useRef();
+  const timestamp = Date.parse(itinerary.created_at);
+
+  const disabled =
+    !formData.categories ||
+    !formData.city ||
+    !formData.description ||
+    !formData.title ||
+    !formData.budget ||
+    !formData.visit_period ||
+    !formData.street ||
+    !formData.lat ||
+    !formData.lng ||
+    !formData.sub_categories ||
+    !formData.social_media ||
+    !formData.map_url ||
+    !frontImagePreview ||
+    !detailImagePreview ||
+    !formData.country;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -128,99 +151,195 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
     setError('');
     setLoading(true);
     const loadingToastId = toast.loading('Loading...');
-    if (
-      !formData.categories ||
-      !formData.detail_image ||
-      !formData.city ||
-      !formData.description ||
-      !formData.title ||
-      !formData.budget ||
-      !formData.visit_period ||
-      !formData.street ||
-      !formData.lat ||
-      !formData.lng ||
-      !formData.sub_categories
-    )
-      return handleError('Please fill all the fields', loadingToastId);
-
-    const imageCorrect =
-      allowedExtensions.exec(formData.detail_image[0].type) &&
-      formData.detail_image[0].size < 3000000 &&
-      allowedExtensions.exec(formData.front_image[0].type) &&
-      formData.front_image[0].size < 3000000;
-
-    if (!imageCorrect)
-      return handleError(
-        'File type is not supported or file size is too large for the image',
-        loadingToastId,
-      );
-
-    if (itinerary) {
-      const { error } = await removeImage(
-        `public/${itinerary.title}/detail_image`,
-        supabase,
-        'itineraries',
-      );
-
-      const { error: error2 } = await removeImage(
-        `public/${itinerary.title}/front_image`,
-        supabase,
-        'itineraries',
-      );
-
-      if (error || error2) {
-        handleError(error.message || error2.message, loadingToastId);
-        return;
-      }
-    }
-
-    const { dataImage: detailImage, errorImage: errorDetail } =
-      await uploadImage(
-        formData.detail_image[0],
-        `detail_image`,
-        formData.title,
-        supabase,
-        'itineraries',
-      );
-
-    const { dataImage, errorImage } = await uploadImage(
-      formData.front_image[0],
-      `front_image`,
-      formData.title,
-      supabase,
-      'itineraries',
+    const itineraryData = itinerary;
+    const detailImageCorrect = correctFile(
+      formData?.detail_image[0]?.type,
+      formData?.detail_image[0]?.size,
     );
 
-    if (errorImage || errorDetail)
-      return handleError(
-        errorImage.statusCode === '409' || errorDetail.statusCode === '409'
-          ? 'The place already exists'
-          : errorImage.message || errorDetail.message,
-        loadingToastId,
-      );
+    const frontImageCorrect = correctFile(
+      formData?.front_image[0]?.type,
+      formData?.front_image[0]?.size,
+    );
 
-    const frontPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/${dataImage.path}`;
-    const detailPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/${detailImage.path}`;
+    if (itineraryData) {
+      let frontImage = itineraryData.front_image;
+      let detailImage = itineraryData.detail_image;
 
-    if (itinerary) {
+      if (
+        !formData.categories ||
+        !formData.city ||
+        !formData.description ||
+        !formData.title ||
+        !formData.budget ||
+        !formData.visit_period ||
+        !formData.street ||
+        !formData.lat ||
+        !formData.lng ||
+        !formData.sub_categories ||
+        !formData.social_media ||
+        !formData.map_url ||
+        !formData.country
+      )
+        return handleError('Please fill all the fields', loadingToastId);
+
+      if (formData.front_image && !frontImageCorrect)
+        return handleError(
+          'File type is not supported or file size is too large for the front image',
+          loadingToastId,
+        );
+
+      if (formData.detail_image && !detailImageCorrect)
+        return handleError(
+          'File type is not supported or file size is too large for the detail image',
+          loadingToastId,
+        );
+
+      if (formData.title !== itineraryData.title && !formData.detail_image) {
+        const { data, error } = await moveImage(
+          `${itineraryData.title}/detail_image`,
+          `${formData.title}/detail_image`,
+          'itineraries',
+          supabase,
+        );
+
+        if (error) return handleError(error.message, loadingToastId);
+
+        detailImage = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/public/${formData.title}/detail_image?${timestamp}`;
+      } else if (formData.detail_image) {
+        const { error } = await removeImage(
+          `public/${itineraryData.title}/detail_image`,
+          supabase,
+          'itineraries',
+        );
+
+        if (error) return handleError(error.message, loadingToastId);
+
+        const { dataImage, errorImage } = await uploadImage(
+          formData.detail_image[0],
+          `detail_image`,
+          formData.title,
+          supabase,
+          'itineraries',
+        );
+
+        if (errorImage) return handleError(errorImage.message, loadingToastId);
+
+        detailImage = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/public/${formData.title}/detail_image?${timestamp}`;
+      }
+
+      if (formData.title !== itineraryData.title && !formData.front_image) {
+        const { data, error } = await moveImage(
+          `${itineraryData.title}/front_image`,
+          `${formData.title}/front_image`,
+          'itineraries',
+          supabase,
+        );
+
+        if (error) return handleError(error.message, loadingToastId);
+
+        detailImage = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/public/${formData.title}/front_image?${timestamp}`;
+      } else if (formData.front_image) {
+        const { error } = await removeImage(
+          `public/${itineraryData.title}/front_image`,
+          supabase,
+          'itineraries',
+        );
+
+        if (error) return handleError(error.message, loadingToastId);
+
+        const { dataImage, errorImage } = await uploadImage(
+          formData.front_image[0],
+          `front_image`,
+          formData.title,
+          supabase,
+          'itineraries',
+        );
+
+        if (errorImage) return handleError(errorImage.message, loadingToastId);
+
+        detailImage = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/public/${formData.title}/front_image?${timestamp}`;
+      }
+
       const { err } = await updateItinerary(
         supabase,
         user.id,
         formData,
-        frontPath,
-        detailPath,
-        itinerary.id,
+        frontImage,
+        detailImage,
+        itineraryData.id,
       );
 
       if (err) {
-        await removeImage(dataImage.path, supabase, 'itineraries');
+        await removeImage(
+          `public/${formData.title}/front_image`,
+          supabase,
+          'itineraries',
+        );
 
-        await removeImage(detailImage.path, supabase, 'itineraries');
+        await removeImage(
+          `public/${formData.title}/detail_image`,
+          supabase,
+          'itineraries',
+        );
 
         handleError(err.message, loadingToastId);
         return;
       }
     } else {
+      if (
+        !formData.categories ||
+        !formData.city ||
+        !formData.description ||
+        !formData.title ||
+        !formData.budget ||
+        !formData.visit_period ||
+        !formData.street ||
+        !formData.lat ||
+        !formData.lng ||
+        !formData.sub_categories ||
+        !formData.social_media ||
+        !formData.map_url ||
+        !formData.front_image ||
+        !formData.detail_image ||
+        !formData.country
+      )
+        return handleError('Please fill all the fields', loadingToastId);
+
+      if (!frontImageCorrect || !detailImageCorrect)
+        return handleError(
+          'File type is not supported or file size is too large for the image',
+          loadingToastId,
+        );
+
+      const { dataImage: detailImage, errorImage: errorDetail } =
+        await uploadImage(
+          formData.detail_image[0],
+          `detail_image`,
+          formData.title,
+          supabase,
+          'itineraries',
+        );
+
+      const { dataImage, errorImage } = await uploadImage(
+        formData.front_image[0],
+        `front_image`,
+        formData.title,
+        supabase,
+        'itineraries',
+      );
+
+      if (errorImage || errorDetail)
+        return handleError(
+          errorImage.statusCode === '409' || errorDetail.statusCode === '409'
+            ? 'The place already exists'
+            : errorImage.message || errorDetail.message,
+          loadingToastId,
+        );
+
+      const frontPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/${dataImage.path}?${timestamp}`;
+      const detailPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/${detailImage.path}?${timestamp}`;
+
       const { itinerary, err } = await uploadItinerary(
         supabase,
         user.id,
@@ -238,28 +357,11 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
         return;
       }
     }
+
     toast.dismiss(loadingToastId);
     toast.success(`Successfully uploaded: ${formData.title}`);
     router.push(`/itineraries/uploaded`);
     setLoading(false);
-    setFormData({
-      title: '',
-      description: '',
-      budget: '',
-      visit_period: '',
-      city: '',
-      street: '',
-      categories: [],
-      lat: '',
-      lng: '',
-      sub_categories: [],
-      front_image: '',
-      detail_image: '',
-    });
-    setFrontImagePreview('');
-    setDetailImagePreview('');
-    detailImageRef.current.value = '';
-    frontImageRef.current.value = '';
   };
 
   const handleChange = async (e) => {
@@ -343,6 +445,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
         ...prev,
         lat: parseFloat(lat),
         lng: parseFloat(lng),
+        map_url: url,
       }));
     }
   };
@@ -350,7 +453,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
   return (
     <Layout
       url={'/dashboard'}
-      title={'Upload itinerary'}
+      title={itinerary ? 'Edit itinerary' : 'Upload itinerary'}
       username={user?.user_metadata?.username}
       role={user?.user_metadata?.role}
     >
@@ -370,7 +473,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
           placeholder="Select a country"
-          defaultValue={''}
+          value={formData.country}
           onChange={handleChange}
         >
           <option value="" disabled>
@@ -400,6 +503,12 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           <option value="" disabled>
             Select a city
           </option>
+          {itinerary && cities.length === 0 && (
+            <option key={itinerary.city.id} value={itinerary.city.id}>
+              {itinerary.city.title}
+            </option>
+          )}
+
           {cities.map((city) => (
             <option key={city.id} value={city.id}>
               {city.title}
@@ -588,6 +697,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           name="map_url"
           id="map_url"
           autoComplete="map_url"
+          value={formData.map_url}
           onChange={handleMapUrl}
           placeholder="https://www.google.com/maps/place/Parrilla+El+Pampa+Sal%C3%B3n+Familiar+%2F+Shows+En+Vivo/@-34.8788851,-57.8781179,16z"
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
@@ -649,19 +759,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
         )}
         <p className="mt-2 mb-3 text-red-600">{error}</p>
         <button
-          disabled={
-            loading ||
-            !formData.categories ||
-            !formData.city ||
-            !formData.description ||
-            !formData.title ||
-            !formData.budget ||
-            !formData.visit_period ||
-            !formData.street ||
-            !formData.lat ||
-            !formData.lng ||
-            !formData.sub_categories
-          }
+          disabled={loading || disabled}
           type="submit"
           className="w-full py-3 font-semibold text-center text-white rounded-lg disabled:opacity-60 disabled:cursor-not-allowed background-gradient font-poppins"
         >

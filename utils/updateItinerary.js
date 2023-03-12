@@ -17,6 +17,9 @@ export const updateItinerary = async (
         front_image: fronImage,
         detail_image: detailImage,
         user_id: userId,
+        created_at: new Date(),
+        country: dataItinerary.country.id,
+        city: dataItinerary.city.id,
       },
     ])
     .eq('id', id);

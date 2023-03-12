@@ -1,18 +1,9 @@
-export const uploadCity = async (
-  title,
-  supabase,
-  description,
-  image,
-  userId,
-  country,
-) => {
+export const uploadCity = async (formData, supabase, image, userId) => {
   const { data, error } = await supabase.from('cities').insert([
     {
-      title,
-      description,
+      ...formData,
       image,
       user_id: userId,
-      country,
     },
   ]);
 
