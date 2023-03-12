@@ -2,7 +2,9 @@
 import FileInput from '@/components/FileInput';
 import Layout from '@/components/Layout';
 import { allowedExtensions } from '@/utils/allowedExtension';
+import { correctFile } from '@/utils/correctFile';
 import { getCountry } from '@/utils/getCountry';
+import { moveImage } from '@/utils/moveImage';
 import { removeImage } from '@/utils/removeImage';
 import { updateCountry } from '@/utils/updateCountry';
 import { uploadCountry } from '@/utils/uploadCountry';
@@ -83,12 +85,15 @@ export default function Country({ user, country }) {
     setLoading(true);
     const loadingToastId = toast.loading('Loading...');
     const countryData = country;
-    const flagCorrect =
-      allowedExtensions.exec(formData?.flag[0]?.type) &&
-      formData?.flag[0]?.size < 3000000;
-    const bgImageCorrect =
-      allowedExtensions.exec(formData?.bg_image[0]?.type) &&
-      formData?.bg_image[0]?.size < 3000000;
+    const flagCorrect = correctFile(
+      formData?.flag[0]?.type,
+      formData?.flag[0]?.size,
+    );
+
+    const bgImageCorrect = correctFile(
+      formData?.bg_image[0]?.type,
+      formData?.bg_image[0]?.size,
+    );
 
     if (countryData) {
       let flagPath = countryData.flag;
@@ -97,31 +102,27 @@ export default function Country({ user, country }) {
       if (!formData.country)
         return handleError('Please fill all the fields', loadingToastId);
 
-      if (formData.flag && !flagCorrect) {
+      if (formData.flag && !flagCorrect)
         return handleError(
           'File type is not supported or file size is too large for flag',
           loadingToastId,
         );
-      }
 
-      if (formData.bg_image && !bgImageCorrect) {
+      if (formData.bg_image && !bgImageCorrect)
         return handleError(
           'File type is not supported or file size is too large for background image',
           loadingToastId,
         );
-      }
 
       if (formData.country !== countryData.title && !formData.flag) {
-        const { data, error } = await supabase.storage
-          .from('countries')
-          .move(
-            `public/${countryData.title}/flag`,
-            `public/${formData.country}/flag`,
-          );
-        if (error) {
-          handleError(error.message, loadingToastId);
-          return;
-        }
+        const { data, error } = await moveImage(
+          `${countryData.title}/flag`,
+          `${formData.country}/flag`,
+          'countries',
+          supabase,
+        );
+
+        if (error) return handleError(error.message, loadingToastId);
 
         flagPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/public/${formData.country}/flag?${timestamp}`;
       } else if (formData.flag) {
@@ -130,10 +131,8 @@ export default function Country({ user, country }) {
           supabase,
           'countries',
         );
-        if (error) {
-          handleError(error.message, loadingToastId);
-          return;
-        }
+
+        if (error) return handleError(error.message, loadingToastId);
 
         const { dataImage, errorImage } = await uploadImage(
           formData.flag[0],
@@ -143,25 +142,20 @@ export default function Country({ user, country }) {
           'countries',
         );
 
-        if (errorImage) {
-          handleError(errorImage.message, loadingToastId);
-          return;
-        }
+        if (errorImage) return handleError(errorImage.message, loadingToastId);
 
         flagPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/public/${formData.country}/flag?${timestamp}`;
       }
 
       if (formData.country !== countryData.title && !formData.bg_image) {
-        const { data, error } = await supabase.storage
-          .from('countries')
-          .move(
-            `public/${countryData.title}/bg_image`,
-            `public/${formData.country}/bg_image`,
-          );
-        if (error) {
-          handleError(error.message, loadingToastId);
-          return;
-        }
+        const { data, error } = await moveImage(
+          `${countryData.title}/bg_image`,
+          `${formData.country}/bg_image`,
+          'countries',
+          supabase,
+        );
+
+        if (error) return handleError(error.message, loadingToastId);
 
         bgImagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/public/${formData.country}/bg_image?${timestamp}`;
       } else if (formData.bg_image) {
@@ -170,10 +164,7 @@ export default function Country({ user, country }) {
           supabase,
           'countries',
         );
-        if (error) {
-          handleError(error.message, loadingToastId);
-          return;
-        }
+        if (error) return handleError(error.message, loadingToastId);
 
         const { dataImage, errorImage } = await uploadImage(
           formData.bg_image[0],
@@ -183,10 +174,7 @@ export default function Country({ user, country }) {
           'countries',
         );
 
-        if (errorImage) {
-          handleError(errorImage.message, loadingToastId);
-          return;
-        }
+        if (errorImage) return handleError(errorImage.message, loadingToastId);
 
         bgImagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/public/${formData.country}/bg_image?${timestamp}`;
       }
@@ -200,10 +188,7 @@ export default function Country({ user, country }) {
         countryData.id,
       );
 
-      if (err) {
-        handleError(err.message, loadingToastId);
-        return;
-      }
+      if (err) return handleError(err.message, loadingToastId);
     } else {
       if (!formData.country || !formData.flag || !formData.bg_image)
         return handleError('Please fill all the fields', loadingToastId);
@@ -230,10 +215,8 @@ export default function Country({ user, country }) {
         'countries',
       );
 
-      if (errorImage || error) {
-        handleError(error.message || errorImage.message, loadingToastId);
-        return;
-      }
+      if (errorImage || error)
+        return handleError(error.message || errorImage.message, loadingToastId);
 
       const flagPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/${dataImage.path}?${timestamp}`;
       const bgImagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/${data.path}?${timestamp}`;
