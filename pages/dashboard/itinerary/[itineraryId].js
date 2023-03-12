@@ -169,7 +169,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
       );
 
       if (error || error2) {
-        handleError(error.message || error2.messag, loadingToastId);
+        handleError(error.message || error2.message, loadingToastId);
         return;
       }
     }
@@ -377,7 +377,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
             Select a country
           </option>
           {countries.map((country) => (
-            <option key={country.id} value={country.title}>
+            <option key={country.id} value={country.id}>
               {country.title}
             </option>
           ))}
@@ -401,7 +401,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
             Select a city
           </option>
           {cities.map((city) => (
-            <option key={city.id} value={city.title}>
+            <option key={city.id} value={city.id}>
               {city.title}
             </option>
           ))}

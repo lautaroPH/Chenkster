@@ -34,18 +34,15 @@ export const getServerSideProps = async (ctx) => {
     await getSavedItinerariesOrder(data.user.id);
 
   if (itinerarySavedError) return { notFound: true };
-
   const citiesWithItinerary = {};
-
   itinerarySaved.forEach((obj) => {
-    const city = obj.itinerary_title.city;
+    const city = obj.itinerary.city.title;
     if (citiesWithItinerary[city]) {
       citiesWithItinerary[city].push(obj);
     } else {
       citiesWithItinerary[city] = [obj];
     }
   });
-
   const cities = Object.keys(citiesWithItinerary);
 
   return {

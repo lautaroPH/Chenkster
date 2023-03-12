@@ -17,7 +17,7 @@ export const getServerSideProps = async (ctx) => {
 
   if (err || !countryData) return { notFound: true };
 
-  const { cities, error } = await getCountryCities(replaceCountry);
+  const { cities, error } = await getCountryCities(countryData.id);
 
   if (error) return { notFound: true };
 
@@ -48,6 +48,7 @@ export default function Country({ user, cities, country }) {
         {cities.map((city) => (
           <City
             key={city.id}
+            id={city.id}
             country={city.country}
             city={city.title}
             description={city.description}

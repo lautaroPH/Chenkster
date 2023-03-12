@@ -11,6 +11,7 @@ const Countries = ({ countries, role }) => {
       {countries.map((country) => (
         <Country
           key={country.id}
+          id={country.id}
           image={country.flag}
           country={country.title}
           role={role}

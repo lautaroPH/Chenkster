@@ -2,14 +2,15 @@
 import { deleteCountry } from '@/utils/deleteCountry';
 import Link from 'next/link';
 import ButtonDelete from '../ButtonDelete';
+import PencilEditSvg from '../Svg/PencilEditSvg';
 
-const Country = ({ image, country, role }) => {
+const Country = ({ image, country, role, id }) => {
   return (
     <li className="flex items-center justify-between w-full px-5 mb-5">
       <Link
         passHref
         href={`/country/${country}`}
-        className="flex items-center gap-1 w-full"
+        className="flex items-center w-full gap-1"
       >
         <img
           className="object-cover w-10 h-5"
@@ -21,12 +22,22 @@ const Country = ({ image, country, role }) => {
         </p>
       </Link>
       {role === 'admin' && (
-        <div>
-          <ButtonDelete
-            title={country}
-            deleteFunction={deleteCountry}
-            redirect={`/dashboard/country`}
-          />
+        <div className="flex items-center">
+          <Link
+            passHref
+            href={`/dashboard/country/${country}`}
+            className="mb-1"
+          >
+            <PencilEditSvg />
+          </Link>
+          <div>
+            <ButtonDelete
+              title={country}
+              id={id}
+              deleteFunction={deleteCountry}
+              redirect={`/dashboard/country/new`}
+            />
+          </div>
         </div>
       )}
     </li>

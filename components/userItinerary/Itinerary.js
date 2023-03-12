@@ -4,7 +4,6 @@ import { deleteSavedItinerary } from '@/utils/deleteSavedItinerary';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { toast, Toaster } from 'react-hot-toast';
-import HeartSvg from '../Svg/HeartSvg';
 import ShareSvg from '../Svg/ShareSvg';
 import TrashSvg from '../Svg/TrashSvg';
 const Draggable = dynamic(
@@ -35,7 +34,7 @@ const Itinerary = ({
 
   const url = `/country/${countryReplace}/${cityReplace}/${categoriesReplace}/${titleReplace}`;
   const handleDeleteItinerary = async () => {
-    const { data, error } = await deleteSavedItinerary(userId, title, supabase);
+    const { data, error } = await deleteSavedItinerary(userId, id, supabase);
 
     if (error) return alert(error.message);
     removeItinerary(id);

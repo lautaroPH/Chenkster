@@ -43,7 +43,7 @@ export const getServerSideProps = async (ctx) => {
 
   const { itinerarySaved, itinerarySavedError } = await getSavedItineraries(
     data?.user?.id,
-    itineraryData.title,
+    itineraryData.id,
   );
 
   if (itinerarySavedError) return { notFound: true };
@@ -80,10 +80,11 @@ export default function Itinerary({
         <ItineraryImage
           image={itinerary.detail_image}
           title={itinerary.title}
-          country={itinerary.city.country}
-          city={itinerary.city.title}
+          country={itinerary.country.id}
+          city={itinerary.city.id}
           userId={user?.id}
           itinerarySaved={itinerarySaved}
+          itineraryId={itinerary.id}
         />
         <div className="flex items-center justify-center">
           <Link href={itinerary.social_media} className="mt-3 mr-5">

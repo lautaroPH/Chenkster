@@ -1,14 +1,14 @@
 export const uploadMessage = async (
   message,
   both_users,
-  username,
-  room,
+  userId,
+  toUserId,
   supabase,
 ) => {
   const { data, error } = await supabase.from('messages').insert({
     content: message,
-    username: username,
-    to_username: room,
+    user_id: userId,
+    to_user_id: toUserId,
     both_users,
   });
 

@@ -4,7 +4,7 @@ export const getCountryCities = async (country) => {
   const { data: cities, error } = await supabase
     .from('cities')
     .select('*')
-    .eq('country', country);
+    .eq('country_id', country);
 
   return { cities, error };
 };

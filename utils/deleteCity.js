@@ -1,33 +1,24 @@
 import { removeImage } from './removeImage';
 
-export const deleteCity = async (title, supabase) => {
+export const deleteCity = async (title, supabase, cityId) => {
   const { data: itinerary } = await supabase
     .from('itineraries')
     .select('title')
-    .eq('city', title)
+    .eq('city', cityId)
     .single();
 
   if (itinerary) {
     await removeImage(
-      `public/${itinerary.title}/image`,
+      `public/${itinerary.title}/front_image`,
       supabase,
       'itineraries',
     );
 
-    await supabase.from('itineraries').delete().eq('city', title);
-  }
-
-  const { data: itinerarySaved } = await supabase
-    .from('saved_itineraries')
-    .select('id')
-    .eq('city', title)
-    .single();
-
-  if (itinerarySaved) {
-    await supabase
-      .from('saved_itineraries')
-      .delete()
-      .eq('id', itinerarySaved.id);
+    await removeImage(
+      `public/${itinerary.title}/detail_image`,
+      supabase,
+      'itineraries',
+    );
   }
 
   await removeImage(`public/${title}/image`, supabase, 'cities');

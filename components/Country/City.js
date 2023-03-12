@@ -3,7 +3,7 @@ import { deleteCity } from '@/utils/deleteCity';
 import Link from 'next/link';
 import ButtonDelete from '../ButtonDelete';
 
-const City = ({ country, city, description, image, role }) => {
+const City = ({ country, city, description, image, role, id }) => {
   const cityReplace = city.replace(/\s+/g, '-');
   const replaceCountry = country.replace(/-/g, ' ');
 
@@ -31,6 +31,7 @@ const City = ({ country, city, description, image, role }) => {
           {role === 'admin' && (
             <ButtonDelete
               title={city}
+              id={id}
               deleteFunction={deleteCity}
               redirect={`/dashboard/city`}
             />

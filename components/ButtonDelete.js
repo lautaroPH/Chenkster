@@ -5,7 +5,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import DeleteModal from './DeleteModal';
 import DeleteSvg from './Svg/DeleteSvg';
 
-const ButtonDelete = ({ title, deleteFunction, redirect }) => {
+const ButtonDelete = ({ title, deleteFunction, redirect, id }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   function openModal() {
@@ -16,7 +16,7 @@ const ButtonDelete = ({ title, deleteFunction, redirect }) => {
   const router = useRouter();
   const handleDelete = async () => {
     setLoading(true);
-    const { data, error } = await deleteFunction(title, supabase);
+    const { data, error } = await deleteFunction(title, supabase, id);
     if (error) return console.log(error);
     setLoading(false);
     toast.success('Itinerary deleted');
@@ -25,7 +25,7 @@ const ButtonDelete = ({ title, deleteFunction, redirect }) => {
 
   return (
     <>
-      <button onClick={openModal} className="mt-2 ml-3 text-red-600">
+      <button onClick={openModal} className="ml-3 text-red-600">
         <DeleteSvg />
       </button>
       <Toaster position="top-center" reverseOrder={false} />

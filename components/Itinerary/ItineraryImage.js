@@ -13,6 +13,7 @@ const ItineraryImage = ({
   itinerarySaved,
   country,
   city,
+  itineraryId,
 }) => {
   const [isSaved, setIsSaved] = useState(itinerarySaved);
   const supabase = useSupabaseClient();
@@ -24,7 +25,7 @@ const ItineraryImage = ({
     if (isSaved) {
       const { data, error } = await deleteSavedItinerary(
         userId,
-        title,
+        itineraryId,
         supabase,
       );
 
@@ -33,7 +34,7 @@ const ItineraryImage = ({
     } else {
       const { data, error } = await uploadSavedItinerary(
         userId,
-        title,
+        itineraryId,
         country,
         city,
         supabase,

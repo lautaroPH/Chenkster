@@ -78,11 +78,11 @@ const CityItinerary = ({
                 <div {...provided.droppableProps} ref={provided.innerRef}>
                   {itineraries[city].map((itinerary, i) => (
                     <Itinerary
-                      categories={itinerary.itinerary_title.categories}
-                      city={itinerary.itinerary_title.city}
-                      country={itinerary.country}
-                      image={itinerary.itinerary_title.front_image}
-                      title={itinerary.itinerary_title.title}
+                      categories={itinerary.itinerary.categories}
+                      city={itinerary.itinerary.city.title}
+                      country={itinerary.country.title}
+                      image={itinerary.itinerary.front_image}
+                      title={itinerary.itinerary.title}
                       key={itinerary.id}
                       index={i}
                       loading={loading}

@@ -8,11 +8,11 @@ const SocialIcon = ({ socialMediaName }) => {
   if (nameLowerCase.includes('instagram')) {
     return <InstagramSvg />;
   } else if (nameLowerCase.includes('twitter')) {
-    return <TwitterSvg size={size} />;
+    return <TwitterSvg />;
   } else if (nameLowerCase.includes('youtube')) {
-    return <TiktokSvg size={size} />;
+    return <TiktokSvg />;
   } else if (nameLowerCase.includes('facebook')) {
-    return <LinkedinSvg size={size} />;
+    return <LinkedinSvg />;
   } else {
     return '';
   }

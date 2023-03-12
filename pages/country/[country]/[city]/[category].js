@@ -4,6 +4,7 @@ import ModalPreferences from '@/components/Category/ModalPreferences';
 import Layout from '@/components/Layout';
 import PreferencesSvg from '@/components/Svg/PreferencesSvg';
 import ShufleSvg from '@/components/Svg/ShufleSvg';
+import { getCity } from '@/utils/getCity';
 import { getItineraries } from '@/utils/getItineraries';
 import { getItinerariesWithPreferenes } from '@/utils/getItinerariesWithPreferenes';
 import { getPreferences } from '@/utils/getPreferences';
@@ -23,7 +24,8 @@ export const getServerSideProps = async (ctx) => {
 
   const { preferences } = await getPreferences(categoryReplace);
 
-  const { places, error } = await getItineraries(cityReplace, categoryReplace);
+  const { cities } = await getCity(cityReplace);
+  const { places, error } = await getItineraries(cities.id, categoryReplace);
   if (error) return { notFound: true };
 
   return {
@@ -53,14 +55,12 @@ export default function Category({
   const [range, setRange] = useState(3);
 
   const categoryReplace = category.replace(/-/g, ' ');
-  const cityReplace = city.replace(/-/g, ' ');
-  const countryReplace = country.replace(/-/g, ' ');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const { itineraries, error } = await getItinerariesWithPreferenes(
-      cityReplace,
+      itineraries[0]?.city?.id,
       checkedOptions,
       categoryReplace,
     );
@@ -71,8 +71,7 @@ export default function Category({
 
   const handleShuffle = async () => {
     const { itineraries, error } = await getRandomItineraries(
-      countryReplace,
-      cityReplace,
+      itineraries[0]?.city?.id,
       checkedOptions,
       categoryReplace,
       range + 3,

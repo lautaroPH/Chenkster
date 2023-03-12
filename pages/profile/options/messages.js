@@ -22,9 +22,7 @@ export const getServerSideProps = async (ctx) => {
       },
     };
 
-  const { messages, errorMessage } = await getTotalMessages(
-    data.user.user_metadata?.username,
-  );
+  const { messages, errorMessage } = await getTotalMessages(data.user.id);
 
   if (messages.length === 0 && data.user.user_metadata?.role === 'user') {
     const { data: dataAdmin, error } = await getUsersAdmin();
@@ -57,10 +55,11 @@ export default function Messages({ user, messagesLoaded, adminProfiles }) {
       user_metadata.username,
       setMessages,
       messages,
+      user.id,
     );
 
     return () => supabase.removeChannel(channel);
-  }, [messages, user_metadata]);
+  }, [messages, user_metadata, user]);
 
   return (
     <LayoutProfile

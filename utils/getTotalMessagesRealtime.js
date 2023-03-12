@@ -1,7 +1,12 @@
 import { supabase } from '@/supabaseClient';
 import { getUserProfile } from './getUserProfile';
 
-export const getTotalMessagesRealtime = (channel, setMessages, messages) => {
+export const getTotalMessagesRealtime = (
+  channel,
+  setMessages,
+  messages,
+  toUserId,
+) => {
   const channelSupabase = supabase
     .channel(channel)
     .on(
@@ -10,7 +15,7 @@ export const getTotalMessagesRealtime = (channel, setMessages, messages) => {
         event: 'INSERT',
         schema: 'public',
         table: `total_messages`,
-        filter: `to_username=eq.${channel}`,
+        filter: `to_user_id=eq.${toUserId}`,
       },
       async (payload) => {
         const { data } = await getUserProfile(payload.new.username);
@@ -29,7 +34,7 @@ export const getTotalMessagesRealtime = (channel, setMessages, messages) => {
         event: 'UPDATE',
         schema: 'public',
         table: `total_messages`,
-        filter: `to_username=eq.${channel}`,
+        filter: `to_user_id=eq.${toUserId}`,
       },
       (payload) => {
         const newMessages = messages.map((message) => {

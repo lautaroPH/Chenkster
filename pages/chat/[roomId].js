@@ -51,16 +51,16 @@ export async function getServerSideProps(ctx) {
   const { messages, errorMessage } = await getMessages(bothUsers);
 
   const messagesDeleted = await resetTotalMessages(
-    data.username,
-    currentUser.user.user_metadata.username,
+    data.user_id,
+    currentUser.user.id,
     supabase,
   );
 
   if (errorMessage) return { notFound: true };
 
   const { totalMessages } = await getTotalMessage(
-    currentUser.user.user_metadata?.username,
-    roomId,
+    currentUser.user.id,
+    data.user_id,
   );
 
   return {
@@ -123,11 +123,11 @@ export default function Chat({
         username={user?.user_metadata?.username}
       />
       <SendMessage
-        room={room}
+        toUserId={toUser.user_id}
         both_users={both_users}
         endRef={messagesEndRef}
         supabase={supabase}
-        username={user?.user_metadata?.username}
+        userId={user?.id}
         isOnline={isOnline}
         setMessages={setMessages}
         messages={messages}

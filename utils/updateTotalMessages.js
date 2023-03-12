@@ -1,6 +1,6 @@
 export const updateTotalMessages = async (
-  username,
-  to_username,
+  userId,
+  toUserId,
   messages,
   supabase,
 ) => {
@@ -10,8 +10,8 @@ export const updateTotalMessages = async (
       messages: messages + 1,
       created_at: new Date(),
     })
-    .eq('username', username)
-    .eq('to_username', to_username);
+    .eq('user_id', userId)
+    .eq('to_user_id', toUserId);
 
   return { data, error };
 };

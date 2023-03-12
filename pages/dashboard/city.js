@@ -178,7 +178,7 @@ export default function City({ user, countries }) {
             Select a country
           </option>
           {countries.map((country) => (
-            <option key={country.id} value={country.title}>
+            <option key={country.id} value={country.id}>
               {country.title}
             </option>
           ))}

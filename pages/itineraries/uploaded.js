@@ -64,9 +64,10 @@ export default function Profile({ user, itineraries }) {
           {itineraries?.map((place) => (
             <Itinerary
               key={place.id}
-              category={place.categories[0].replace(/-/g, ' ')}
-              city={place.city.replace(/-/g, ' ')}
-              country={place.country.replace(/-/g, ' ')}
+              //reemplazar el espacio por el - en category
+              category={place.categories[0].replace(/\s+/g, '-')}
+              city={place.city.title.replace(/\s+/g, '-')}
+              country={place.country.title.replace(/\s+/g, '-')}
               title={place.title}
               budget={place.budget}
               image={place.front_image}

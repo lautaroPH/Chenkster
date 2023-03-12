@@ -42,7 +42,7 @@ export default function Dashboard({ user }) {
     >
       <div className="flex flex-col items-center justify-center w-full mt-20">
         <Link
-          href={'/dashboard/country'}
+          href={'/dashboard/country/new'}
           className="w-2/3 py-5 mb-6 text-xl font-bold text-center text-white rounded-lg bg-gradient font-lato"
         >
           Upload Country

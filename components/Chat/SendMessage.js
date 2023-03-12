@@ -6,8 +6,8 @@ import SendSvg from '../Svg/SendSvg';
 
 const SendMessage = ({
   both_users,
-  username,
-  room,
+  userId,
+  toUserId,
   supabase,
   endRef,
   isOnline,
@@ -18,13 +18,13 @@ const SendMessage = ({
   const sendMessage = async (e) => {
     e.preventDefault();
     if (newMessage !== '') {
-      await uploadMessage(newMessage, both_users, username, room, supabase);
+      await uploadMessage(newMessage, both_users, userId, toUserId, supabase);
       if (!isOnline) {
         if (messages === 'Not messages') {
-          await uploadTotalMessages(username, room, supabase);
+          await uploadTotalMessages(userId, toUserId, supabase);
           setMessages(1);
         } else {
-          await updateTotalMessages(username, room, messages, supabase);
+          await updateTotalMessages(userId, toUserId, messages, supabase);
           setMessages(messages + 1);
         }
       } else {
