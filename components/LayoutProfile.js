@@ -16,6 +16,7 @@ const LayoutProfile = ({
   username,
   url,
   role,
+  userId,
 }) => {
   return (
     <div className="relative flex flex-col items-center w-full max-w-2xl min-h-screen m-auto mb-20 overflow-hidden">
@@ -51,7 +52,7 @@ const LayoutProfile = ({
         </button>
       </div>
       {children}
-      <NavbarBottom username={username} role={role} />
+      <NavbarBottom username={username} role={role} userId={userId} />
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center m-auto -z-30">
         <WorldLightSvg />
       </div>

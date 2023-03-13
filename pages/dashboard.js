@@ -39,6 +39,7 @@ export default function Dashboard({ user }) {
       username={user.user_metadata?.username}
       role={user?.user_metadata?.role}
       url={'welcome'}
+      userId={user?.id}
     >
       <div className="flex flex-col items-center justify-center w-full mt-20">
         <Link

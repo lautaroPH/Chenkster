@@ -57,10 +57,10 @@ const Messages = ({
         <Message
           key={message.id}
           messages={messages}
-          first_name={message.username.first_name}
+          first_name={message.user_id.first_name}
           i={i}
-          last_name={message.username.last_name}
-          messageUsername={message.username.username}
+          last_name={message.user_id.last_name}
+          messageUsername={message.user_id.username}
           username={username}
           content={message.content}
           created_at={message.created_at}

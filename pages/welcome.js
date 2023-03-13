@@ -48,6 +48,7 @@ export default function Welcome({ countries, user }) {
       <NavbarBottom
         username={user?.user_metadata?.username}
         role={user?.user_metadata?.role}
+        userId={user?.id}
       />
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center m-auto -z-30">
         <WorldLightSvg />

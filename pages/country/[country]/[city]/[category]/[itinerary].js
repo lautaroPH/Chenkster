@@ -74,6 +74,7 @@ export default function Itinerary({
       title={'Discover the best food'}
       username={user?.user_metadata?.username}
       role={user?.user_metadata?.role}
+      userId={user?.id}
     >
       <div className="w-full mb-5 sm:w-4/5">
         <ItineraryImage

@@ -12,10 +12,10 @@ const Message = ({
   created_at,
 }) => {
   const nextIsdifferntUser =
-    messages[i + 1] && messages[i + 1].username.username !== username;
+    messages[i + 1] && messages[i + 1].user_id.username !== username;
 
   const nextIsSameUser =
-    messages[i + 1] && messages[i + 1].username.username === username;
+    messages[i + 1] && messages[i + 1].user_id.username === username;
 
   return (
     <>

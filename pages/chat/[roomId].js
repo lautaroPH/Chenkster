@@ -23,7 +23,6 @@ export async function getServerSideProps(ctx) {
   const supabase = createServerSupabaseClient(ctx);
 
   const { data, error } = await getUserProfile(roomId);
-
   if (error || !data?.role) return { notFound: true };
 
   const { data: currentUser } = await supabase.auth.getUser();
@@ -39,7 +38,6 @@ export async function getServerSideProps(ctx) {
   if (currentUser.user.user_metadata?.role === 'user' && data.role === 'user') {
     return { notFound: true };
   }
-
   if (currentUser.user.user_metadata?.username === roomId)
     return { notFound: true };
 
@@ -135,6 +133,7 @@ export default function Chat({
       <NavbarBottom
         username={user?.user_metadata?.username}
         role={user?.user_metadata?.role}
+        userId={user?.id}
       />
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center m-auto -z-30">
         <WorldLightSvg />

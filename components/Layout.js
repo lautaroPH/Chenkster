@@ -2,7 +2,7 @@ import Header from './Header';
 import NavbarBottom from './NavbarBottom';
 import WorldLightSvg from './Svg/WorldLightSvg';
 
-const Layout = ({ title, children, username, notShow, url, role }) => {
+const Layout = ({ title, children, username, notShow, url, role, userId }) => {
   return (
     <div className="relative flex flex-col items-center w-full max-w-3xl min-h-screen m-auto overflow-hidden">
       <div className="relative z-20 flex flex-col items-center w-full">
@@ -11,7 +11,9 @@ const Layout = ({ title, children, username, notShow, url, role }) => {
           {children}
         </div>
       </div>
-      {!notShow && <NavbarBottom username={username} role={role} />}
+      {!notShow && (
+        <NavbarBottom username={username} role={role} userId={userId} />
+      )}
       <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center m-auto -z-30">
         <WorldLightSvg />
       </div>

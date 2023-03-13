@@ -24,7 +24,7 @@ export const getServerSideProps = async (ctx) => {
 
   const { messages, errorMessage } = await getTotalMessages(data.user.id);
 
-  if (messages.length === 0 && data.user.user_metadata?.role === 'user') {
+  if (messages?.length === 0 && data.user.user_metadata?.role === 'user') {
     const { data: dataAdmin, error } = await getUsersAdmin();
     return {
       props: {
@@ -74,6 +74,7 @@ export default function Messages({ user, messagesLoaded, adminProfiles }) {
       href={`/profile/options/messages`}
       username={user_metadata.username}
       role={user_metadata.role}
+      userId={user.id}
     >
       {!requests ? (
         <>
@@ -91,12 +92,12 @@ export default function Messages({ user, messagesLoaded, adminProfiles }) {
           {messages?.map((message) => (
             <MessagesProfile
               key={message.id}
-              avatar={message.username.avatar}
-              first_name={message.username.first_name}
-              last_name={message.username.last_name}
+              avatar={message.user_id.avatar}
+              first_name={message.user_id.first_name}
+              last_name={message.user_id.last_name}
               created_at={message.created_at}
               numberMessages={message.messages}
-              room={message.username.username}
+              room={message.user_id.username}
             />
           ))}
         </>

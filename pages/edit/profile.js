@@ -232,6 +232,7 @@ export default function Profile({ user }) {
       title="Create profile"
       username={user?.user_metadata?.username}
       role={user?.user_metadata?.role}
+      userId={user?.id}
     >
       <form
         onSubmit={handleSubmit}

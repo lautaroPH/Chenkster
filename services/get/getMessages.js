@@ -4,7 +4,7 @@ export const getMessages = async (bothUsers) => {
   const { data, error } = await supabase
     .from('messages')
     .select(
-      '*,to_username (avatar,first_name,last_name,user_id,role),username (avatar,first_name,last_name,user_id,username,role)',
+      '*,to_user_id (avatar,first_name,last_name,user_id,role),user_id (avatar,first_name,last_name,user_id,username,role)',
     )
     .eq('both_users', bothUsers)
     .order('created_at', { ascending: true });

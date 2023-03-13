@@ -1,4 +1,4 @@
-import { getUserProfile } from '../get/getUserProfile';
+import { getUserProfileById } from '../get/getUserProfileById';
 
 export const getMessagesRealtime = (
   room,
@@ -21,14 +21,13 @@ export const getMessagesRealtime = (
         filter: `both_users=eq.${both_users}`,
       },
       async (payload) => {
-        const { data } = await getUserProfile(payload.new.username);
+        const { data } = await getUserProfileById(payload.new.user_id);
         const newData = {
           ...payload.new,
-          username: data,
+          user_id: data,
         };
         setNewData(newData);
-
-        if (room !== payload.new.username || !showScrollButton) {
+        if (room !== payload.new.user_id || !showScrollButton) {
           setTimeout(() => {
             endRef.current.scrollTo(0, endRef.current.scrollHeight);
           }, 400);

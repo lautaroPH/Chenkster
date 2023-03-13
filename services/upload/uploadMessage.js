@@ -11,6 +11,5 @@ export const uploadMessage = async (
     to_user_id: toUserId,
     both_users,
   });
-
   return { data, error };
 };

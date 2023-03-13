@@ -1,5 +1,5 @@
 import { supabase } from '@/supabaseClient';
-import { getUserProfile } from '../get/getUserProfile';
+import { getUserProfileById } from '../get/getUserProfileById';
 
 export const getTotalMessagesRealtime = (
   channel,
@@ -18,11 +18,11 @@ export const getTotalMessagesRealtime = (
         filter: `to_user_id=eq.${toUserId}`,
       },
       async (payload) => {
-        const { data } = await getUserProfile(payload.new.username);
+        const { data } = await getUserProfileById(payload.new.user_id);
         setMessages([
           {
             ...payload.new,
-            username: { ...data },
+            user_id: { ...data },
           },
           ...messages,
         ]);
@@ -41,7 +41,7 @@ export const getTotalMessagesRealtime = (
           if (message.id === payload.new.id) {
             return {
               ...payload.new,
-              username: { ...message.username },
+              user_id: { ...message.user_id },
             };
           }
           return message;

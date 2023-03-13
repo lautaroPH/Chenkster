@@ -227,6 +227,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
       title={itinerary ? 'Edit itinerary' : 'Upload itinerary'}
       username={user?.user_metadata?.username}
       role={user?.user_metadata?.role}
+      userId={user?.id}
     >
       <form
         onSubmit={handleSubmit}

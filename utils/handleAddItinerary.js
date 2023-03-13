@@ -62,8 +62,6 @@ export const handleAddItinerary = async (
     'itineraries',
   );
 
-  console.log(errorImage, errorDetail);
-
   if (errorImage || errorDetail)
     return handleError(
       errorImage.statusCode === '409' || errorDetail.statusCode === '409'

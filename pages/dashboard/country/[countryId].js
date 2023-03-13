@@ -140,6 +140,7 @@ export default function Country({ user, country }) {
       title={country ? 'Edit Country' : 'Upload Country'}
       username={user?.user_metadata?.username}
       role={user?.user_metadata?.role}
+      userId={user?.id}
     >
       <form
         onSubmit={handleSubmit}

@@ -45,6 +45,7 @@ export default function Settings({ user }) {
       username={user_metadata.username}
       url={`/profile/${user_metadata.username}`}
       role={user_metadata.role}
+      userId={user.id}
     >
       {!help ? <SettingsProfile /> : <Help />}
       <FollowUs />

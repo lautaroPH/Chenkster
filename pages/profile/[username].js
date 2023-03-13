@@ -21,7 +21,6 @@ export async function getServerSideProps(ctx) {
   const { data, error } = await getUserProfile(username);
 
   if (error) {
-    console.log('error', error);
     return { notFound: true };
   }
 
@@ -46,6 +45,7 @@ export default function Username({ userProfile, userData }) {
       username={userData?.user_metadata?.username}
       url={`/welcome`}
       role={userData?.user_metadata?.role}
+      userId={userData?.id}
     >
       {!stats ? (
         <Profile

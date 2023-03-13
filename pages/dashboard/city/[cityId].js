@@ -153,6 +153,7 @@ export default function City({ user, countries, city }) {
       title={city ? 'Edit City' : 'Upload City'}
       username={user?.user_metadata?.username}
       role={user?.user_metadata?.role}
+      userId={user?.id}
     >
       <form
         onSubmit={handleSubmit}
