@@ -5,6 +5,7 @@ import Layout from '@/components/Layout';
 import { handleAddCategory } from '@/utils/handleAddCategory';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import Head from 'next/head';
 import { useRef, useState } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
 
@@ -108,6 +109,13 @@ export default function Category({ user }) {
       role={user?.user_metadata?.role}
       userId={user?.id}
     >
+      <Head>
+        <title>Upload category - Chenkster</title>
+        <meta
+          name="description"
+          content="Upload a new category to the website"
+        />
+      </Head>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-center w-96"

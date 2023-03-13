@@ -5,6 +5,7 @@ import { newPassword } from '@/services/auth/newPassword';
 import { recoverPassword } from '@/services/auth/recoverPassword';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -66,6 +67,10 @@ export default function Recover() {
 
   return (
     <Layout url={'/login'} title="Recover password" notShow={true}>
+      <Head>
+        <title>Chenkster - Recover password</title>
+        <meta name="description" content="Recover your password to Chenkster" />
+      </Head>
       <form
         onSubmit={handleSubmit}
         className="relative flex flex-col items-center justify-center mt-12 w-96"

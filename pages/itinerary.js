@@ -6,6 +6,7 @@ import { updateOrderCity } from '@/services/update/updateOrderCity';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import dynamic from 'next/dynamic';
+import Head from 'next/head';
 import { useState } from 'react';
 import { resetServerContext } from 'react-beautiful-dnd';
 const DragDropContext = dynamic(
@@ -86,6 +87,10 @@ export default function Itinerary({
       role={user?.user_metadata?.role}
       userId={user?.id}
     >
+      <Head>
+        <title>Chenkster - Itinerary</title>
+        <meta name="description" content="Plan your next trip with Chenkster" />
+      </Head>
       <DragDropContext onDragEnd={handleDragEnd}>
         <StrictModeDroppable droppableId="items">
           {(provided) => (

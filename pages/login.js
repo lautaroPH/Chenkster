@@ -4,6 +4,7 @@ import LineSeparate from '@/components/LineSeparate';
 import LoginForm from '@/components/LoginForm';
 import GoogleSvg from '@/components/Svg/GoogleSvg';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import Head from 'next/head';
 
 export const getServerSideProps = async (ctx) => {
   const supabase = createServerSupabaseClient(ctx);
@@ -28,7 +29,14 @@ export const getServerSideProps = async (ctx) => {
 
 export default function Login() {
   return (
-    <Layout url={'/register'} title="Chenkster Sign Up" notShow={true}>
+    <Layout url={'/register'} title="Chenkster Sign in" notShow={true}>
+      <Head>
+        <title>Chenkster - Sign in</title>
+        <meta
+          name="description"
+          content="Sign in to Chenkster and start planning your next trip"
+        />
+      </Head>
       <LoginForm />
 
       <LineSeparate />

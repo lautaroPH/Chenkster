@@ -18,6 +18,7 @@ import SelectCountry from '@/components/Dashboard/itinerary/SelectCountry';
 import SelectCity from '@/components/Dashboard/itinerary/SelectCity';
 import FormLabel from '@/components/Dashboard/FormLabel';
 import ImagePreview from '@/components/Dashboard/ImagePreview';
+import Head from 'next/head';
 
 export const getServerSideProps = async (ctx) => {
   const { itineraryId } = ctx.params;
@@ -229,6 +230,15 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
       role={user?.user_metadata?.role}
       userId={user?.id}
     >
+      <Head>
+        <title>
+          {itinerary ? 'Edit itinerary' : 'Upload itinerary'} - Chenkster
+        </title>
+        <meta
+          name="description"
+          content="Upload your itinerary and share it with the world"
+        />
+      </Head>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-center mb-10 w-96"

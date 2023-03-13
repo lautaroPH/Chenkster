@@ -19,6 +19,7 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
+import Head from 'next/head';
 
 export const getServerSideProps = async (ctx) => {
   const { cityId } = ctx.params;
@@ -155,6 +156,13 @@ export default function City({ user, countries, city }) {
       role={user?.user_metadata?.role}
       userId={user?.id}
     >
+      <Head>
+        <title>{city ? 'Edit City' : 'Upload City'} - Chenkster</title>
+        <meta
+          name="description"
+          content="Upload a new city or edit an existing one"
+        />
+      </Head>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-center w-96"

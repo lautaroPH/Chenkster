@@ -15,6 +15,7 @@ import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRef } from 'react';
 import { useEffect, useState } from 'react';
+import Head from 'next/head';
 
 export async function getServerSideProps(ctx) {
   const { roomId } = ctx.query;
@@ -106,6 +107,13 @@ export default function Chat({
 
   return (
     <div className="relative flex flex-col items-center w-full h-screen max-w-2xl m-auto">
+      <Head>
+        <title>Chat with {room} - Chenkster</title>
+        <meta
+          name="description"
+          content={`Chat with ${room} and get help with your projects`}
+        />
+      </Head>
       <ProfileTop
         avatar={toUser.avatar}
         first_name={toUser.first_name}

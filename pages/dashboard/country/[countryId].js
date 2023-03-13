@@ -7,6 +7,7 @@ import { handleAddCountry } from '@/utils/handleAddCountry';
 import { handleEditCountry } from '@/utils/handleEditCountry';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -142,6 +143,13 @@ export default function Country({ user, country }) {
       role={user?.user_metadata?.role}
       userId={user?.id}
     >
+      <Head>
+        <title>{country ? 'Edit Country' : 'Upload Country'} - Chenkster</title>
+        <meta
+          name="description"
+          content="Edit or upload a new country to the website"
+        />
+      </Head>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-center w-96"

@@ -10,6 +10,7 @@ import { getItinerariesWithPreferenes } from '@/services/get/getItinerariesWithP
 import { getPreferences } from '@/services/get/getPreferences';
 import { getRandomItineraries } from '@/services/get/getRandomItineraries';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import Head from 'next/head';
 import { useState } from 'react';
 
 export const getServerSideProps = async (ctx) => {
@@ -88,6 +89,13 @@ export default function Category({
       role={user?.user_metadata?.role}
       userId={user?.id}
     >
+      <Head>
+        <title>{categoryReplace} - Chenkster</title>
+        <meta
+          name="description"
+          content={`Explore our top places for ${city}`}
+        />
+      </Head>
       <div className="flex items-center justify-center">
         <button
           onClick={() => setOpenModal(true)}

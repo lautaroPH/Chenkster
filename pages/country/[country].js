@@ -4,6 +4,7 @@ import City from '@/components/Country/City';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { getCountry } from '@/services/get/getCountry';
 import { getCountryCities } from '@/services/get/getCountryCities';
+import Head from 'next/head';
 
 export const getServerSideProps = async (ctx) => {
   const { country } = ctx.query;
@@ -40,6 +41,13 @@ export default function Country({ user, cities, country }) {
       role={user?.user_metadata?.role}
       userId={user?.id}
     >
+      <Head>
+        <title>{country.title} - Chenkster</title>
+        <meta
+          name="description"
+          content={`Discover ${country.title} on Chenkster`}
+        />
+      </Head>
       <DiscoverCountry
         country={country.title}
         bgImage={country.bg_image}

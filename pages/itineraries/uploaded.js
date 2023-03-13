@@ -4,6 +4,7 @@ import { getUserItineraries } from '@/services/get/getUserItineraries';
 import Itinerary from '@/components/Category/Itinerary';
 import AddSvg from '@/components/Svg/AddSvg';
 import Link from 'next/link';
+import Head from 'next/head';
 
 export const getServerSideProps = async (ctx) => {
   const supabase = createServerSupabaseClient(ctx);
@@ -56,6 +57,13 @@ export default function Profile({ user, itineraries }) {
       role={user?.user_metadata?.role}
       userId={user?.id}
     >
+      <Head>
+        <title>Uploaded itineraries - Chenkster</title>
+        <meta
+          name="description"
+          content="Itineraries uploaded by Chenkster users. Find the best itineraries for your next trip."
+        />
+      </Head>
       {!itineraries || itineraries?.length === 0 ? (
         <p className="my-5 font-bold font-lato text-chenkster-gray">
           No itineraries found

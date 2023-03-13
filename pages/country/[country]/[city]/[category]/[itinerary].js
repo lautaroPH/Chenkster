@@ -12,6 +12,7 @@ import { deleteItinerary } from '@/services/delete/deleteItinerary';
 import { getItinerary } from '@/services/get/getItinerary';
 import { getSavedItineraries } from '@/services/get/getSavedItineraries';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import Head from 'next/head';
 import Link from 'next/link';
 
 export const getServerSideProps = async (ctx) => {
@@ -76,6 +77,10 @@ export default function Itinerary({
       role={user?.user_metadata?.role}
       userId={user?.id}
     >
+      <Head>
+        <title>{itinerary.title} - Chenkster</title>
+        <meta name="description" content={itinerary.description} />
+      </Head>
       <div className="w-full mb-5 sm:w-4/5">
         <ItineraryImage
           image={itinerary.detail_image}

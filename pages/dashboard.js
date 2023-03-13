@@ -1,5 +1,6 @@
 import Layout from '@/components/Layout';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import Head from 'next/head';
 import Link from 'next/link';
 
 export const getServerSideProps = async (ctx) => {
@@ -41,6 +42,13 @@ export default function Dashboard({ user }) {
       url={'welcome'}
       userId={user?.id}
     >
+      <Head>
+        <title>Chenkster - Dashboard</title>
+        <meta
+          name="description"
+          content="Dashboard for Chenkster. Upload new countries, cities, categories, and itineraries"
+        />
+      </Head>
       <div className="flex flex-col items-center justify-center w-full mt-20">
         <Link
           href={'/dashboard/country/new'}

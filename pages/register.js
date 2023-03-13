@@ -5,6 +5,7 @@ import LineSeparate from '@/components/LineSeparate';
 import FacebookSvg from '@/components/Svg/FacebookSvg';
 import GoogleSvg from '@/components/Svg/GoogleSvg';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import Head from 'next/head';
 
 export const getServerSideProps = async (ctx) => {
   const supabase = createServerSupabaseClient(ctx);
@@ -30,6 +31,13 @@ export const getServerSideProps = async (ctx) => {
 export default function Register() {
   return (
     <Layout title="Chenkster Sign Up" notShow={true}>
+      <Head>
+        <title>Chenkster - Sign Up</title>
+        <meta
+          name="description"
+          content="Sign Up to Chenkster and start planning your next trip"
+        />
+      </Head>
       <FormRegister />
 
       <LineSeparate />

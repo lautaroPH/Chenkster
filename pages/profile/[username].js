@@ -8,6 +8,7 @@ import Verifications from '@/components/Stats/Verifications';
 import Views from '@/components/Stats/Views';
 import { getUserProfile } from '@/services/get/getUserProfile';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import Head from 'next/head';
 import { useState } from 'react';
 
 export async function getServerSideProps(ctx) {
@@ -47,6 +48,13 @@ export default function Username({ userProfile, userData }) {
       role={userData?.user_metadata?.role}
       userId={userData?.id}
     >
+      <Head>
+        <title>{userProfile?.username} - Chenkster</title>
+        <meta
+          name="description"
+          content={`Profile of ${userProfile?.username} on Chenkster. ${userProfile?.description}`}
+        />
+      </Head>
       {!stats ? (
         <Profile
           description={userProfile?.description}

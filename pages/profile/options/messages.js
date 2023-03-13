@@ -8,6 +8,7 @@ import { getTotalMessagesRealtime } from '@/services/realtime/getTotalMessagesRe
 import { getUsersAdmin } from '@/services/get/getUsersAdmin';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useEffect, useState } from 'react';
+import Head from 'next/head';
 
 export const getServerSideProps = async (ctx) => {
   const supabase = createServerSupabaseClient(ctx);
@@ -76,6 +77,13 @@ export default function Messages({ user, messagesLoaded, adminProfiles }) {
       role={user_metadata.role}
       userId={user.id}
     >
+      <Head>
+        <title>{!requests ? 'Messages' : 'Requests'} - Chenkster</title>
+        <meta
+          name="description"
+          content="Chat with Chenkster users and admins"
+        />
+      </Head>
       {!requests ? (
         <>
           {adminProfiles &&

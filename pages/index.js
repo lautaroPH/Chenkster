@@ -1,5 +1,6 @@
 import AboutChenkster from '@/components/AboutChenkster/AboutChenkster';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import Head from 'next/head';
 
 export const getServerSideProps = async (ctx) => {
   const supabase = createServerSupabaseClient(ctx);
@@ -28,6 +29,13 @@ export const getServerSideProps = async (ctx) => {
 export default function Home({ user }) {
   return (
     <div className="relative flex flex-col items-center w-full min-h-screen overflow-hidden">
+      <Head>
+        <title>Chenkster</title>
+        <meta
+          name="description"
+          content="Chenkster is a travel planning app that helps you plan your next trip"
+        />
+      </Head>
       <AboutChenkster user={user} />
     </div>
   );

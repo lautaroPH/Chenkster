@@ -4,6 +4,7 @@ import FollowUs from '@/components/Profile/settings/FollowUs';
 import Help from '@/components/Profile/settings/Help';
 import SettingsProfile from '@/components/Profile/settings/Settings';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import Head from 'next/head';
 import { useState } from 'react';
 
 export const getServerSideProps = async (ctx) => {
@@ -47,6 +48,15 @@ export default function Settings({ user }) {
       role={user_metadata.role}
       userId={user.id}
     >
+      <Head>
+        <title>{!help ? 'Settings' : 'Help'} - Chenkster</title>
+        <meta
+          name="description"
+          content={`${!help ? 'Settings' : 'Help'} of ${
+            user_metadata?.username
+          } on Chenkster.`}
+        />
+      </Head>
       {!help ? <SettingsProfile /> : <Help />}
       <FollowUs />
     </LayoutProfile>

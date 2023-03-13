@@ -3,6 +3,7 @@ import EnterMetaverse from '@/components/City/EnterMetaverse';
 import Layout from '@/components/Layout';
 import { getCategories } from '@/services/get/getCategories';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
+import Head from 'next/head';
 
 export const getServerSideProps = async (ctx) => {
   const { country, city } = ctx.query;
@@ -27,6 +28,7 @@ export const getServerSideProps = async (ctx) => {
 };
 
 export default function City({ user, categories, country, city }) {
+  const citiesReplace = city.replace(/-/g, ' ');
   return (
     <Layout
       url={`/country/${country}`}
@@ -35,6 +37,13 @@ export default function City({ user, categories, country, city }) {
       role={user?.user_metadata?.role}
       userId={user?.id}
     >
+      <Head>
+        <title>{citiesReplace} - Chenkster</title>
+        <meta
+          name="description"
+          content={`Discover ${citiesReplace} on Chenkster`}
+        />
+      </Head>
       <p className="text-lg text-center font-lato text-chenkster-gray w-80">
         Get the best advice about places, experiences and activities, directly
         from our <span className="text-chenkster-blue">local chenksters!</span>

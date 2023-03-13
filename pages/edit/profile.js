@@ -13,6 +13,7 @@ import { updateProfile } from '@/services/update/updateProfile';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { allowedExtensions } from '@/utils/allowedExtension';
+import Head from 'next/head';
 
 export const getServerSideProps = async (ctx) => {
   const supabase = createServerSupabaseClient(ctx);
@@ -234,6 +235,13 @@ export default function Profile({ user }) {
       role={user?.user_metadata?.role}
       userId={user?.id}
     >
+      <Head>
+        <title>Create profile - Chenkster</title>
+        <meta
+          name="description"
+          content="Create your profile and start sharing your knowledge with the world"
+        />
+      </Head>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col justify-center gap-5 mt-8 mb-10 w-96"

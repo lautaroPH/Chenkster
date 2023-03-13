@@ -5,6 +5,7 @@ import ShowCountries from '@/components/WelcomeChenkster/ShowCountries';
 import { getCountriesLimit } from '@/services/get/getCountriesLimit';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import NavbarBottom from '@/components/NavbarBottom';
+import Head from 'next/head';
 
 export const getServerSideProps = async (ctx) => {
   const { countries, err } = await getCountriesLimit();
@@ -26,6 +27,13 @@ export const getServerSideProps = async (ctx) => {
 export default function Welcome({ countries, user }) {
   return (
     <div className="relative flex flex-col items-center justify-between w-full min-h-screen overflow-hidden">
+      <Head>
+        <title>Chenkster - Welcome</title>
+        <meta
+          name="description"
+          content="Welcome to Chenkster! Find the best suggestions for your next trip in only 3 clicks"
+        />
+      </Head>
       <GoBack
         styles={
           'absolute top-16 left-8 sm:left-40 md:left-60 lg:left-96 xl:left-[30rem]'
