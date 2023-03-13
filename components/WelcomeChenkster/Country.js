@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { deleteCountry } from '@/utils/deleteCountry';
+import { deleteCountry } from '@/services/delete/deleteCountry';
 import Link from 'next/link';
 import ButtonDelete from '../ButtonDelete';
 import PencilEditSvg from '../Svg/PencilEditSvg';

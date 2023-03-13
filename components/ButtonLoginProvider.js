@@ -1,4 +1,4 @@
-import { loginWithProvider } from '@/utils/loginWithProvider';
+import { loginWithProvider } from '@/services/auth/loginWithProvider';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/router';
 

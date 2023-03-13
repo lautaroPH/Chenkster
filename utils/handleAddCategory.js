@@ -1,7 +1,7 @@
 import { correctFile } from './correctFile';
-import { removeImage } from './removeImage';
-import { uploadCategory } from './uploadCategory';
-import { uploadImage } from './uploadImage';
+import { removeImage } from '../services/delete/removeImage';
+import { uploadCategory } from '../services/upload/uploadCategory';
+import { uploadImage } from '../services/upload/uploadImage';
 
 export const handleAddCategory = async (
   formData,

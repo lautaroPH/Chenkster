@@ -1,4 +1,4 @@
-import { getUserProfile } from './getUserProfile';
+import { getUserProfile } from '../get/getUserProfile';
 
 export const getMessagesRealtime = (
   room,

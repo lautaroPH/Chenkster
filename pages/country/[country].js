@@ -2,8 +2,8 @@ import DiscoverCountry from '@/components/Country/DiscoverCountry';
 import Layout from '@/components/Layout';
 import City from '@/components/Country/City';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
-import { getCountry } from '@/utils/getCountry';
-import { getCountryCities } from '@/utils/getCountryCities';
+import { getCountry } from '@/services/get/getCountry';
+import { getCountryCities } from '@/services/get/getCountryCities';
 
 export const getServerSideProps = async (ctx) => {
   const { country } = ctx.query;

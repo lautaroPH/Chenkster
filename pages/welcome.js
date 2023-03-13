@@ -2,7 +2,7 @@ import WorldLightSvg from '@/components/Svg/WorldLightSvg';
 import GoBack from '@/components/GoBack';
 import ChenksterLogo from '@/components/ChenksterLogo';
 import ShowCountries from '@/components/WelcomeChenkster/ShowCountries';
-import { getCountriesLimit } from '@/utils/getCountriesLimit';
+import { getCountriesLimit } from '@/services/get/getCountriesLimit';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import NavbarBottom from '@/components/NavbarBottom';
 

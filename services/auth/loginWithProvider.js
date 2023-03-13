@@ -1,4 +1,4 @@
-import { uploadProfile } from './uploadProfile';
+import { uploadProfile } from '../upload/uploadProfile';
 
 export const loginWithProvider = async (provider, supabase) => {
   const randomNumber = Math.floor(Math.random() * 9000) + 1000;

@@ -4,11 +4,11 @@ import ModalPreferences from '@/components/Category/ModalPreferences';
 import Layout from '@/components/Layout';
 import PreferencesSvg from '@/components/Svg/PreferencesSvg';
 import ShufleSvg from '@/components/Svg/ShufleSvg';
-import { getCity } from '@/utils/getCity';
-import { getItineraries } from '@/utils/getItineraries';
-import { getItinerariesWithPreferenes } from '@/utils/getItinerariesWithPreferenes';
-import { getPreferences } from '@/utils/getPreferences';
-import { getRandomItineraries } from '@/utils/getRandomItineraries';
+import { getCity } from '@/services/get/getCity';
+import { getItineraries } from '@/services/get/getItineraries';
+import { getItinerariesWithPreferenes } from '@/services/get/getItinerariesWithPreferenes';
+import { getPreferences } from '@/services/get/getPreferences';
+import { getRandomItineraries } from '@/services/get/getRandomItineraries';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useState } from 'react';
 

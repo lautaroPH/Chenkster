@@ -1,7 +1,7 @@
 import { correctFile } from './correctFile';
-import { removeImage } from './removeImage';
-import { uploadImage } from './uploadImage';
-import { uploadItinerary } from './uploadItinerary';
+import { removeImage } from '../services/delete/removeImage';
+import { uploadImage } from '../services/upload/uploadImage';
+import { uploadItinerary } from '../services/upload/uploadItinerary';
 
 export const handleAddItinerary = async (
   formData,

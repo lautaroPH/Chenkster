@@ -3,9 +3,9 @@ import LayoutProfile from '@/components/LayoutProfile';
 import MessagesProfile from '@/components/Profile/messages/Messages';
 import Requests from '@/components/Profile/messages/Requests';
 import { supabase } from '@/supabaseClient';
-import { getTotalMessages } from '@/utils/getTotalMessages';
-import { getTotalMessagesRealtime } from '@/utils/getTotalMessagesRealtime';
-import { getUsersAdmin } from '@/utils/getUsersAdmin';
+import { getTotalMessages } from '@/services/get/getTotalMessages';
+import { getTotalMessagesRealtime } from '@/services/realtime/getTotalMessagesRealtime';
+import { getUsersAdmin } from '@/services/get/getUsersAdmin';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useEffect, useState } from 'react';
 

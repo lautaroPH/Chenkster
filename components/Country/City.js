@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-img-element */
-import { deleteCity } from '@/utils/deleteCity';
+import { deleteCity } from '@/services/delete/deleteCity';
 import Link from 'next/link';
 import ButtonDelete from '../ButtonDelete';
 import PencilEditSvg from '../Svg/PencilEditSvg';

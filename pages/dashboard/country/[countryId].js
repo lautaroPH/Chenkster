@@ -2,7 +2,7 @@ import FormLabel from '@/components/Dashboard/FormLabel';
 import ImagePreview from '@/components/Dashboard/ImagePreview';
 import FileInput from '@/components/FileInput';
 import Layout from '@/components/Layout';
-import { getCountry } from '@/utils/getCountry';
+import { getCountry } from '@/services/get/getCountry';
 import { handleAddCountry } from '@/utils/handleAddCountry';
 import { handleEditCountry } from '@/utils/handleEditCountry';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';

@@ -1,5 +1,5 @@
-import { getUserProfile } from './getUserProfile';
-import { uploadProfile } from './uploadProfile';
+import { getUserProfile } from '../services/get/getUserProfile';
+import { uploadProfile } from '../services/upload/uploadProfile';
 
 export const registerWithEmail = async (
   email,

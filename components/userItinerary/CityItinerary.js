@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Itinerary from './Itinerary';
 import dynamic from 'next/dynamic';
 import { StrictModeDroppable } from '../StrictModeDroppable';
-import { updateOrder } from '@/utils/updateOrder';
+import { updateOrder } from '@/services/update/updateOrder';
 const Draggable = dynamic(
   () =>
     import('react-beautiful-dnd').then((mod) => {

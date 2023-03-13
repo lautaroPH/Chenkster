@@ -1,6 +1,6 @@
-import { updateTotalMessages } from '@/utils/updateTotalMessages';
-import { uploadMessage } from '@/utils/uploadMessage';
-import { uploadTotalMessages } from '@/utils/uploadTotalMessages';
+import { updateTotalMessages } from '@/services/update/updateTotalMessages';
+import { uploadMessage } from '@/services/upload/uploadMessage';
+import { uploadTotalMessages } from '@/services/upload/uploadTotalMessages';
 import { useState } from 'react';
 import SendSvg from '../Svg/SendSvg';
 

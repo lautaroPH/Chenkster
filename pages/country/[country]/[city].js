@@ -1,7 +1,7 @@
 import Category from '@/components/City/Category';
 import EnterMetaverse from '@/components/City/EnterMetaverse';
 import Layout from '@/components/Layout';
-import { getCategories } from '@/utils/getCategories';
+import { getCategories } from '@/services/get/getCategories';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 
 export const getServerSideProps = async (ctx) => {

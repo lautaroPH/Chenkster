@@ -1,8 +1,8 @@
 import Layout from '@/components/Layout';
 import { StrictModeDroppable } from '@/components/StrictModeDroppable';
 import CityItinerary from '@/components/userItinerary/CityItinerary';
-import { getSavedItinerariesOrder } from '@/utils/getSavedItinerariesOrder';
-import { updateOrderCity } from '@/utils/updateOrderCity';
+import { getSavedItinerariesOrder } from '@/services/get/getSavedItinerariesOrder';
+import { updateOrderCity } from '@/services/update/updateOrderCity';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import dynamic from 'next/dynamic';

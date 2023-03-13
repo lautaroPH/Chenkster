@@ -9,7 +9,7 @@ import PrivacySvg from '@/components/Svg/PrivacySvg';
 import SafetySvg from '@/components/Svg/SafetySvg';
 import ThemeSvg from '@/components/Svg/ThemeSvg';
 import TwoFactorSvg from '@/components/Svg/TwoFactorSvg';
-import { logout } from '@/utils/logout';
+import { logout } from '@/services/auth/logout';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';

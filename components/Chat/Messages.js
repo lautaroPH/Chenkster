@@ -1,4 +1,4 @@
-import { getMessagesRealtime } from '@/utils/getMessagesRealtime';
+import { getMessagesRealtime } from '@/services/realtime/getMessagesRealtime';
 import { useEffect, useRef, useState } from 'react';
 import ButtonGoBottom from './ButtonGoBottom';
 import Message from './Message';

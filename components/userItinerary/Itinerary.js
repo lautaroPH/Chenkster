@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 
-import { deleteSavedItinerary } from '@/utils/deleteSavedItinerary';
+import { deleteSavedItinerary } from '@/services/delete/deleteSavedItinerary';
 import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import { toast, Toaster } from 'react-hot-toast';

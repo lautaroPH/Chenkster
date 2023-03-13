@@ -1,8 +1,8 @@
 import Layout from '@/components/Layout';
 import EyeSlashSvg from '@/components/Svg/EyeSlashSvg';
 import EyeSvg from '@/components/Svg/EyeSvg';
-import { newPassword } from '@/utils/newPassword';
-import { recoverPassword } from '@/utils/recoverPassword';
+import { newPassword } from '@/services/auth/newPassword';
+import { recoverPassword } from '@/services/auth/recoverPassword';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/router';

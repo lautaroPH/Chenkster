@@ -1,7 +1,7 @@
 import { correctFile } from './correctFile';
-import { removeImage } from './removeImage';
-import { uploadCountry } from './uploadCountry';
-import { uploadImage } from './uploadImage';
+import { removeImage } from '../services/delete/removeImage';
+import { uploadCountry } from '../services/upload/uploadCountry';
+import { uploadImage } from '../services/upload/uploadImage';
 
 export const handleAddCountry = async (
   formData,

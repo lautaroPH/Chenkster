@@ -1,4 +1,4 @@
-import { searchCountry } from '@/utils/searchCountry';
+import { searchCountry } from '@/services/get/searchCountry';
 import debounce from 'just-debounce-it';
 import SearchSvg from '../Svg/SearchSvg';
 

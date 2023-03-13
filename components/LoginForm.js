@@ -1,4 +1,4 @@
-import { loginWithEmail } from '@/utils/loginWithEmail';
+import { loginWithEmail } from '@/services/auth/loginWithEmail';
 import Link from 'next/link';
 import { useState } from 'react';
 import EyeSlashSvg from './Svg/EyeSlashSvg';
@@ -35,9 +35,9 @@ const LoginForm = () => {
       setError({ submit: error.message });
       return;
     }
-    if(data?.user?.user_metadata?.role){
-      router.push('/dashboard')
-      return
+    if (data?.user?.user_metadata?.role) {
+      router.push('/dashboard');
+      return;
     }
     router.push(callbackUrl);
   };

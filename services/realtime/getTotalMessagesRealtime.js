@@ -1,5 +1,5 @@
 import { supabase } from '@/supabaseClient';
-import { getUserProfile } from './getUserProfile';
+import { getUserProfile } from '../get/getUserProfile';
 
 export const getTotalMessagesRealtime = (
   channel,

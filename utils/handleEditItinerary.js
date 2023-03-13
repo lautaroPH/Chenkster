@@ -1,8 +1,8 @@
 import { correctFile } from './correctFile';
-import { moveImage } from './moveImage';
-import { removeImage } from './removeImage';
-import { updateItinerary } from './updateItinerary';
-import { uploadImage } from './uploadImage';
+import { moveImage } from '../services/update/moveImage';
+import { removeImage } from '../services/delete/removeImage';
+import { updateItinerary } from '../services/update/updateItinerary';
+import { uploadImage } from '../services/upload/uploadImage';
 
 export const handleEditItinerary = async (
   itineraryData,

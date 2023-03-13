@@ -1,6 +1,6 @@
 import Layout from '@/components/Layout';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
-import { getUserItineraries } from '@/utils/getUserItineraries';
+import { getUserItineraries } from '@/services/get/getUserItineraries';
 import Itinerary from '@/components/Category/Itinerary';
 import AddSvg from '@/components/Svg/AddSvg';
 import Link from 'next/link';

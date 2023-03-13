@@ -8,9 +8,9 @@ import SocialIcon from '@/components/SocialIcons';
 import MapPointSvg from '@/components/Svg/MapPointSvg';
 import PencilEditSvg from '@/components/Svg/PencilEditSvg';
 import VerificSvg from '@/components/Svg/VerificSvg';
-import { deleteItinerary } from '@/utils/deleteItinerary';
-import { getItinerary } from '@/utils/getItinerary';
-import { getSavedItineraries } from '@/utils/getSavedItineraries';
+import { deleteItinerary } from '@/services/delete/deleteItinerary';
+import { getItinerary } from '@/services/get/getItinerary';
+import { getSavedItineraries } from '@/services/get/getSavedItineraries';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import Link from 'next/link';
 

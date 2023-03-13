@@ -6,7 +6,7 @@ import GoldBadge from '@/components/Stats/GoldBadge';
 import TotalEarning from '@/components/Stats/TotalEarning';
 import Verifications from '@/components/Stats/Verifications';
 import Views from '@/components/Stats/Views';
-import { getUserProfile } from '@/utils/getUserProfile';
+import { getUserProfile } from '@/services/get/getUserProfile';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useState } from 'react';
 

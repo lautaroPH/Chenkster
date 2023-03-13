@@ -1,6 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
-import { deleteSavedItinerary } from '@/utils/deleteSavedItinerary';
-import { uploadSavedItinerary } from '@/utils/uploadSavedItinerary';
+import { deleteSavedItinerary } from '@/services/delete/deleteSavedItinerary';
+import { uploadSavedItinerary } from '@/services/upload/uploadSavedItinerary';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useState } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
