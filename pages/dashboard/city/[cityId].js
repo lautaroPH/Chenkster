@@ -1,9 +1,14 @@
 /* eslint-disable @next/next/no-img-element */
+import SelectCountry from '@/components/Dashboard/City/SelectCountry';
+import FormLabel from '@/components/Dashboard/FormLabel';
+import ImagePreview from '@/components/Dashboard/ImagePreview';
 import FileInput from '@/components/FileInput';
 import Layout from '@/components/Layout';
 import { correctFile } from '@/utils/correctFile';
 import { getCity } from '@/utils/getCity';
 import { getCountries } from '@/utils/getCountries';
+import { handleAddCity } from '@/utils/handleAddCity';
+import { handleEditCity } from '@/utils/handleEditCity';
 import { moveImage } from '@/utils/moveImage';
 import { removeImage } from '@/utils/removeImage';
 import { updateCity } from '@/utils/updateCity';
@@ -79,7 +84,7 @@ export default function City({ user, countries, city }) {
   const [imagePreview, setImagePreview] = useState(city?.image || '');
 
   const imageInputRef = useRef();
-  const timestamp = Date.parse(city.created_at);
+  const timestamp = Date.parse(city?.created_at);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -88,109 +93,32 @@ export default function City({ user, countries, city }) {
     setLoading(true);
     const loadingToastId = toast.loading('Loading...');
     const cityData = city;
-    const imageCorrect = correctFile(
-      formData?.image[0]?.type,
-      formData?.image[0]?.size,
-    );
 
     if (cityData) {
-      let imagePath = cityData.image;
-      if (!formData.title || !formData.description || !formData.country_id)
-        return handleError('Please fill all the fields', loadingToastId);
-
-      if (formData.image && !imageCorrect)
-        return handleError(
-          'File type is not supported or file size is too large for image',
-          loadingToastId,
-        );
-
-      if (formData.title !== cityData.title && !formData.image) {
-        const { data, error } = await moveImage(
-          `${cityData.title}/image`,
-          `${formData.title}/image`,
-          'cities',
-          supabase,
-        );
-
-        if (error) return handleError(error.message, loadingToastId);
-
-        imagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/cities/public/${formData.title}/image?${timestamp}`;
-      } else if (formData.image) {
-        const { error } = await removeImage(
-          `public/${cityData.title}/image`,
-          supabase,
-          'cities',
-        );
-
-        if (error) return handleError(error.message, loadingToastId);
-
-        const { dataImage, errorImage } = await uploadImage(
-          formData.image[0],
-          `image`,
-          formData.title,
-          supabase,
-          'cities',
-        );
-
-        if (errorImage) return handleError(errorImage.message, loadingToastId);
-
-        imagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/cities/public/${formData.title}/image?${timestamp}`;
-      }
-      const { country, err } = await updateCity(
+      const ok = await handleEditCity(
         formData,
+        cityData,
+        handleError,
+        loadingToastId,
         supabase,
-        imagePath,
+        timestamp,
         user.id,
-        cityData.title,
       );
 
-      if (err) {
-        await removeImage(`public/${formData.title}/image`, supabase, 'cities');
-
-        handleError(err.message, loadingToastId);
-        return;
-      }
+      if (!ok) return;
     } else {
-      if (
-        !formData.title ||
-        !formData.description ||
-        !formData.image ||
-        !formData.country_id
-      )
-        return handleError('Please fill all the fields', loadingToastId);
-
-      if (!imageCorrect)
-        return handleError(
-          'File type is not supported or file size is too large for image',
-          loadingToastId,
-        );
-
-      const { dataImage, errorImage } = await uploadImage(
-        formData.image[0],
-        `image`,
-        formData.title,
-        supabase,
-        'cities',
-      );
-
-      if (errorImage) return handleError(errorImage.message, loadingToastId);
-
-      const imagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/cities/${dataImage.path}?${timestamp}`;
-
-      const { city, err } = await uploadCity(
+      const ok = await handleAddCity(
         formData,
+        handleError,
+        loadingToastId,
         supabase,
-        imagePath,
+        timestamp,
         user.id,
       );
 
-      if (err) {
-        await removeImage(dataImage.path, supabase, 'cities');
-
-        handleError(err.message, loadingToastId);
-        return;
-      }
+      if (!ok) return;
     }
+
     const country = countries.find(
       (country) => country.id === formData.country_id,
     );
@@ -230,36 +158,12 @@ export default function City({ user, countries, city }) {
         onSubmit={handleSubmit}
         className="flex flex-col justify-center w-96"
       >
-        <label
-          htmlFor="country_id"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Select a country
-        </label>
-        <select
-          name="country_id"
-          id="country_id"
-          className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-          required
-          placeholder="Select a country"
-          onChange={handleChange}
-          value={formData.country_id}
-        >
-          <option value="" disabled>
-            Select a country
-          </option>
-          {countries.map((country) => (
-            <option key={country.id} value={country.id}>
-              {country.title}
-            </option>
-          ))}
-        </select>
-        <label
-          htmlFor="title"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          City
-        </label>
+        <SelectCountry
+          countries={countries}
+          handleChange={handleChange}
+          countryId={formData.country_id}
+        />
+        <FormLabel title={'City'} name="title" />
         <input
           type="text"
           name="title"
@@ -271,12 +175,7 @@ export default function City({ user, countries, city }) {
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />
-        <label
-          htmlFor="description"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Description
-        </label>
+        <FormLabel title={'Description'} name="description" />
         <textarea
           name="description"
           rows={3}
@@ -286,12 +185,7 @@ export default function City({ user, countries, city }) {
           placeholder="Milan is a city where you can find a lot of things to do..."
           required
         />
-        <label
-          htmlFor="image"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Image city
-        </label>
+        <FormLabel title={'Image city'} name="image" />
         <FileInput
           name="image"
           inputRef={imageInputRef}
@@ -299,13 +193,11 @@ export default function City({ user, countries, city }) {
           handleData={updateImageData}
           handlePreview={uploadImagePreview}
         />
-        {imagePreview && (
-          <img
-            src={imagePreview}
-            alt="Image for the city"
-            className="object-cover h-32 w-28 rounded-2xl"
-          />
-        )}
+        <ImagePreview
+          alt="Image for the city"
+          imagePreview={imagePreview}
+          styles="object-cover h-32 w-28 rounded-2xl"
+        />
         <p className="mt-2 mb-3 text-red-600">{error}</p>
         <button
           disabled={

@@ -1,10 +1,8 @@
-/* eslint-disable @next/next/no-img-element */
+import FormLabel from '@/components/Dashboard/FormLabel';
+import ImagePreview from '@/components/Dashboard/ImagePreview';
 import FileInput from '@/components/FileInput';
 import Layout from '@/components/Layout';
-import { allowedExtensions } from '@/utils/allowedExtension';
-import { removeImage } from '@/utils/removeImage';
-import { uploadCategory } from '@/utils/uploadCategory';
-import { uploadImage } from '@/utils/uploadImage';
+import { handleAddCategory } from '@/utils/handleAddCategory';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRef, useState } from 'react';
@@ -61,53 +59,16 @@ export default function Category({ user }) {
     setLoading(true);
     const loadingToastId = toast.loading('Loading...');
 
-    if (!formData.category || !formData.image || !formData.sub_categories)
-      return handleError('Please fill all the fields', loadingToastId);
-
-    const imageCorrect =
-      allowedExtensions.exec(formData.image[0].type) &&
-      formData.image[0].size < 700000;
-
-    if (!imageCorrect)
-      return handleError(
-        'File type is not supported or file size is too large for flag and background image',
-        loadingToastId,
-      );
-
-    const { dataImage, errorImage } = await uploadImage(
-      formData.image[0],
-      `image`,
-      formData.category,
+    const ok = await handleAddCategory(
+      formData,
+      handleError,
+      loadingToastId,
       supabase,
-      'categories',
-    );
-
-    if (errorImage) return handleError(errorImage.message, loadingToastId);
-
-    const imagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/categories/${dataImage.path}`;
-
-    const subCategories = formData.sub_categories
-      .split(',')
-      .map((sub) => sub.trim());
-
-    const { category, err } = await uploadCategory(
-      formData.category,
-      supabase,
-      imagePath,
       user.id,
-      subCategories,
     );
 
-    if (err) {
-      const removedImage = await removeImage(
-        dataImage.path,
-        supabase,
-        'categories',
-      );
+    if (!ok) return;
 
-      handleError(err.message, loadingToastId);
-      return;
-    }
     toast.dismiss(loadingToastId);
     toast.success(`Successfully uploaded: ${formData.category}`);
     setLoading(false);
@@ -125,7 +86,7 @@ export default function Category({ user }) {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleError = (error) => {
+  const handleError = (error, loadingToastId) => {
     toast.dismiss(loadingToastId);
     setLoading(false);
     setError(error);
@@ -150,12 +111,7 @@ export default function Category({ user }) {
         onSubmit={handleSubmit}
         className="flex flex-col justify-center w-96"
       >
-        <label
-          htmlFor="category"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Category
-        </label>
+        <FormLabel name="category" title="Category" />
         <input
           type="text"
           name="category"
@@ -167,12 +123,7 @@ export default function Category({ user }) {
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />
-        <label
-          htmlFor="sub_categories"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Sub categories
-        </label>
+        <FormLabel name={'sub_categories'} title={'Sub categories'} />
         <textarea
           name="sub_categories"
           rows={3}
@@ -182,12 +133,7 @@ export default function Category({ user }) {
           placeholder="Meat, Fish, Vegetarian, Vegan, etc... (Important to separate with commas)"
           required
         />
-        <label
-          htmlFor="image"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Category image
-        </label>
+        <FormLabel name="image" title="Image" />
         <FileInput
           name="image"
           inputRef={imageInputRef}
@@ -195,13 +141,11 @@ export default function Category({ user }) {
           handleData={updateImageData}
           handlePreview={uploadImagePreview}
         />
-        {imagePreview && (
-          <img
-            src={imagePreview}
-            alt="Flag country"
-            className="object-cover w-36 h-36 rounded-xl"
-          />
-        )}
+        <ImagePreview
+          alt={'Category image'}
+          imagePreview={imagePreview}
+          styles={'object-cover w-36 h-36 rounded-xl'}
+        />
         <p className="mt-2 mb-3 text-red-600">{error}</p>
         <button
           disabled={loading || !formData.category || !formData.image}

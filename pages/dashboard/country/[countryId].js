@@ -1,13 +1,10 @@
-/* eslint-disable @next/next/no-img-element */
+import FormLabel from '@/components/Dashboard/FormLabel';
+import ImagePreview from '@/components/Dashboard/ImagePreview';
 import FileInput from '@/components/FileInput';
 import Layout from '@/components/Layout';
-import { correctFile } from '@/utils/correctFile';
 import { getCountry } from '@/utils/getCountry';
-import { moveImage } from '@/utils/moveImage';
-import { removeImage } from '@/utils/removeImage';
-import { updateCountry } from '@/utils/updateCountry';
-import { uploadCountry } from '@/utils/uploadCountry';
-import { uploadImage } from '@/utils/uploadImage';
+import { handleAddCountry } from '@/utils/handleAddCountry';
+import { handleEditCountry } from '@/utils/handleEditCountry';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/router';
@@ -71,7 +68,7 @@ export default function Country({ user, country }) {
   const [flagPreview, setFlagPreview] = useState(country?.flag || '');
   const [bgImagePreview, setBgImagePreview] = useState(country?.bg_image || '');
 
-  const timestamp = Date.parse(country.created_at);
+  const timestamp = Date.parse(country?.created_at);
   const flagInputRef = useRef();
   const bgImageInputRef = useRef();
 
@@ -84,177 +81,34 @@ export default function Country({ user, country }) {
     setLoading(true);
     const loadingToastId = toast.loading('Loading...');
     const countryData = country;
-    const flagCorrect = correctFile(
-      formData?.flag[0]?.type,
-      formData?.flag[0]?.size,
-    );
-
-    const bgImageCorrect = correctFile(
-      formData?.bg_image[0]?.type,
-      formData?.bg_image[0]?.size,
-    );
 
     if (countryData) {
-      let flagPath = countryData.flag;
-      let bgImagePath = countryData.bg_image;
-
-      if (!formData.country)
-        return handleError('Please fill all the fields', loadingToastId);
-
-      if (formData.flag && !flagCorrect)
-        return handleError(
-          'File type is not supported or file size is too large for flag',
-          loadingToastId,
-        );
-
-      if (formData.bg_image && !bgImageCorrect)
-        return handleError(
-          'File type is not supported or file size is too large for background image',
-          loadingToastId,
-        );
-
-      if (formData.country !== countryData.title && !formData.flag) {
-        const { data, error } = await moveImage(
-          `${countryData.title}/flag`,
-          `${formData.country}/flag`,
-          'countries',
-          supabase,
-        );
-
-        if (error) return handleError(error.message, loadingToastId);
-
-        flagPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/public/${formData.country}/flag?${timestamp}`;
-      } else if (formData.flag) {
-        const { error } = await removeImage(
-          `public/${countryData.title}/flag`,
-          supabase,
-          'countries',
-        );
-
-        if (error) return handleError(error.message, loadingToastId);
-
-        const { dataImage, errorImage } = await uploadImage(
-          formData.flag[0],
-          `flag`,
-          formData.country,
-          supabase,
-          'countries',
-        );
-
-        if (errorImage) return handleError(errorImage.message, loadingToastId);
-
-        flagPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/public/${formData.country}/flag?${timestamp}`;
-      }
-
-      if (formData.country !== countryData.title && !formData.bg_image) {
-        const { data, error } = await moveImage(
-          `${countryData.title}/bg_image`,
-          `${formData.country}/bg_image`,
-          'countries',
-          supabase,
-        );
-
-        if (error) return handleError(error.message, loadingToastId);
-
-        bgImagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/public/${formData.country}/bg_image?${timestamp}`;
-      } else if (formData.bg_image) {
-        const { error } = await removeImage(
-          `public/${countryData.title}/bg_image`,
-          supabase,
-          'countries',
-        );
-        if (error) return handleError(error.message, loadingToastId);
-
-        const { dataImage, errorImage } = await uploadImage(
-          formData.bg_image[0],
-          `bg_image`,
-          formData.country,
-          supabase,
-          'countries',
-        );
-
-        if (errorImage) return handleError(errorImage.message, loadingToastId);
-
-        bgImagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/public/${formData.country}/bg_image?${timestamp}`;
-      }
-
-      const { country, err } = await updateCountry(
-        formData.country,
+      const ok = await handleEditCountry(
+        countryData,
+        formData,
+        handleError,
+        loadingToastId,
         supabase,
-        flagPath,
-        bgImagePath,
+        timestamp,
         user.id,
-        countryData.id,
       );
 
-      if (err) {
-        await removeImage(
-          `public/${formData.country}/bg_image`,
-          supabase,
-          'countries',
-        );
-
-        await removeImage(
-          `public/${formData.country}/flag`,
-          supabase,
-          'countries',
-        );
-
-        return handleError(err.message, loadingToastId);
-      }
+      if (!ok) return;
     } else {
-      if (!formData.country || !formData.flag || !formData.bg_image)
-        return handleError('Please fill all the fields', loadingToastId);
-
-      if (!flagCorrect || !bgImageCorrect)
-        return handleError(
-          'File type is not supported or file size is too large for flag and background image',
-          loadingToastId,
-        );
-
-      const { dataImage, errorImage } = await uploadImage(
-        formData.flag[0],
-        `flag`,
-        formData.country,
+      const ok = await handleAddCountry(
+        formData,
+        handleError,
+        loadingToastId,
         supabase,
-        'countries',
-      );
-
-      const { dataImage: data, errorImage: error } = await uploadImage(
-        formData.bg_image[0],
-        `bg_image`,
-        formData.country,
-        supabase,
-        'countries',
-      );
-
-      if (errorImage || error)
-        return handleError(error.message || errorImage.message, loadingToastId);
-
-      const flagPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/${dataImage.path}?${timestamp}`;
-      const bgImagePath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/countries/${data.path}?${timestamp}`;
-
-      const { country, err } = await uploadCountry(
-        formData.country,
-        supabase,
-        flagPath,
-        bgImagePath,
+        timestamp,
         user.id,
       );
-
-      if (err) {
-        await removeImage(dataImage.path, supabase, 'countries');
-
-        await removeImage(data.path, supabase, 'countries');
-
-        handleError(err.message, loadingToastId);
-        return;
-      }
+      if (!ok) return;
     }
 
     router.push('/welcome');
     toast.dismiss(loadingToastId);
-    toast.success(`Successfully uploaded: ${formData.country}`);
+    toast.success(`Successfully edited: ${formData.country}`);
   };
 
   const handleChange = (e) => {
@@ -291,12 +145,7 @@ export default function Country({ user, country }) {
         onSubmit={handleSubmit}
         className="flex flex-col justify-center w-96"
       >
-        <label
-          htmlFor="country"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Country
-        </label>
+        <FormLabel name="country" title="Country" />
         <input
           type="text"
           name="country"
@@ -308,12 +157,7 @@ export default function Country({ user, country }) {
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />
-        <label
-          htmlFor="flag"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Flag
-        </label>
+        <FormLabel name="flag" title="Flag" />
         <FileInput
           name="flag"
           inputRef={flagInputRef}
@@ -321,19 +165,12 @@ export default function Country({ user, country }) {
           handleData={updateImageData}
           handlePreview={uploadFlagPreview}
         />
-        {flagPreview && (
-          <img
-            src={flagPreview}
-            alt="Flag country"
-            className="object-cover w-10 h-5"
-          />
-        )}
-        <label
-          htmlFor="bg_image"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Background image
-        </label>
+        <ImagePreview
+          alt="flag image country"
+          imagePreview={flagPreview}
+          styles="object-cover w-10 h-5"
+        />
+        <FormLabel name="bg_image" title="Background image" />
         <FileInput
           name="bg_image"
           inputRef={bgImageInputRef}
@@ -341,13 +178,11 @@ export default function Country({ user, country }) {
           handleData={updateImageData}
           handlePreview={uploadBgPreview}
         />
-        {bgImagePreview && (
-          <img
-            src={bgImagePreview}
-            alt="Background image country"
-            className="object-cover w-80 h-72"
-          />
-        )}
+        <ImagePreview
+          alt="Background image country"
+          imagePreview={bgImagePreview}
+          styles="object-cover w-80 h-72"
+        />
         <p className="mt-2 mb-3 text-red-600">{error}</p>
         <button
           disabled={

@@ -1,4 +1,4 @@
-import FormLabel from './FormLabel';
+import FormLabel from '../FormLabel';
 
 const SelectCity = ({ city, cities, itinerary, handleChange }) => {
   return (

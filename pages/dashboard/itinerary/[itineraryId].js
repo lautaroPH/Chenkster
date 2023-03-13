@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 import Layout from '@/components/Layout';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
@@ -17,8 +16,8 @@ import SelectSubCategory from '@/components/Dashboard/itinerary/SelectSubCategor
 import { getCoordinates } from '@/utils/getCoordinates';
 import SelectCountry from '@/components/Dashboard/itinerary/SelectCountry';
 import SelectCity from '@/components/Dashboard/itinerary/SelectCity';
-import FormLabel from '@/components/Dashboard/itinerary/FormLabel';
-import ImagePreview from '@/components/Dashboard/itinerary/ImagePreview';
+import FormLabel from '@/components/Dashboard/FormLabel';
+import ImagePreview from '@/components/Dashboard/ImagePreview';
 
 export const getServerSideProps = async (ctx) => {
   const { itineraryId } = ctx.params;
@@ -162,11 +161,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
         timestamp,
       );
 
-      if (ok) {
-        router.push(`/itineraries/uploaded`);
-        toast.dismiss(loadingToastId);
-        toast.success(`Successfully updated: ${formData.title}`);
-      }
+      if (!ok) return;
     } else {
       const ok = await handleAddItinerary(
         formData,
@@ -176,13 +171,12 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
         timestamp,
         user.id,
       );
-
-      if (ok) {
-        router.push(`/itineraries/uploaded`);
-        toast.dismiss(loadingToastId);
-        toast.success(`Successfully uploaded: ${formData.title}`);
-      }
+      if (!ok) return;
     }
+
+    router.push(`/itineraries/uploaded`);
+    toast.dismiss(loadingToastId);
+    toast.success(`Successfully uploaded: ${formData.title}`);
     setLoading(false);
   };
 

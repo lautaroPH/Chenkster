@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import CategorySelected from '../CategorySelected';
-import FormLabel from './FormLabel';
+import FormLabel from '../FormLabel';
 
 const SelectSubCategory = ({
   subCategoriesForm,
