@@ -1,12 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 import FileInput from '@/components/FileInput';
 import Layout from '@/components/Layout';
-import UploadSvg from '@/components/Svg/UploadSvg';
 import { allowedExtensions } from '@/utils/allowedExtension';
 import { removeImage } from '@/utils/removeImage';
 import { uploadCategory } from '@/utils/uploadCategory';
 import { uploadImage } from '@/utils/uploadImage';
-import { uploadImagePreview } from '@/utils/uploadImagePreview';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRef, useState } from 'react';
@@ -99,7 +97,7 @@ export default function Category({ user }) {
       user.id,
       subCategories,
     );
-    console.log(err);
+
     if (err) {
       const removedImage = await removeImage(
         dataImage.path,

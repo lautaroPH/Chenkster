@@ -14,8 +14,6 @@ export const uploadItinerary = async (
       user_id: userId,
       front_image: frontPath,
       detail_image: detailPath,
-      country: dataItinerary.country.id,
-      city: dataItinerary.city.id,
     },
   ]);
 

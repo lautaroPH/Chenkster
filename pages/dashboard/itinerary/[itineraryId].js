@@ -5,19 +5,20 @@ import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { useRef, useState } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
 import { getCategories } from '@/utils/getCategories';
-import { allowedExtensions } from '@/utils/allowedExtension';
-import { uploadImage } from '@/utils/uploadImage';
-import { removeImage } from '@/utils/removeImage';
-import { uploadItinerary } from '@/utils/uploadItinerary';
-import CategorySelected from '@/components/Dashboard/CategorySelected';
-import { updateItinerary } from '@/utils/updateItinerary';
 import { useRouter } from 'next/router';
 import FileInput from '@/components/FileInput';
 import { getCountries } from '@/utils/getCountries';
 import { getCountryCities } from '@/utils/getCountryCities';
 import { getItinerary } from '@/utils/getItinerary';
-import { correctFile } from '@/utils/correctFile';
-import { moveImage } from '@/utils/moveImage';
+import { handleEditItinerary } from '@/utils/handleEditItinerary';
+import { handleAddItinerary } from '@/utils/handleAddItinerary';
+import SelectCategory from '@/components/Dashboard/itinerary/selectCategory';
+import SelectSubCategory from '@/components/Dashboard/itinerary/SelectSubCategory';
+import { getCoordinates } from '@/utils/getCoordinates';
+import SelectCountry from '@/components/Dashboard/itinerary/SelectCountry';
+import SelectCity from '@/components/Dashboard/itinerary/SelectCity';
+import FormLabel from '@/components/Dashboard/itinerary/FormLabel';
+import ImagePreview from '@/components/Dashboard/itinerary/ImagePreview';
 
 export const getServerSideProps = async (ctx) => {
   const { itineraryId } = ctx.params;
@@ -124,9 +125,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
 
   const frontImageRef = useRef();
   const detailImageRef = useRef();
-  const categorySelectRef = useRef();
-  const subCategorySelectRef = useRef();
-  const timestamp = Date.parse(itinerary.created_at);
+  const timestamp = Date.parse(itinerary?.created_at);
 
   const disabled =
     !formData.categories ||
@@ -152,215 +151,38 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
     setLoading(true);
     const loadingToastId = toast.loading('Loading...');
     const itineraryData = itinerary;
-    const detailImageCorrect = correctFile(
-      formData?.detail_image[0]?.type,
-      formData?.detail_image[0]?.size,
-    );
-
-    const frontImageCorrect = correctFile(
-      formData?.front_image[0]?.type,
-      formData?.front_image[0]?.size,
-    );
 
     if (itineraryData) {
-      let frontImage = itineraryData.front_image;
-      let detailImage = itineraryData.detail_image;
-
-      if (
-        !formData.categories ||
-        !formData.city ||
-        !formData.description ||
-        !formData.title ||
-        !formData.budget ||
-        !formData.visit_period ||
-        !formData.street ||
-        !formData.lat ||
-        !formData.lng ||
-        !formData.sub_categories ||
-        !formData.social_media ||
-        !formData.map_url ||
-        !formData.country
-      )
-        return handleError('Please fill all the fields', loadingToastId);
-
-      if (formData.front_image && !frontImageCorrect)
-        return handleError(
-          'File type is not supported or file size is too large for the front image',
-          loadingToastId,
-        );
-
-      if (formData.detail_image && !detailImageCorrect)
-        return handleError(
-          'File type is not supported or file size is too large for the detail image',
-          loadingToastId,
-        );
-
-      if (formData.title !== itineraryData.title && !formData.detail_image) {
-        const { data, error } = await moveImage(
-          `${itineraryData.title}/detail_image`,
-          `${formData.title}/detail_image`,
-          'itineraries',
-          supabase,
-        );
-
-        if (error) return handleError(error.message, loadingToastId);
-
-        detailImage = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/public/${formData.title}/detail_image?${timestamp}`;
-      } else if (formData.detail_image) {
-        const { error } = await removeImage(
-          `public/${itineraryData.title}/detail_image`,
-          supabase,
-          'itineraries',
-        );
-
-        if (error) return handleError(error.message, loadingToastId);
-
-        const { dataImage, errorImage } = await uploadImage(
-          formData.detail_image[0],
-          `detail_image`,
-          formData.title,
-          supabase,
-          'itineraries',
-        );
-
-        if (errorImage) return handleError(errorImage.message, loadingToastId);
-
-        detailImage = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/public/${formData.title}/detail_image?${timestamp}`;
-      }
-
-      if (formData.title !== itineraryData.title && !formData.front_image) {
-        const { data, error } = await moveImage(
-          `${itineraryData.title}/front_image`,
-          `${formData.title}/front_image`,
-          'itineraries',
-          supabase,
-        );
-
-        if (error) return handleError(error.message, loadingToastId);
-
-        detailImage = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/public/${formData.title}/front_image?${timestamp}`;
-      } else if (formData.front_image) {
-        const { error } = await removeImage(
-          `public/${itineraryData.title}/front_image`,
-          supabase,
-          'itineraries',
-        );
-
-        if (error) return handleError(error.message, loadingToastId);
-
-        const { dataImage, errorImage } = await uploadImage(
-          formData.front_image[0],
-          `front_image`,
-          formData.title,
-          supabase,
-          'itineraries',
-        );
-
-        if (errorImage) return handleError(errorImage.message, loadingToastId);
-
-        detailImage = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/public/${formData.title}/front_image?${timestamp}`;
-      }
-
-      const { err } = await updateItinerary(
-        supabase,
-        user.id,
+      const ok = await handleEditItinerary(
+        itineraryData,
         formData,
-        frontImage,
-        detailImage,
-        itineraryData.id,
+        supabase,
+        handleError,
+        loadingToastId,
+        timestamp,
       );
 
-      if (err) {
-        await removeImage(
-          `public/${formData.title}/front_image`,
-          supabase,
-          'itineraries',
-        );
-
-        await removeImage(
-          `public/${formData.title}/detail_image`,
-          supabase,
-          'itineraries',
-        );
-
-        handleError(err.message, loadingToastId);
-        return;
+      if (ok) {
+        router.push(`/itineraries/uploaded`);
+        toast.dismiss(loadingToastId);
+        toast.success(`Successfully updated: ${formData.title}`);
       }
     } else {
-      if (
-        !formData.categories ||
-        !formData.city ||
-        !formData.description ||
-        !formData.title ||
-        !formData.budget ||
-        !formData.visit_period ||
-        !formData.street ||
-        !formData.lat ||
-        !formData.lng ||
-        !formData.sub_categories ||
-        !formData.social_media ||
-        !formData.map_url ||
-        !formData.front_image ||
-        !formData.detail_image ||
-        !formData.country
-      )
-        return handleError('Please fill all the fields', loadingToastId);
-
-      if (!frontImageCorrect || !detailImageCorrect)
-        return handleError(
-          'File type is not supported or file size is too large for the image',
-          loadingToastId,
-        );
-
-      const { dataImage: detailImage, errorImage: errorDetail } =
-        await uploadImage(
-          formData.detail_image[0],
-          `detail_image`,
-          formData.title,
-          supabase,
-          'itineraries',
-        );
-
-      const { dataImage, errorImage } = await uploadImage(
-        formData.front_image[0],
-        `front_image`,
-        formData.title,
-        supabase,
-        'itineraries',
-      );
-
-      if (errorImage || errorDetail)
-        return handleError(
-          errorImage.statusCode === '409' || errorDetail.statusCode === '409'
-            ? 'The place already exists'
-            : errorImage.message || errorDetail.message,
-          loadingToastId,
-        );
-
-      const frontPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/${dataImage.path}?${timestamp}`;
-      const detailPath = `https://pgbobzpagoauoxbtnxbt.supabase.co/storage/v1/object/public/itineraries/${detailImage.path}?${timestamp}`;
-
-      const { itinerary, err } = await uploadItinerary(
-        supabase,
-        user.id,
+      const ok = await handleAddItinerary(
         formData,
-        frontPath,
-        detailPath,
+        handleError,
+        loadingToastId,
+        supabase,
+        timestamp,
+        user.id,
       );
 
-      if (err) {
-        await removeImage(dataImage.path, supabase, 'itineraries');
-
-        await removeImage(detailImage.path, supabase, 'itineraries');
-
-        handleError(err.message, loadingToastId);
-        return;
+      if (ok) {
+        router.push(`/itineraries/uploaded`);
+        toast.dismiss(loadingToastId);
+        toast.success(`Successfully uploaded: ${formData.title}`);
       }
     }
-
-    toast.dismiss(loadingToastId);
-    toast.success(`Successfully uploaded: ${formData.title}`);
-    router.push(`/itineraries/uploaded`);
     setLoading(false);
   };
 
@@ -379,48 +201,6 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
     setError(error);
   };
 
-  const handleCategoryChange = (e) => {
-    const { value } = e.target;
-    if (formData.categories.find((c) => c.title === value)) {
-      categorySelectRef.current.value = '';
-      return;
-    }
-    const category = categories.find((category) => category.title === value);
-    setFormData((prev) => ({
-      ...prev,
-      categories: [...prev.categories, category],
-    }));
-    categorySelectRef.current.value = '';
-  };
-
-  const handleSubCategoryChange = (e) => {
-    const { value } = e.target;
-    if (formData.sub_categories.includes(value)) {
-      subCategorySelectRef.current.value = '';
-      return;
-    }
-
-    setFormData((prev) => ({
-      ...prev,
-      sub_categories: [...prev.sub_categories, value],
-    }));
-    subCategorySelectRef.current.value = '';
-  };
-
-  const removeCategory = (category) => {
-    setFormData((prev) => ({
-      ...prev,
-      categories: prev.categories.filter((c) => c.title !== category),
-    }));
-  };
-
-  const removeSubCategory = (subCategory) => {
-    setFormData((prev) => ({
-      ...prev,
-      sub_categories: prev.sub_categories.filter((c) => c !== subCategory),
-    }));
-  };
-
   const updateImageData = (files, name) => {
     setFormData((prev) => ({ ...prev, [name]: files }));
   };
@@ -435,16 +215,13 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
 
   const handleMapUrl = (e) => {
     const url = e.target.value;
-    const regex = /@(-?\d+\.?\d*),(-?\d+\.?\d*)/;
-    const match = url.match(regex);
+    const { lat, lng } = getCoordinates(url);
 
-    if (match) {
-      const lat = match[1];
-      const lng = match[2];
+    if (lat) {
       setFormData((prev) => ({
         ...prev,
-        lat: parseFloat(lat),
-        lng: parseFloat(lng),
+        lat,
+        lng,
         map_url: url,
       }));
     }
@@ -461,137 +238,28 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
         onSubmit={handleSubmit}
         className="flex flex-col justify-center mb-10 w-96"
       >
-        <label
-          htmlFor="country"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Select a country
-        </label>
-        <select
-          name="country"
-          id="country"
-          className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-          required
-          placeholder="Select a country"
-          value={formData.country}
-          onChange={handleChange}
-        >
-          <option value="" disabled>
-            Select a country
-          </option>
-          {countries.map((country) => (
-            <option key={country.id} value={country.id}>
-              {country.title}
-            </option>
-          ))}
-        </select>
-        <label
-          htmlFor="city"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Select a city
-        </label>
-        <select
-          name="city"
-          id="city"
-          className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-          required
-          placeholder="Select a city"
-          value={formData.city}
-          onChange={handleChange}
-        >
-          <option value="" disabled>
-            Select a city
-          </option>
-          {itinerary && cities.length === 0 && (
-            <option key={itinerary.city.id} value={itinerary.city.id}>
-              {itinerary.city.title}
-            </option>
-          )}
-
-          {cities.map((city) => (
-            <option key={city.id} value={city.id}>
-              {city.title}
-            </option>
-          ))}
-        </select>
-        <label
-          htmlFor="categories"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Select a category
-        </label>
-        <select
-          name="categories"
-          id="categories"
-          className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-          placeholder="Select a category"
-          defaultValue={''}
-          onChange={handleCategoryChange}
-          ref={categorySelectRef}
-        >
-          <option value="" disabled>
-            Select a category
-          </option>
-          {categories.map((category) => (
-            <option key={category.id} value={category.title}>
-              {category.title}
-            </option>
-          ))}
-        </select>
-        <div className="flex flex-wrap gap-2">
-          {formData.categories.map((category) => (
-            <CategorySelected
-              key={category.id}
-              removeItem={removeCategory}
-              title={category.title}
-            />
-          ))}
-        </div>
-        <label
-          htmlFor="sub_categories"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Select a sub category
-        </label>
-        <select
-          name="sub_categories"
-          id="sub_categories"
-          className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
-          placeholder="Select a sub categories"
-          defaultValue={''}
-          onChange={handleSubCategoryChange}
-          ref={subCategorySelectRef}
-        >
-          <option value="" disabled>
-            Select a sub categories
-          </option>
-          {formData.categories.map((categoria) =>
-            categoria.sub_categories.map((subcategoria) => (
-              <option
-                key={`${subcategoria}-${categoria.id}`}
-                value={subcategoria}
-              >
-                {subcategoria}
-              </option>
-            )),
-          )}
-        </select>
-        <div className="flex flex-wrap gap-2">
-          {formData.sub_categories.map((category) => (
-            <CategorySelected
-              key={category}
-              removeItem={removeSubCategory}
-              title={category}
-            />
-          ))}
-        </div>
-        <label
-          htmlFor="title"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Title
-        </label>
+        <SelectCountry
+          countries={countries}
+          country={formData.country}
+          handleChange={handleChange}
+        />
+        <SelectCity
+          cities={cities}
+          city={formData.city}
+          handleChange={handleChange}
+          itinerary={itinerary}
+        />
+        <SelectCategory
+          categories={categories}
+          formCategories={formData.categories}
+          setFormData={setFormData}
+        />
+        <SelectSubCategory
+          setFormData={setFormData}
+          subCategoriesForm={formData.sub_categories}
+          categoriesForm={formData.categories}
+        />
+        <FormLabel name="title" title="Title" />
         <input
           type="text"
           name="title"
@@ -603,12 +271,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />
-        <label
-          htmlFor="description"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Description
-        </label>
+        <FormLabel name="description" title="Description" />
         <textarea
           name="description"
           rows={3}
@@ -618,12 +281,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           placeholder="Assaje is a famous Pizzeria with Neapolitan origins, which means that the pizza is thick on the side and thin in the..."
           required
         />
-        <label
-          htmlFor="budget"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Budget
-        </label>
+        <FormLabel name="budget" title="Budget" />
         <input
           type="text"
           name="budget"
@@ -635,12 +293,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />
-        <label
-          htmlFor="visit_period"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Visit period
-        </label>
+        <FormLabel name="visit_period" title="Visit period" />
         <input
           type="text"
           name="visit_period"
@@ -652,12 +305,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />{' '}
-        <label
-          htmlFor="social_media"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Social media link
-        </label>
+        <FormLabel name="social_media" title="Social media link" />
         <input
           type="url"
           name="social_media"
@@ -669,12 +317,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />
-        <label
-          htmlFor="street"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Street
-        </label>
+        <FormLabel name="street" title="Street" />
         <input
           type="text"
           name="street"
@@ -686,12 +329,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />
-        <label
-          htmlFor="map_url"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Google Map Url
-        </label>
+        <FormLabel name="map_url" title="Google Map Url" />
         <input
           type="url"
           name="map_url"
@@ -703,12 +341,7 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           className="w-full px-4 py-3 mb-3 text-base text-gray-700 placeholder-gray-500 border border-gray-400 rounded-lg focus:shadow-outline font-lato"
           required
         />
-        <label
-          htmlFor="front_image"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Front image
-        </label>
+        <FormLabel name="front_image" title="Front image" />
         <FileInput
           name="front_image"
           inputRef={frontImageRef}
@@ -716,19 +349,12 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           handleData={updateImageData}
           handlePreview={uploadFrontImagePreview}
         />
-        {frontImagePreview && (
-          <img
-            src={frontImagePreview}
-            alt="image preview"
-            className="object-cover h-40 w-80 rounded-xl"
-          />
-        )}
-        <label
-          htmlFor="detail_image"
-          className="mt-2 mb-3 font-semibold font-lato text-chenkster-gray"
-        >
-          Detail image
-        </label>
+        <ImagePreview
+          alt={'front image preview'}
+          imagePreview={frontImagePreview}
+          styles={'object-cover h-40 w-80 rounded-xl'}
+        />
+        <FormLabel name="detail_image" title="Detail image" />
         <FileInput
           name="detail_image"
           inputRef={detailImageRef}
@@ -736,13 +362,11 @@ export default function Itinerary({ user, categories, itinerary, countries }) {
           handleData={updateImageData}
           handlePreview={uploadDetailImagePreview}
         />
-        {detailImagePreview && (
-          <img
-            src={detailImagePreview}
-            alt="image preview"
-            className="object-cover w-96 h-60 rounded-2xl"
-          />
-        )}
+        <ImagePreview
+          alt={'detail image preview'}
+          imagePreview={detailImagePreview}
+          styles={'object-cover w-96 h-60 rounded-2xl'}
+        />
         <p className="mt-2 mb-3 text-red-600">{error}</p>
         <button
           disabled={loading || disabled}
